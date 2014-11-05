@@ -1,0 +1,12 @@
+declare shader
+    color "qkcolimo" 
+	(
+		boolean "mask" default off,
+		boolean "Reflection" default off,
+		boolean "Refraction" default off,
+		scalar "IOR" default 1
+
+	)
+    version 1
+	apply material	
+end declare
