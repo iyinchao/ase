@@ -1,0 +1,5 @@
+﻿#gitignore file
+
+
+#microsoft word temp file
+~$*.doc*
