@@ -18,16 +18,21 @@ public:
     void menuCloseCallback(cocos2d::Ref* pSender);
 
 	void sceneItemCallback(cocos2d::Ref* pSender, int id);
+	//virtual bool onTouchBegan(cocos2d::Touch *pTouch, cocos2d::Event *pEvent);
+    //virtual void onTouchMoved(cocos2d::Touch *pTouch, cocos2d::Event *pEvent);
+    //virtual void onTouchEnded(cocos2d::Touch *pTouch, cocos2d::Event *pEvent);
+    //virtual void onTouchCancelled(cocos2d::Touch *pTouch, cocos2d::Event *pEvent);
     
     // implement the "static create()" method manually
     CREATE_FUNC(MeijiaMain);
 
-	void addSceneItems(cocos2d::Sprite* mainScene, cocos2d::Menu* menu);
+	void addSceneItems(cocos2d::Sprite* mainScene);
 
 private:
 	cocos2d::MenuItemImage * sceneItem[6];
 	cocos2d::MenuItemImage * user;
 	cocos2d::MenuItemImage * setting;
+	cocos2d::Menu* menu;
 };
 
 #endif // __MEIJIA_MAIN_SCENE_H__

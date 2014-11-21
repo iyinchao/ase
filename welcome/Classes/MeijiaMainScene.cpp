@@ -1,5 +1,7 @@
 #include "MeijiaMainScene.h"
 #include "HelloWorldScene.h"
+#include "DialogLayer.h"
+#include "ConfirmDlg.h"
 
 USING_NS_CC;
 
@@ -39,7 +41,7 @@ bool MeijiaMain::init()
                                 origin.y + closeItem->getContentSize().height/2 + 10));
 
     // create menu, it's an autorelease object
-    auto menu = Menu::create(closeItem, NULL);
+    menu = Menu::create(closeItem, NULL);
     menu->setPosition(Vec2::ZERO);
 
     //auto label = LabelTTF::create("meijia", "Arial", 80);
@@ -52,7 +54,7 @@ bool MeijiaMain::init()
 
 	auto voidBg = Sprite::create("voidBg.png");
 	voidBg->setPosition(mainBg->getContentSize().width/2, mainBg->getContentSize().height/2);
-	addSceneItems(voidBg, menu);
+	addSceneItems(voidBg);
 
 	mainBg->addChild(voidBg, 0);
 	voidBg->addChild(menu, 0);
@@ -63,7 +65,7 @@ bool MeijiaMain::init()
     return true;
 }
 
-void MeijiaMain::addSceneItems(Sprite* mainScene, Menu* menu)
+void MeijiaMain::addSceneItems(Sprite* mainScene)
 {
 	int index;
 	for(int i=0; i<ITEMROWS; i++)
@@ -104,32 +106,47 @@ void MeijiaMain::menuCloseCallback(Ref* pSender)
 
 void MeijiaMain::sceneItemCallback(cocos2d::Ref* pSender, int id)
 {
-	Scene* test;
+	ConfirmDlg *layertest;
+	std::string dlgID;
+	std::string teststr("young");
 	switch(id){
 	case 0:
-		test = HelloWorld::createScene("test 1");
+		layertest = ConfirmDlg::create();
+		dlgID = "test 1";
+		layertest->setID(dlgID);
 		break;
 	case 1:
-		test = HelloWorld::createScene("test 2");
+		layertest = ConfirmDlg::create();
+		dlgID = "test 2";
+		layertest->setID(dlgID);
 		break;
 	case 2:
-		test = HelloWorld::createScene("test 3");
+		layertest = ConfirmDlg::create();
+		dlgID = "test 3";
+		layertest->setID(dlgID);
 		break;
 	case 3:
-		test = HelloWorld::createScene("test 4");
+		layertest = ConfirmDlg::create();
+		dlgID = "test 4";
+		layertest->setID(dlgID);
 		break;
 	case 4:
-		test = HelloWorld::createScene("test 5");
+		layertest = ConfirmDlg::create();
+		dlgID = "test 5";
+		layertest->setID(dlgID);
 		break;
 	case 5:
-		test = HelloWorld::createScene("test 6");
+		layertest = ConfirmDlg::create();
+		dlgID = "test 6";
+		layertest->setID(dlgID);
 		break;
 	default:
 		MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.","Alert");
 		return;
 	}
-	// Director::getInstance()->replaceScene(TransitionFade::create(1.f, test));
-	Director::getInstance()->pushScene(TransitionFade::create(1.f, test));
-	
-	//Director::getInstance()->end();
+
+	layertest->initLabel(teststr, teststr);
+	layertest->receiveSceneMenu(menu);
+	this->addChild(layertest, 10);
+	menu->setEnabled(false);
 }

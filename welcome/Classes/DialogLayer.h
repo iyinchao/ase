@@ -19,14 +19,15 @@ public:
     //virtual void onTouchCancelled(cocos2d::Touch *pTouch, cocos2d::Event *pEvent);
 	
 	void menuCloseCallback(cocos2d::Ref* pSender);
+	void receiveSceneMenu(cocos2d::Menu* _sceneMenu);
 	CREATE_FUNC(DialogLayer);
 
-private:
+protected:
     /** 初始化菜单 将菜单添加到模态对话框上 **/
     bool initMenu();
-
-private:
-    cocos2d::Menu *dialogMenu;							// 模态对话框菜单
+	cocos2d::Sprite *dlgBg;
+	cocos2d::Menu *dlgMenu;
+	cocos2d::Menu *sceneMenu;
 	//cocos2d::Vector<cocos2d::MenuItem> menuItemArray;	// 所有菜单
     bool mTouchedMenu;									// 记录菜单点击
 };

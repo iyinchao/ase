@@ -58,11 +58,11 @@ bool Welcome::init()
     auto label = LabelTTF::create("meijia", "Arial", 80);
     
     // position the label on the center of the screen
-    //label->setPosition(Vec2(origin.x + visibleSize.width/2,
-    //                        origin.y + visibleSize.height/4*3));
+    label->setPosition(Vec2(origin.x + visibleSize.width/2,
+                            origin.y + visibleSize.height/4*3));
 
     // add the label as a child to this layer
-    this->addChild(label, 1);
+    //this->addChild(label, 1);
 
 
     // add "HelloWorld" splash screen"
