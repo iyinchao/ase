@@ -1,6 +1,7 @@
 #include "AppDelegate.h"
 #include "WelcomeScene.h"
 #include "MeijiaMainScene.h"
+#include "GameScene.h"
 
 USING_NS_CC;
 
@@ -35,12 +36,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     // create a scene. it's an autorelease object
 	auto scene = Welcome::createScene();
-	// auto meijiaMain = MeijiaMain::createScene();
-
-    // run
     director->runWithScene(scene);
-	// director->replaceScene(TransitionFade::create(0.5f, meijiaMain));
-	// director->replaceScene(meijiaMain);
 
     return true;
 }

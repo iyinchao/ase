@@ -2,6 +2,7 @@
 #include "HelloWorldScene.h"
 #include "DialogLayer.h"
 #include "ConfirmDlg.h"
+#include "LoginDlg.h"
 
 USING_NS_CC;
 
@@ -32,16 +33,24 @@ bool MeijiaMain::init()
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
     // add a "close" icon to exit the progress. it's an autorelease object
-    auto closeItem = MenuItemImage::create(
-                                           "SettingNormal.png",
-                                           "SettingSelected.png",
-                                           CC_CALLBACK_1(MeijiaMain::menuCloseCallback, this));
+    auto searchItem = MenuItemImage::create(
+                                           "SearchNormal.png",
+                                           "SearchSelected.png",
+                                           CC_CALLBACK_1(MeijiaMain::menuSearchCallback, this));
     
-	closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width/2 - 10,
-                                origin.y + closeItem->getContentSize().height/2 + 10));
+	searchItem->setPosition(Vec2(origin.x + visibleSize.width - searchItem->getContentSize().width/2 - 20,
+        origin.y + searchItem->getContentSize().height/2 + 10));
+
+	auto userItem = MenuItemImage::create(
+                                           "UserNormal.png",
+                                           "UserSelected.png",
+                                           CC_CALLBACK_1(MeijiaMain::menuLoginCallback, this));
+    
+	userItem->setPosition(Vec2(origin.x + visibleSize.width - userItem->getContentSize().width/2 - 20,
+		visibleSize.height - userItem->getContentSize().height/2 - 30));
 
     // create menu, it's an autorelease object
-    menu = Menu::create(closeItem, NULL);
+    menu = Menu::create(searchItem, userItem, NULL);
     menu->setPosition(Vec2::ZERO);
 
     //auto label = LabelTTF::create("meijia", "Arial", 80);
@@ -90,7 +99,7 @@ void MeijiaMain::addSceneItems(Sprite* mainScene)
 	//menu->addChild(label, 0);
 }
 
-void MeijiaMain::menuCloseCallback(Ref* pSender)
+void MeijiaMain::menuSearchCallback(Ref* pSender)
 {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WP8) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
 	MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.","Alert");
@@ -102,6 +111,14 @@ void MeijiaMain::menuCloseCallback(Ref* pSender)
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     exit(0);
 #endif
+}
+
+void MeijiaMain::menuLoginCallback(Ref* pSender)
+{
+	LoginDlg *logintest = LoginDlg::create();
+	this->addChild(logintest, 10);
+	logintest->receiveSceneMenu(menu);
+	menu->setEnabled(false);
 }
 
 void MeijiaMain::sceneItemCallback(cocos2d::Ref* pSender, int id)

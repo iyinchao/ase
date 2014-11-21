@@ -15,9 +15,10 @@ public:
     virtual bool init();  
     
     // a selector callback
-    void menuCloseCallback(cocos2d::Ref* pSender);
-
+    void menuSearchCallback(cocos2d::Ref* pSender);
 	void sceneItemCallback(cocos2d::Ref* pSender, int id);
+	void menuLoginCallback(cocos2d::Ref* pSender);
+
 	//virtual bool onTouchBegan(cocos2d::Touch *pTouch, cocos2d::Event *pEvent);
     //virtual void onTouchMoved(cocos2d::Touch *pTouch, cocos2d::Event *pEvent);
     //virtual void onTouchEnded(cocos2d::Touch *pTouch, cocos2d::Event *pEvent);
@@ -30,8 +31,9 @@ public:
 
 private:
 	cocos2d::MenuItemImage * sceneItem[6];
-	cocos2d::MenuItemImage * user;
-	cocos2d::MenuItemImage * setting;
+	cocos2d::MenuItemImage * userItem;
+	cocos2d::MenuItemImage * settingItem;
+	cocos2d::MenuItemImage * searchItem;
 	cocos2d::Menu* menu;
 };
 
