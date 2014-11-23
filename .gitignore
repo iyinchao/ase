@@ -4,8 +4,17 @@
 #microsoft word temp file
 ~$*.doc*
 
-#personal
+############personal################
 #Yinchao
-
 #phpstorm project settings
 .idea
+
+#website feature-test folder
+.test
+
+#website 3rd party libs showcase
+.lib
+
+#sass compile cache 
+.sass-cache
+#####################################
