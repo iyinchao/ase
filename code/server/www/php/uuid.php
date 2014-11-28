@@ -15,6 +15,15 @@
 class UUID
 {
     /**
+     *Default namespace magic number
+     */
+    const DEF_NS_M = '12c47c35-def6-4856-982b-7cc9d93d8a4d';
+    /**
+     *Default namespace
+     *UUID::v5('12c47c35-def6-4856-982b-7cc9d93d8a4d', 'meijia');
+     */
+    const DEF_NS = 'a220eafd-aee4-530a-9b88-88bc4a1d10ee';
+    /**
      * Generate v3 UUID
      *
      * Version 3 UUIDs are named based. They require a namespace (another
