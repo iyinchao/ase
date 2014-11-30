@@ -125,7 +125,8 @@ void MeijiaMain::sceneItemCallback(cocos2d::Ref* pSender, int id)
 {
 	ConfirmDlg *layertest;
 	std::string dlgID;
-	std::string teststr("young");
+	std::string titlestr("TITLEtitleTITLEtitle");
+	std::string intro("introduction\nintroduction\nintroduction\nintroduction");
 	switch(id){
 	case 0:
 		layertest = ConfirmDlg::create();
@@ -162,8 +163,27 @@ void MeijiaMain::sceneItemCallback(cocos2d::Ref* pSender, int id)
 		return;
 	}
 
-	layertest->initLabel(teststr, teststr);
+	layertest->initLabel(intro, titlestr);
 	layertest->receiveSceneMenu(menu);
 	this->addChild(layertest, 10);
 	menu->setEnabled(false);
+}
+
+Texture2D* MeijiaMain::Base64toTex(std::string bfile)
+{
+	// getFileData 如果不指定，读取根目录是 Resource 文件夹
+	ssize_t size = 0;
+	unsigned char* titlech = FileUtils::getInstance()->getFileData(bfile, "r", &size);
+	std::string load_str;
+	load_str = std::string((const char*)titlech, size);
+
+	int len = 0;
+	unsigned char *buffer;
+	len = base64Decode((unsigned char*)load_str.c_str(), (unsigned int)load_str.length(), &buffer);
+
+	Image* img = new Image(); 
+	bool ok = img->initWithImageData(buffer, len);
+	Texture2D* tex = new Texture2D();
+	
+	return tex;
 }

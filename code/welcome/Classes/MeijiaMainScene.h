@@ -29,6 +29,8 @@ public:
 
 	void addSceneItems(cocos2d::Sprite* mainScene);
 
+	cocos2d::Texture2D* Base64toTex(std::string bfile);
+
 private:
 	cocos2d::MenuItemImage * sceneItem[6];
 	cocos2d::MenuItemImage * userItem;
