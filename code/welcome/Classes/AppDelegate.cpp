@@ -1,7 +1,6 @@
 #include "AppDelegate.h"
 #include "WelcomeScene.h"
 #include "MeijiaMainScene.h"
-#include "GameScene.h"
 
 USING_NS_CC;
 

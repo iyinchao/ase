@@ -43,7 +43,11 @@ bool ConfirmDlg::init()
 
 void ConfirmDlg::initLabel(std::string &_intro, std::string &_name)
 {
-	intro = LabelTTF::create(_intro, "", 30);
+	intro = Label::create(_intro, "", 30);
+	intro->setLineBreakWithoutSpace(true);
+	//intro->setWidth(100);
+	//intro->setHeight(200);
+	//intro->setMaxLineWidth(50);
 	intro->setPosition(origin.x + dlgSize.width / 4*3, origin.y + dlgSize.height / 2);
 	dlgBg->addChild(intro);
 
