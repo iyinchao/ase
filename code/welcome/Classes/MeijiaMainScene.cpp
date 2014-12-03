@@ -5,6 +5,7 @@
 #include "LoginDlg.h"
 
 USING_NS_CC;
+using namespace cocos2d::network;
 
 Scene* MeijiaMain::createScene()
 {
@@ -28,6 +29,14 @@ bool MeijiaMain::init()
     {
         return false;
     }
+
+	request = new HttpRequest();
+	request->setRequestType(HttpRequest::Type::GET);
+	request->setUrl("http://www.baidu.com");
+	request->setResponseCallback(CC_CALLBACK_2(MeijiaMain::onHttpRequestComplete, this));
+	request->setTag("GET test");
+	HttpClient::getInstance()->send(request);
+	request->release();
     
     Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
@@ -186,4 +195,40 @@ Texture2D* MeijiaMain::Base64toTex(std::string bfile)
 	Texture2D* tex = new Texture2D();
 	
 	return tex;
+}
+
+void MeijiaMain::onHttpRequestComplete(HttpClient *sender, HttpResponse* response)
+{
+    if (!response)
+    {
+        return;
+    }    
+ 
+    // You can get original request type from: response->request->reqType
+    if (0 != strlen(response->getHttpRequest()->getTag()))
+    {
+        log("%s completed", response->getHttpRequest()->getTag());
+    }    
+    int statusCode = response->getResponseCode();
+    char statusString[64] = {};
+    sprintf(statusString, "HTTP Status Code: %d, tag = %s", statusCode, response->getHttpRequest()->getTag());
+    // _labelStatusCode->setString(statusString);
+    log("response code: %d", statusCode);    
+    if (!response->isSucceed())
+    {
+        log("response failed");
+        log("error buffer: %s", response->getErrorBuffer());
+        return;
+    }
+    // dump data
+    std::vector<char> *buffer = response->getResponseData();
+    log("Http Test, dump data: ");
+	log("%s", buffer);
+
+	char* save = new char[buffer->size()];
+    for (unsigned int i = 0; i < buffer->size(); i++)
+    {
+        save[i] =  (*buffer)[i];
+    }
+	log("%s", save);
 }
