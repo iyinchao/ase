@@ -21,7 +21,4 @@ class DBConn
     }
 
 }
-
-//$conn = DBConn::connect();
-
 ?>

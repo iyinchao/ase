@@ -15,6 +15,9 @@
 #website 3rd party libs showcase
 .lib
 
+#reference files
+.ref
+
 #sass compile cache 
 .sass-cache
 #####################################
