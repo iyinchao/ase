@@ -3,6 +3,9 @@
 #include "DialogLayer.h"
 #include "ConfirmDlg.h"
 #include "LoginDlg.h"
+#include "json\document.h"
+#include "json\writer.h"
+#include "json\stringbuffer.h"
 
 USING_NS_CC;
 using namespace cocos2d::network;
@@ -30,14 +33,39 @@ bool MeijiaMain::init()
         return false;
     }
 
+	// *** 客户端与服务器链接初始化 ***
+	// 生成传输给服务器端的.json 文件
+	rapidjson::Document writedoc;
+	writedoc.SetObject();
+	rapidjson::Document::AllocatorType& allocator = writedoc.GetAllocator();
+	rapidjson::Value array(rapidjson::kArrayType);
+	rapidjson::Value object(rapidjson::kObjectType);
+	
+	// json object 格式添加 “名称/值” 对
+	object.AddMember("inttag", 1, allocator);
+	object.AddMember("doubletag", 1.0, allocator);
+	object.AddMember("booltag", true, allocator);
+	object.AddMember("hellotag", "helloworld", allocator);
+	
+	// json 加入数组
+	array.PushBack(object, allocator);
+	
+	// json object 格式添加 “名称/值” 对
+	writedoc.AddMember("json", "json string", allocator);
+	writedoc.AddMember("array", array, allocator);
+
+	// 将 .json 文件转为字符流传送给服务器
+	const char* postData = writedoc.GetString();
 	request = new HttpRequest();
-	request->setRequestType(HttpRequest::Type::GET);
+	request->setRequestType(HttpRequest::Type::POST);
 	request->setUrl("http://www.baidu.com");
 	request->setResponseCallback(CC_CALLBACK_2(MeijiaMain::onHttpRequestComplete, this));
-	request->setTag("GET test");
+	request->setRequestData(postData, strlen(postData));
+	request->setTag("POST test");
 	HttpClient::getInstance()->send(request);
 	request->release();
     
+	// *** 客户端本地初始化 ***
     Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
@@ -209,26 +237,46 @@ void MeijiaMain::onHttpRequestComplete(HttpClient *sender, HttpResponse* respons
     {
         log("%s completed", response->getHttpRequest()->getTag());
     }    
-    int statusCode = response->getResponseCode();
+    //int statusCode = response->getResponseCode();
+    //log("response code: %d", statusCode);
     char statusString[64] = {};
-    sprintf(statusString, "HTTP Status Code: %d, tag = %s", statusCode, response->getHttpRequest()->getTag());
-    // _labelStatusCode->setString(statusString);
-    log("response code: %d", statusCode);    
+    sprintf(statusString, "HTTP tag = %s", response->getHttpRequest()->getTag());
+  
     if (!response->isSucceed())
     {
         log("response failed");
         log("error buffer: %s", response->getErrorBuffer());
         return;
     }
-    // dump data
-    std::vector<char> *buffer = response->getResponseData();
+
+	// dump data
+	std::vector<char> *buffer = response->getResponseData();
     log("Http Test, dump data: ");
 	log("%s", buffer);
-
-	char* save = new char[buffer->size()];
+	unsigned char* save = new unsigned char[buffer->size()];
     for (unsigned int i = 0; i < buffer->size(); i++)
     {
         save[i] =  (*buffer)[i];
     }
 	log("%s", save);
+
+	// 如果是 base64 码，则需转码
+	if (response->getHttpRequest()->getTag == "base64")
+	{
+		unsigned char *buffer;  
+		int len = base64Decode((unsigned char*)save, strlen((char*)save), &buffer);  
+	}
+
+	// 将下载的文件保存为.zip格式
+	auto path = FileUtils::getInstance()->getWritablePath();
+	path.append("baidu.html");
+    log("MeijiaMainScene save file path = %s",path.c_str());  
+      
+	FILE* file = fopen(path.c_str(), "wb");
+	if(file)
+	{
+		fputs((char*)save, file);
+		fclose(file);
+	}
+	delete[] save;
 }

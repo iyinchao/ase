@@ -2,6 +2,9 @@
 #define _CONFIRM_DLG_H_
 
 #include "DialogLayer.h"
+#include "network\HttpClient.h"
+#include "network\HttpRequest.h"
+#include "network\HttpResponse.h"
 
 class ConfirmDlg : public DialogLayer
 {
@@ -15,6 +18,7 @@ public:
 	void menuCancelCallback(cocos2d::Ref* pSender);
 	void menuDownloadCallback(cocos2d::Ref* pSender);
 	void menuEnterCallback(cocos2d::Ref* pSender);
+	void onHttpRequestComplete(cocos2d::network::HttpClient *sender, cocos2d::network::HttpResponse *reponse);
 
 	CREATE_FUNC(ConfirmDlg);
 
@@ -30,6 +34,7 @@ private:
 	cocos2d::MenuItemFont *download;
 	cocos2d::MenuItemFont *cancel;
 	std::string dlgID;
+	cocos2d::network::HttpRequest* requestDlg;
 };
 
 //ConfirmDlg : public DialogLayer::ConfirmDlg : public DialogLayer()
