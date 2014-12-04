@@ -1,6 +1,6 @@
 <?php
 /**
- * Scene API
+ * Scene Manager
  * User: Charles
  * Date: 2014/12/2
  * Time: 22:16
@@ -9,30 +9,21 @@ include_once 'conf.php';
 include_once 'db_conn.php';
 include_once 'debug.php';
 include_once 'uuid.php';
-
-//Process client post data
-if(!isset($_POST['op'])) exit('{status:\'NO_REQ_OP\'}');
-switch($_POST['op']){
-    case 'client_download':
-        if(!isset($_POST['data'])) exit('{status:\'NO_REQ_DATA\'}');
-        $data = json_decode($_POST['data']);
-        SceneManager::clientDownload($data);
-        break;
-}
+include_once 'zip.php';
 
 class SceneManager{
     /**
      * clientDownload
      *
      * Handle client download request for a scene.
-     * Response a application/zip binary stream to the clinet
+     * Response a application/zip binary stream to the client
      *
      * @param $data object for scene
      */
-    static public function clientDownload($data){
+    static public function client_download($data){
         //test if s_id data is set
         if(!isset($data->s_id)){
-            exit('{status:\'INVALID_DATA\'}');
+            exit('{"status":"INVALID_DATA"}');
         }
         //create connection
         try{
@@ -40,26 +31,62 @@ class SceneManager{
         }catch (Exception $e){
             exit('{"status":"ERROR_DB_CONN","error_message:"'.$e->getMessage().'"}');
         }
-
         //prevent inject attack
-        $s_id = mysqli_real_escape_string($db, $data->s_id); //TODO: special check, such as length & charset
+        //TODO: special check, such as length & charset
+        $s_id = mysqli_real_escape_string($db, $data->s_id);
 
-        $qs = "SELECT * FROM scene WHERE s_id ='".$s_id."'";
+        $qs = "SELECT * FROM scene WHERE s_id ='$s_id'";
+        //process query result
         $result = $db->query($qs);
+        $db->close();
         if($result->num_rows == 1){
-            $zip = new ZipArchive();
-
-            $db->close();
-            exit();
+            try{
+                /*$exclude = array(realpath(Conf::DIR_DESIGN_FILE.$s_id.'/thumb.png'));
+                echo realpath(Conf::DIR_DESIGN_FILE.$s_id.'/thumb.png');*/
+                $zipdir = ZipCon::zip_dir(Conf::DIR_DESIGN_FILE.$s_id);
+            }catch (Exception $e){
+                exit('{"status":"ERROR_CREATE_ZIP", "err_msg":"'.$e->getMessage().'"}');
+            }
+            if(!isset($data->test)) {
+                //form response
+                header('Content-Type: application/zip');
+                header('Content-Length: ' . filesize($zipdir));
+                header('Content-Disposition: attachment; filename="scene.zip"');
+                readfile($zipdir);
+                unlink($zipdir); //remove temp
+            }else{
+                echo $zipdir;
+                unlink($zipdir);
+            }
         }else{
-            $db->close();
             exit('{"status":"NO_SCENE"}');
         }
         //
+    }
+    public static function client_browse($data){
+        //test if s_id data is set
+        if(!isset($data->page_now) || !isset($data->scene_per_page)){
+            exit('{"status":"INVALID_DATA"}');
+        }
+        //create connection
+        try{
+            $db = DBConn::connect();
+        }catch (Exception $e){
+            exit('{"status":"ERROR_DB_CONN","error_message:"'.$e->getMessage().'"}');
+        }
+        //
+        if(isset($data->search)){
 
+        }
+        if(isset($data->sort_by)){
 
+        }
+
+        $page_now = mysqli_real_escape_string($db, $data->page_now);
+        $qs_count = "SELECT COUNT(s_id) FROM bhouse.scene";
+        $qs_content = "";
+
+        echo 'ok';
 
     }
 }
-
-?>

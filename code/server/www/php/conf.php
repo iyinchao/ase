@@ -10,7 +10,8 @@
  * Class Conf
  */
 class Conf{
-    const FILESTORE = '../../filestore';
-    const USER_FILE_DIR = '../../filestore/user';
-    const DESIGN_FILE_DIR = '../../filestore/design';
+    const FILESTORE = '../../filestore/';
+    const DIR_USER_FILE = '../../filestore/user/';
+    const DIR_DESIGN_FILE = '../../filestore/design/';
+    const DIR_TMP = '../../filestore/tmp';
 }
