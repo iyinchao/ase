@@ -16,6 +16,7 @@ include '../uuid.php';      //好像是解析user-id所需要的
 //试试看：实现读post数据（_POST['XXX']）中的op和data，因为感觉这样更安全
 switch ($_GET['op']) {
     case 'view':     //获得场景
+        if(!isset($_GET['data']))  exit('{"status:"NO_REQ_DATA"}');
         $data = json_decode($_GET['data']); //解析json（其实应该加上try/catch）
         SceneManager::view($data); //调用方法
         break;
@@ -32,35 +33,47 @@ class SceneManager{
     const uuidNamespace = 'afc38a18-c53a-11e3-8841-1a514932ac01'; //这个要换成UUID::DEF_NS
 
     static public function view($data){
-
-        $db = DBConn::connect();   //连接数据库
-        //下面这一段应改成try/catch
-        /*        if (mysqli_connect_errno()) {
-                    //echo "Failed to connect to MySQL: " . mysqli_connect_error();
-                    $response = (object)array();
-                    $response->result = 'no';
-                    echo json_encode($response);
-                    die('Failed to connect the database');
-                }*/
-
-
-        // 防止注入攻击，对每个输入的数据做处理
-        $sea = mysqli_real_escape_string($db, $data->{'search'});  //php函数，用来预防攻击
-        $tag = mysqli_real_escape_string($db, $data->{'tag'});
-        $page = $data->{'page_now'};
-        $sort =mysqli_real_escape_string($db, $data->{'sort_by'});
-        $order=mysqli_real_escape_string($db, $data->{'order'});
+        //database connect
+        try{
+            $db = DBConn::connect();
+        }catch (Exception $e){
+            exit('{"status":"ERROR_DB_CONN","error_message:"'.$e->getMessage().'"}');
+        }
+        if(!isset($data->{'page_now'})){
+            echo 'dddd<br/>';
+            exit('{"status":"INVALID_DATA"}');
+        }
+        else { $page = $data->{'page_now'};}
+        $query = "select * from scene where 1=1 ";
+        if(isset($data->{'search'})) {
+            $sea = mysqli_real_escape_string($db, $data->{'search'});  // 防止注入攻击，对每个输入的数据做处理
+            $query = $query . " and " . $sea;
+        }  //php函数，用来预防攻击
+        if(isset($data->{'tag'}))
+        {
+            $tag = mysqli_real_escape_string($db, $data->{'tag'});
+            $query=$query." and tags= "."$tag";      //need to be modified
+        }
+        if(isset($data->{'sort_by'}))
+        {
+            $sort =mysqli_real_escape_string($db, $data->{'sort_by'});
+            $query=$query." order by ".$sort;
+        }
+        if(isset($data->{'order'}))
+        {
+            $order=mysqli_real_escape_string($db, $data->{'order'});
+            $query=$query." ".$order;
+        }
      //   $passha1 = sha1(stripcslashes($pas));    //估计是对密码解码
 
         //首先，检查 magic_quotes_gpc 是否配置为自动转义斜线，若为on，应该调用stripslashes去掉$_REQUEST、$_GET,$_POST、$_COOKIE的转义斜线；然后，查询/写入/更新数据至mysql时，再使用mysql_real_escape_string进行字符转义。
         //http://blog.unvs.cn/archives/magic_quotes_gpc-mysql_real_escape_string-addslashes.html
         //$query = "select * from user where email='".$data->{'email'}."'and password=sha1('".$data->{'pas'}."')";
-        if(trim($sea)=="") $query = "select * from scene where tags=" . "$tag";
-        else $query = "select * from scene where tag= " . "$tag" ." and". "$sea";
-        if(trim($sort)!="") $query=$query." order by ".$sort;
+        $n=$page*6-6;
+        $query=$query." limit 6 offset ".$n;
         $result = $db->query($query);  //执行SQL
-        $n=$result->num_rows;
-        if($n<=($page-1)*6)
+        $n = $result->num_rows;
+        if($n==0)
         {
             $response=(object)array();
             $response->result='no';
@@ -68,44 +81,29 @@ class SceneManager{
         else {
             $i = 0;
             $scene = array();
-            $k = ($page - 1) * 4;
             while ($row = $result->fetch_array()) {
-                if ($i >= ($page - 1) * 4 && $i < $n && $i < $page * 4) {
-                    $nn = $i - $k;
-                    $term = (object)array();
-                    $term->s_id = $row['s_id'];
-                    $term->b_id = $row['b_id'];
-                    $term->modify_date = $row['modify_date'];
-                    $term->designer = $row['designer'];
-                    $term->desc = $row['desc'];
-                    $term->tags = $row['tags'];
-                    $term->download_times = $row['download_times'];
-                    $term->views_count = $row['views_count'];
-                    $scene[$nn] = $term;
-                }
+                $term = (object)array();
+                $term->s_id = $row['s_id'];
+                $term->b_id = $row['b_id'];
+                $query="select * from scene where s_id='" . $row['b_id']."'";
+                $result2 = $db->query($query);
+                $row2=$result2->fetch_assoc();
+                $term->brand=$row2['name'];
+                $term->modify_date = $row['modify_date'];
+                $term->designer = $row['designer'];
+                $term->desc = $row['desc'];
+                $term->tags = $row['tags'];
+                $term->download_times = $row['download_times'];
+                $term->views_count = $row['views_count'];
+                $scene[$i] = $term;
                 $i = $i + 1;
             }
-
-          //  session_start();  //开启php session
-          //  $row = $result->fetch_assoc();   //取结果中的一行，如有多行可以for循环之。但是此处不需要
-           // $_SESSION['user_id'] = $row['id'];  //设置session cookie   表示已经登录了
-
             //准备回传的JSON，需按照之前写好的接口文档设置
             $response = (object)array();
             $response->result = 'ok';  //这个转换到json就是 {"result":"ok"}
-            $response->scene=$scene;
-            $response->page_now=$page;
-            $response->page_all=ceil($n/6);
-           // $response->sess_id = session_id();
-            //$response->user_id = $_SESSION['user_id'];  //不是可以直接从row【‘id’】中得到吗
-           // $response->email = $row['email'];
-           // $response->name = $row['display_name'];
-            //$response->gavatar = 'http://www.gravatar.com/avatar/'.md5($email).'?d=mm&s=48';  //这是什么东西
-            //$response->sign = $row['sign'];
-
-            //if(isset($data->{'remember'}) && $data->{'remember'})
-              //  setcookie('PANOCAMP_UID', $response->user_id, time()+3600*24*7, '/');//一周内免登录的cookie
-
+            $response->scene = $scene;
+            $response->page_now = $page;
+            $response->page_all = ceil($n / 6);
             echo json_encode($response);  //编码json，发回客户端
         }
         $db->close();  //一定记得在用完数据库后关闭！！

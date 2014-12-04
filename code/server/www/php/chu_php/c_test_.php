@@ -5,9 +5,9 @@
  * Date: 2014/11/28
  * Time: 19:49
  */
-include_once 'debug.php';
-include_once 'db_conn.php';
-include_once 'uuid.php';
+include_once '../debug.php';
+include_once '../db_conn.php';
+include_once '../uuid.php';
 
 //array test
 $con1=(object)array();
@@ -29,7 +29,7 @@ try{
     die($e->getMessage());
 }
 //$db=DBConn::connect();
-$query = "select * from scene where tags=1 ";
+$query = "select * from scene where 1=1 limit 4 offset 4";
 $result = $db->query($query);
 $n=$result->num_rows;
 $i=0;
