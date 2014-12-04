@@ -7,6 +7,9 @@
  */
 include_once 'scene_manager.php';
 
+//default response header
+header("Content-Type: application/json;charset=utf-8");
+
 //Process client post data
 if(!isset($_POST['op'])) exit('{"status":"NO_REQ_OP"}');
 switch($_POST['op']){

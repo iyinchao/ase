@@ -26,9 +26,9 @@ DROP TABLE IF EXISTS `brand`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `brand` (
   `b_id` char(36) NOT NULL,
-  `name` varchar(80) DEFAULT NULL,
+  `name` varchar(80) NOT NULL,
   `desc` varchar(300) DEFAULT NULL,
-  `email` varchar(80) DEFAULT NULL,
+  `email` varchar(80) NOT NULL,
   `tel` varchar(20) DEFAULT NULL,
   `website` varchar(80) DEFAULT NULL,
   `modify_date` datetime DEFAULT NULL,
@@ -46,6 +46,7 @@ CREATE TABLE `brand` (
 
 LOCK TABLES `brand` WRITE;
 /*!40000 ALTER TABLE `brand` DISABLE KEYS */;
+INSERT INTO `brand` VALUES ('503d5728-fc6c-52f1-a151-537778c296a5','MeijiaTest','This is a test brand','test@meijia.com','12345678910','www.meijia.com','2014-12-03 10:42:08'),('7918c182-6581-42cb-8805-0508e15aa0b5','SJTU','This is a test brand','meijia@sjtu.edu.cn',NULL,NULL,'2014-12-04 21:50:27');
 /*!40000 ALTER TABLE `brand` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -63,7 +64,6 @@ CREATE TABLE `scene` (
   `modify_date` datetime NOT NULL,
   `designer` varchar(80) DEFAULT NULL,
   `desc` varchar(300) DEFAULT NULL,
-  `tags` varchar(200) DEFAULT NULL,
   `download_times` bigint(20) unsigned zerofill NOT NULL,
   `views_count` int(3) NOT NULL,
   PRIMARY KEY (`s_id`),
@@ -79,6 +79,7 @@ CREATE TABLE `scene` (
 
 LOCK TABLES `scene` WRITE;
 /*!40000 ALTER TABLE `scene` DISABLE KEYS */;
+INSERT INTO `scene` VALUES ('0b7587a9-940c-4965-9cbc-45c3a1380ae5','503d5728-fc6c-52f1-a151-537778c296a5','Test2','2014-12-04 21:48:47','ShuYi','This the test scene',00000000000000000000,1),('1630b189-4383-4a1b-a955-cfeb228ed5bc','503d5728-fc6c-52f1-a151-537778c296a5','Test3','2014-12-04 21:48:47','YangCheng','This the test scene',00000000000000000000,1),('180d2d0d-730c-45aa-bd3b-9493cd29985f','7918c182-6581-42cb-8805-0508e15aa0b5','Test4','2014-12-04 21:48:46','YinChao','This the test scene',00000000000000000000,1),('276ab768-ca9e-44a7-969c-be7bafcd6bb9','7918c182-6581-42cb-8805-0508e15aa0b5','Test8','2014-12-04 21:48:42','ChaoGe','This the test scene',00000000000000000000,1),('51ff6575-53fa-4ad6-be5b-426de31b500c','7918c182-6581-42cb-8805-0508e15aa0b5','Test6','2014-12-04 21:48:44','LaoYang','This the test scene',00000000000000000000,1),('6d05d6ba-4ca2-523c-8a15-adbbfe4f2265','503d5728-fc6c-52f1-a151-537778c296a5','Test','2014-12-03 10:59:01','Charles','This the test scene',00000000000000000009,1),('bbfa1cf3-cb0a-4407-998b-9494bcd35036','7918c182-6581-42cb-8805-0508e15aa0b5','Test5','2014-12-04 21:48:45','ChuJieyu','This the test scene',00000000000000000000,1),('d6dd5a71-5101-415b-9cc8-cb016e17e10f','7918c182-6581-42cb-8805-0508e15aa0b5','Test7','2014-12-04 21:48:43','PengYe','This the test scene',00000000000000000000,1);
 /*!40000 ALTER TABLE `scene` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -96,7 +97,7 @@ CREATE TABLE `tag` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -105,7 +106,61 @@ CREATE TABLE `tag` (
 
 LOCK TABLES `tag` WRITE;
 /*!40000 ALTER TABLE `tag` DISABLE KEYS */;
+INSERT INTO `tag` VALUES (1,'Child','Suitable for children'),(2,'Young couple',NULL),(3,'SOHO',NULL),(4,'Bright',NULL);
 /*!40000 ALTER TABLE `tag` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tag_scene`
+--
+
+DROP TABLE IF EXISTS `tag_scene`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tag_scene` (
+  `s_id` char(36) NOT NULL,
+  `tag` int(11) NOT NULL,
+  KEY `tag_tag_idx` (`tag`),
+  KEY `id_s_idx` (`s_id`),
+  CONSTRAINT `id_s` FOREIGN KEY (`s_id`) REFERENCES `scene` (`s_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `tag_tag_s` FOREIGN KEY (`tag`) REFERENCES `tag` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tag_scene`
+--
+
+LOCK TABLES `tag_scene` WRITE;
+/*!40000 ALTER TABLE `tag_scene` DISABLE KEYS */;
+INSERT INTO `tag_scene` VALUES ('0b7587a9-940c-4965-9cbc-45c3a1380ae5',1),('1630b189-4383-4a1b-a955-cfeb228ed5bc',2),('180d2d0d-730c-45aa-bd3b-9493cd29985f',3),('276ab768-ca9e-44a7-969c-be7bafcd6bb9',4),('51ff6575-53fa-4ad6-be5b-426de31b500c',4),('6d05d6ba-4ca2-523c-8a15-adbbfe4f2265',3),('bbfa1cf3-cb0a-4407-998b-9494bcd35036',2),('d6dd5a71-5101-415b-9cc8-cb016e17e10f',1),('6d05d6ba-4ca2-523c-8a15-adbbfe4f2265',2),('6d05d6ba-4ca2-523c-8a15-adbbfe4f2265',4),('0b7587a9-940c-4965-9cbc-45c3a1380ae5',3),('0b7587a9-940c-4965-9cbc-45c3a1380ae5',4);
+/*!40000 ALTER TABLE `tag_scene` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tag_uscene`
+--
+
+DROP TABLE IF EXISTS `tag_uscene`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tag_uscene` (
+  `us_id` char(36) NOT NULL,
+  `tag` int(11) NOT NULL,
+  KEY `id_us_idx` (`us_id`),
+  KEY `tag_tag_idx` (`tag`),
+  CONSTRAINT `id_us` FOREIGN KEY (`us_id`) REFERENCES `user_scene` (`us_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `tag_tag_u` FOREIGN KEY (`tag`) REFERENCES `tag` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tag_uscene`
+--
+
+LOCK TABLES `tag_uscene` WRITE;
+/*!40000 ALTER TABLE `tag_uscene` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tag_uscene` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -150,7 +205,6 @@ CREATE TABLE `user_scene` (
   `s_id` char(36) NOT NULL,
   `name` varchar(80) NOT NULL,
   `modify_date` datetime NOT NULL,
-  `tags` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`us_id`),
   UNIQUE KEY `us_id_UNIQUE` (`us_id`),
   KEY `us_u_idx` (`u_id`),
@@ -182,4 +236,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-11-26 18:59:17
+-- Dump completed on 2014-12-04 22:29:38

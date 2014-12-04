@@ -160,12 +160,14 @@ class UUID
             '[0-9a-f]{4}\-?[0-9a-f]{12}\}?$/i', $uuid) === 1;
     }
 
-    public static function gen_b_id($name, $email){
-        return UUID::v5(UUID::v5(UUID::DEF_NS, $email), $name);
+    //
+    public static function gen_b_id(){
+        return UUID::v4();
     }
 
-    public static function gen_s_id($name, $b_id){
-        return UUID::v5(UUID::v5(UUID::DEF_NS, $b_id), $name);
+    //
+    public static function gen_s_id(){
+        return UUID::v4();
     }
 }
 ?>

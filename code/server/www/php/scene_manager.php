@@ -82,7 +82,27 @@ class SceneManager{
 
         }
 
+        if(isset($data->tag)){
+            $tags = (array)$data->tag;
+            //echo sizeof($tags);
+            if(sizeof($tags) != 0){
+
+                for($i = 0; $i < sizeof($tags); $i++){
+                    $tags[$i] = mysqli_real_escape_string($db,$tags[$i]);
+                }
+                $_qs_tags = join(',',$tags);
+            }
+        }
         $page_now = mysqli_real_escape_string($db, $data->page_now);
+
+        if(isset($_qs_tags)){
+            $qs_tags = "SELECT s_id FROM bhouse.tag_scene WHERE tag IN ($_qs_tags)";
+            $result = $db->query($qs_tags);
+            if($row =$result->fetch_assoc()){
+                echo $row['s_id'];
+            }
+        }
+
         $qs_count = "SELECT COUNT(s_id) FROM bhouse.scene";
         $qs_content = "";
 
