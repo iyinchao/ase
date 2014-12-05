@@ -90,6 +90,7 @@ class USceneManager{
             while ($row = $result->fetch_array())
             {
                 $term = (object)array();
+                $term->us_id=$row['us_id'];
                 $s_id=$row['s_id'];
                 $query3="select * from scene where s_id='" . "$s_id"."'";    //get the detail of the scene
                 $result1 = $db->query($query3);
@@ -136,8 +137,13 @@ class USceneManager{
         }
         $us_id = mysqli_real_escape_string($db, $data->{'us_id'});
         $query = "delete from user_scene where us_id='" . $us_id."'";
-        echo $query;
-        $db->query($query);
+        $result=$db->query($query);
+        if($result)
+        {
+            $response = (object)array();
+            $response->result = 'ok';  //这个转换到json就是 {"result":"ok"}
+            echo json_encode($response);  //编码json，发回客户端
+        }
         $db->close();
     }
 

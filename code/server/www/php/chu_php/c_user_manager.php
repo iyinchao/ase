@@ -180,10 +180,10 @@ class UserManager{
 
         $uid = UUID::v5(self::uuidNamespace, $email);
         $time = date("y-m-d h:i:s",time());  //会出现警告，好像date这个格式已经过时了
-        echo $time;
+        //echo $time;
 
         $query = "INSERT INTO user VALUES ('".$uid."','".$passha1."','".$email."','".$name."','"."$time"."')";
-        echo $query;
+      //  echo $query;
         $result = $db->query($query);
 
         if($result){

@@ -48,7 +48,7 @@ class SceneManager{
         if(isset($data->{'search'})) {
             $sea = mysqli_real_escape_string($db, $data->{'search'});  // 防止注入攻击，对每个输入的数据做处理
             $query = $query . " and " . $sea;
-        }  
+        }
         if(isset($data->{'tag'}))
         {
             //$tags=array($data->tag);   //this change have some mistakes
