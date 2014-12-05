@@ -29,7 +29,7 @@ try{
     die($e->getMessage());
 }
 //$db=DBConn::connect();
-$query = "select * from scene where 1=1 limit 4 offset 4";
+$query = "select * from scene where Exists(select * from tag_scene where tag_scene.s_id=scene.s_id and tag_scene.tag=1)";
 $result = $db->query($query);
 $n=$result->num_rows;
 $i=0;
