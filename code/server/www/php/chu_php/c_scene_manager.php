@@ -121,7 +121,11 @@ class SceneManager{
     }
 
     static public function get_tags(){
-        $db = DBConn::connect();
+        try{
+            $db = DBConn::connect();
+        }catch (Exception $e){
+            exit('{"status":"ERROR_DB_CONN","error_message:"'.$e->getMessage().'"}');
+        }
         $query = "select * from tag";
         $result = $db->query($query);
         $n=$result->num_rows;

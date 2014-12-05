@@ -29,6 +29,11 @@ try{
     die($e->getMessage());
 }
 //$db=DBConn::connect();
+$query="insert into tag (name) values('test888999')";
+$result = $db->query($query);
+$query="insert into user values('8f463b03-c638-5ba4-be10-f8307dc223e7','7110eda4d09e062aa5e4a390b0a572ac0d2c0220','test4.meijia.com','test5','2014-11-26 18:45:00')";
+$result = $db->query($query);
+if(!$result) echo "no insert<br/>";
 $query = "select * from scene where Exists(select * from tag_scene where tag_scene.s_id=scene.s_id and tag_scene.tag=1)";
 $result = $db->query($query);
 $n=$result->num_rows;
