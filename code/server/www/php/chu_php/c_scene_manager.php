@@ -48,7 +48,7 @@ class SceneManager{
         if(isset($data->{'search'})) {
             $sea = mysqli_real_escape_string($db, $data->{'search'});  // 防止注入攻击，对每个输入的数据做处理
             $query = $query . " and " . $sea;
-        }  //php函数，用来预防攻击
+        }  
         if(isset($data->{'tag'}))
         {
             //$tags=array($data->tag);   //this change have some mistakes
@@ -70,7 +70,6 @@ class SceneManager{
             $order=mysqli_real_escape_string($db, $data->{'order'});
             $query=$query." ".$order;
         }
-     //   $passha1 = sha1(stripcslashes($pas));    //估计是对密码解码
 
         //首先，检查 magic_quotes_gpc 是否配置为自动转义斜线，若为on，应该调用stripslashes去掉$_REQUEST、$_GET,$_POST、$_COOKIE的转义斜线；然后，查询/写入/更新数据至mysql时，再使用mysql_real_escape_string进行字符转义。
         //http://blog.unvs.cn/archives/magic_quotes_gpc-mysql_real_escape_string-addslashes.html
