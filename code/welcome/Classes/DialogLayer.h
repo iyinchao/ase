@@ -19,7 +19,7 @@ public:
     //virtual void onTouchCancelled(cocos2d::Touch *pTouch, cocos2d::Event *pEvent);
 	
 	void menuCloseCallback(cocos2d::Ref* pSender);
-	void receiveSceneMenu(cocos2d::Menu* _sceneMenu);
+	void setSceneMenu(cocos2d::Menu* _sceneMenu);
 	CREATE_FUNC(DialogLayer);
 
 protected:

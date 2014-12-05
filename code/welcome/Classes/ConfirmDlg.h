@@ -10,8 +10,8 @@ class ConfirmDlg : public DialogLayer
 {
 public:
 	virtual bool init();
-	void initLabel(std::string &_intro, std::string &_name);
-	void setID(std::string &_dlgID);
+	void initLabel(std::string _intro, std::string _name);
+	void setID(std::string _dlgID);
 
 	// a selector callback
     void menuCloseCallback(cocos2d::Ref* pSender);

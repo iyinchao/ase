@@ -41,9 +41,11 @@ bool DialogLayer::init()
 void DialogLayer::menuCloseCallback(Ref *pSender)
 {
 	Director::getInstance()->end();
+	return;
 }
 
-void DialogLayer::receiveSceneMenu(Menu *_sceneMenu)
+void DialogLayer::setSceneMenu(Menu *_sceneMenu)
 {
 	sceneMenu = _sceneMenu;
+	return;
 }
