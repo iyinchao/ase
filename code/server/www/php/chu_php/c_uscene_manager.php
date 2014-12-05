@@ -5,10 +5,11 @@
  * Date: 2014/12/3
  * Time: 18:13
  */
+chdir("../");
 header("Content-Type: text/html;charset=utf-8");  //定义返回字符集
-include '../debug.php';      //出错的处理
-include '../db_conn.php';    //数据库连接
-include '../uuid.php';      //好像是解析user-id所需要的
+include 'debug.php';      //出错的处理
+include 'db_conn.php';    //数据库连接
+include 'uuid.php';      //好像是解析user-id所需要的
 
 //取得XXX.php?op=xxx&data=xxx中的信息
 //op为option，即相关操作名称，如login，logout，reg等
@@ -42,7 +43,6 @@ class USceneManager{
             exit('{"status":"ERROR_DB_CONN","error_message:"'.$e->getMessage().'"}');
         }
         if(!isset($data->{'page_now'})){
-            echo 'dddd<br/>';
             exit('{"status":"INVALID_DATA"}');
         }
         else { $page = $data->{'page_now'};}
@@ -53,8 +53,14 @@ class USceneManager{
         }  //php函数，用来预防攻击
         if(isset($data->{'tag'}))
         {
-            $tag = mysqli_real_escape_string($db, $data->{'tag'});
-            $query=$query." and tags= "."$tag";      //need to be modified,tag用数组表示
+            //$tags=array($data->tag);   //this change have some mistakes
+            $tags=$data->tag;
+            for($i=0;$i<sizeof($tags);$i++)
+            {
+                //$tag=mysql_real_escape_string($db,$tags[$i]);  //there is no need to check for it is int not string
+                $tag=$tags[$i];
+                $query=$query." and Exists(select * from tag_uscene where tag_uscene.us_id=user_scene.us_id and tag_uscene.tag = "."$tag".")";
+            }
         }
         $u_id = mysqli_real_escape_string($db, $data->{'u_id'});  //之后利用cookie得到u_id
         $query=$query." and u_id = '".$u_id."'";
@@ -69,9 +75,9 @@ class USceneManager{
             $query=$query." ".$order;
         }
         $n=$page*6-6;
-        $query=$query." limit 6 offset ".$n;
-        echo $query;
-        $result = $db->query($query);  //执行SQL
+        $query1=$query." limit 6 offset ".$n;
+        //echo $query;     //just for test
+        $result = $db->query($query1);  //执行SQL
         $n = $result->num_rows;
         if($n==0)
         {
@@ -85,19 +91,18 @@ class USceneManager{
             {
                 $term = (object)array();
                 $s_id=$row['s_id'];
-                $query="select * from scene where s_id='" . "$s_id"."'";
-                $result1 = $db->query($query);
+                $query3="select * from scene where s_id='" . "$s_id"."'";    //get the detail of the scene
+                $result1 = $db->query($query3);
                 $row1=$result1->fetch_assoc();
                 $term->s_id = $row['s_id'];
                 $term->b_id = $row1['b_id'];
-                $query="select * from scene where s_id='" . $row1['b_id']."'";
-                $result2 = $db->query($query);
+                $query2="select * from scene where s_id='" . $row1['b_id']."'";      //get the brand name
+                $result2 = $db->query($query2);
                 $row2=$result2->fetch_assoc();
                 $term->brand=$row2['name'];
                 $term->modify_date = $row1['modify_date'];
                 $term->designer = $row1['designer'];
                 $term->desc = $row1['desc'];
-                $term->tags = $row1['tags'];
                 $term->download_times = $row1['download_times'];
                 $term->views_count = $row1['views_count'];
                 $scene[$i] = $term;
@@ -108,6 +113,11 @@ class USceneManager{
             $response->result = 'ok';  //这个转换到json就是 {"result":"ok"}
             $response->scene=$scene;
             $response->page_now=$page;
+            $result = $db->query($query);  //执行SQL,get page_all
+            $n = $result->num_rows;
+            //echo "<br/>";           //just for test
+            //echo $n;
+            //echo "<br/>";
             $response->page_all=ceil($n/6);
             echo json_encode($response);  //编码json，发回客户端
         }

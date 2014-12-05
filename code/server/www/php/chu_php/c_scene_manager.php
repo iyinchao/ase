@@ -40,7 +40,7 @@ class SceneManager{
             exit('{"status":"ERROR_DB_CONN","error_message:"'.$e->getMessage().'"}');
         }
         if(!isset($data->{'page_now'})){
-            echo 'dddd<br/>';
+            echo "ddd";
             exit('{"status":"INVALID_DATA"}');
         }
         else { $page = $data->{'page_now'};}
@@ -48,11 +48,17 @@ class SceneManager{
         if(isset($data->{'search'})) {
             $sea = mysqli_real_escape_string($db, $data->{'search'});  // 防止注入攻击，对每个输入的数据做处理
             $query = $query . " and " . $sea;
-        }  //php函数，用来预防攻击
+        }  
         if(isset($data->{'tag'}))
         {
-            $tag = mysqli_real_escape_string($db, $data->{'tag'});
-            $query=$query." and tags= "."$tag";      //need to be modified
+            //$tags=array($data->tag);   //this change have some mistakes
+            $tags=$data->tag;
+            for($i=0;$i<sizeof($tags);$i++)
+            {
+                //$tag=mysql_real_escape_string($db,$tags[$i]);  //there is no need to check for it is int not string
+                $tag=$tags[$i];
+                $query=$query." and Exists(select * from tag_scene where tag_scene.s_id=scene.s_id and tag_scene.tag = "."$tag".")";
+            }
         }
         if(isset($data->{'sort_by'}))
         {
@@ -64,14 +70,13 @@ class SceneManager{
             $order=mysqli_real_escape_string($db, $data->{'order'});
             $query=$query." ".$order;
         }
-     //   $passha1 = sha1(stripcslashes($pas));    //估计是对密码解码
 
         //首先，检查 magic_quotes_gpc 是否配置为自动转义斜线，若为on，应该调用stripslashes去掉$_REQUEST、$_GET,$_POST、$_COOKIE的转义斜线；然后，查询/写入/更新数据至mysql时，再使用mysql_real_escape_string进行字符转义。
         //http://blog.unvs.cn/archives/magic_quotes_gpc-mysql_real_escape_string-addslashes.html
         //$query = "select * from user where email='".$data->{'email'}."'and password=sha1('".$data->{'pas'}."')";
         $n=$page*6-6;
-        $query=$query." limit 6 offset ".$n;
-        $result = $db->query($query);  //执行SQL
+        $query1=$query." limit 6 offset ".$n;
+        $result = $db->query($query1);  //执行SQL
         $n = $result->num_rows;
         if($n==0)
         {
@@ -85,14 +90,14 @@ class SceneManager{
                 $term = (object)array();
                 $term->s_id = $row['s_id'];
                 $term->b_id = $row['b_id'];
-                $query="select * from scene where s_id='" . $row['b_id']."'";
-                $result2 = $db->query($query);
+                $query2="select * from scene where s_id='" . $row['b_id']."'";    //get the brand name
+                $result2 = $db->query($query2);
                 $row2=$result2->fetch_assoc();
                 $term->brand=$row2['name'];
                 $term->modify_date = $row['modify_date'];
                 $term->designer = $row['designer'];
                 $term->desc = $row['desc'];
-                $term->tags = $row['tags'];
+                //$term->tags = $row['tags'];
                 $term->download_times = $row['download_times'];
                 $term->views_count = $row['views_count'];
                 $scene[$i] = $term;
@@ -103,14 +108,23 @@ class SceneManager{
             $response->result = 'ok';  //这个转换到json就是 {"result":"ok"}
             $response->scene = $scene;
             $response->page_now = $page;
-            $response->page_all = ceil($n / 6);
+            $result = $db->query($query);  //执行SQL,get page all
+            $n = $result->num_rows;
+            //echo "<br/>";           //just for test
+            //echo $n;
+            //echo "<br/>";
+            $response->page_all=ceil($n/6);
             echo json_encode($response);  //编码json，发回客户端
         }
         $db->close();  //一定记得在用完数据库后关闭！！
     }
 
     static public function get_tags(){
-        $db = DBConn::connect();
+        try{
+            $db = DBConn::connect();
+        }catch (Exception $e){
+            exit('{"status":"ERROR_DB_CONN","error_message:"'.$e->getMessage().'"}');
+        }
         $query = "select * from tag";
         $result = $db->query($query);
         $n=$result->num_rows;
