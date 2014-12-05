@@ -134,6 +134,7 @@ void MeijiaMain::addSceneItems(Sprite* mainScene)
 	//auto label = LabelTTF::create("meijia", "Arial", 80);
 	//label->setPosition(Vec2(sceneItem[0]->getPosition().x, sceneItem[0]->getPosition().y));
 	//menu->addChild(label, 0);
+	return;
 }
 
 void MeijiaMain::menuSearchCallback(Ref* pSender)
@@ -154,56 +155,59 @@ void MeijiaMain::menuLoginCallback(Ref* pSender)
 {
 	LoginDlg *logintest = LoginDlg::create();
 	this->addChild(logintest, 10);
-	logintest->receiveSceneMenu(menu);
+	logintest->setSceneMenu(menu);
 	menu->setEnabled(false);
+	return;
 }
 
 void MeijiaMain::sceneItemCallback(cocos2d::Ref* pSender, int id)
 {
-	ConfirmDlg *layertest;
-	std::string dlgID;
+	ConfirmDlg *layertest = ConfirmDlg::create();
+	std::string _dlgID;
 	std::string titlestr("TITLEtitleTITLEtitle");
 	std::string intro("introduction\nintroduction\nintroduction\nintroduction");
 	switch(id){
 	case 0:
-		layertest = ConfirmDlg::create();
-		dlgID = "test 1";
-		layertest->setID(dlgID);
+		//layertest = ConfirmDlg::create();
+		_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
+		layertest->setID(_dlgID);
 		break;
 	case 1:
-		layertest = ConfirmDlg::create();
-		dlgID = "test 2";
-		layertest->setID(dlgID);
+		//layertest = ConfirmDlg::create();
+		_dlgID = "test 2";
+		layertest->setID(_dlgID);
 		break;
 	case 2:
-		layertest = ConfirmDlg::create();
-		dlgID = "test 3";
-		layertest->setID(dlgID);
+		//layertest = ConfirmDlg::create();
+		_dlgID = "test 3";
+		layertest->setID(_dlgID);
 		break;
 	case 3:
-		layertest = ConfirmDlg::create();
-		dlgID = "test 4";
-		layertest->setID(dlgID);
+		//layertest = ConfirmDlg::create();
+		_dlgID = "test 4";
+		layertest->setID(_dlgID);
 		break;
 	case 4:
 		layertest = ConfirmDlg::create();
-		dlgID = "test 5";
-		layertest->setID(dlgID);
+		_dlgID = "test 5";
+		layertest->setID(_dlgID);
 		break;
 	case 5:
 		layertest = ConfirmDlg::create();
-		dlgID = "test 6";
-		layertest->setID(dlgID);
+		_dlgID = "test 6";
+		layertest->setID(_dlgID);
 		break;
 	default:
 		MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.","Alert");
 		return;
 	}
 
+	// CCLOG(_dlgID);
 	layertest->initLabel(intro, titlestr);
-	layertest->receiveSceneMenu(menu);
+	layertest->setSceneMenu(menu);
 	this->addChild(layertest, 10);
 	menu->setEnabled(false);
+	return;
 }
 
 Texture2D* MeijiaMain::Base64toTex(std::string bfile)
@@ -261,7 +265,7 @@ void MeijiaMain::onHttpRequestComplete(HttpClient *sender, HttpResponse* respons
 	log("%s", save);
 
 	// 如果是 base64 码，则需转码
-	if (response->getHttpRequest()->getTag == "base64")
+	if (response->getHttpRequest()->getTag() == "base64")
 	{
 		unsigned char *buffer;  
 		int len = base64Decode((unsigned char*)save, strlen((char*)save), &buffer);  
@@ -279,4 +283,5 @@ void MeijiaMain::onHttpRequestComplete(HttpClient *sender, HttpResponse* respons
 		fclose(file);
 	}
 	delete[] save;
+	return;
 }
