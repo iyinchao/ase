@@ -128,6 +128,5 @@ class SceneManager{
         $response->page_now = $page_now;
         $response->page_all = $page_all;
         echo json_encode($response);
-
     }
 }
