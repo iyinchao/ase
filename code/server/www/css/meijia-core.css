@@ -1,0 +1,39 @@
+#mj-main-title {
+  font-size: 16pt;
+  font-weight: bold;
+  font-family: "Arial", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+  color: #FFFFFF;
+  text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.4);
+}
+.mj-page-title {
+  font-family: "Arial", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+}
+.mj-sidebar-item {
+  font-family: "Arial", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+}
+.mj-sidebar-item span {
+  margin-left: 8px;
+}
+.mj-titlebar {
+  background-color: #58a1ff;
+  background: -webkit-gradient(linear, left top, left bottom, from(#58a1ff), to(#3b72af));
+  background: -webkit-linear-gradient(top, #58a1ff, #3b72af);
+  background: -moz-linear-gradient(top, #58a1ff, #3b72af);
+  background: -ms-linear-gradient(top, #58a1ff, #3b72af);
+  background: -o-linear-gradient(top, #58a1ff, #3b72af);
+}
+#mj-dropdown-toggle {
+  color: #FFF;
+  text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.4);
+}
+#mj-dropdown-toggle:hover {
+  color: #3b72af;
+  background: #FFF;
+}
+#mj-dropdown-toggle:focus {
+  color: #3b72af;
+  background: #FFF;
+}
+.mj-search-placeholder {
+  font-family: "Arial", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+}

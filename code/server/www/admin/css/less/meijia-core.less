@@ -1,0 +1,47 @@
+@import "variables.less";
+@import "mixins.less";
+//Meijia core css files
+#mj-main-title{
+  font-size: 16pt;
+  font-weight: bold;
+
+  font-family: @mj-title-font;
+  color: #FFFFFF;
+  .text-shadow(0px 2px 3px rgba(0, 0, 0, 0.4));
+}
+
+.mj-page-title{
+  font-family: @mj-title-font;
+}
+
+.mj-sidebar-item{
+  span{
+    margin-left: 8px;
+  }
+  font-family: @mj-title-font;
+}
+
+.mj-titlebar{
+  .gradient(@startColor: #58a1ff, @endColor: #3b72af);
+}
+
+#mj-dropdown-toggle{
+  color:#FFF;
+  .text-shadow-level(@z:1);
+}
+
+#mj-dropdown-toggle:hover{
+  color:#3b72af;
+  background: #FFF;
+  //.text-shadow-level(@z:1);
+}
+
+#mj-dropdown-toggle:focus{
+  color: #3b72af;
+  background: #FFF;
+  //.text-shadow-level(@z:1);
+}
+
+.mj-search-placeholder{
+  font-family: @mj-title-font;
+}
