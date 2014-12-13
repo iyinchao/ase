@@ -82,3 +82,62 @@ echo 'test-uuid:'.UUID::v5(UUID::DEF_NS, 'charles');
 //---------------------------
 
 ?>
+<head>
+    <script type="text/javascript">
+        function loadXMLDoc()
+        {
+            document.getElementById("myDiv").innerHTML="change";
+            var xmlhttp;
+            //检查浏览器是否支持 XMLHttpRequest 对象
+            if (window.XMLHttpRequest)
+            {// code for IE7+, Firefox, Chrome, Opera, Safari
+                xmlhttp=new XMLHttpRequest();
+            }
+            else
+            {// code for IE6, IE5
+                xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            //设置response
+            xmlhttp.onreadystatechange=function() {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    var resopnse=eval('(' + xmlhttp.responseText + ')');
+                    document.getElementById("myDiv").innerHTML=resopnse.email;
+                    var result=resopnse.result;
+                    if(equals(result.match,"OK")) alert("OK");   //这边有问题，不知道是什么问题
+                   // document.write(resopnse.result);
+                    switch (resopnse.result){          //不知道为什么是判断错误的
+                        case "OK":
+                            alert("login sucesses");
+                            break;
+                        case "No":
+                            alert("fault");
+                            break;
+                        default :
+                            alert("else");
+                    }
+                    //document.getElementById("myDiv").innerHTML = xmlhttp.responseText;
+                }
+            };
+            //GET
+           // xmlhttp.open("GET",'c_user_manager.php?op=login&data={ "email":"fortest@meijia.com","pas":"1234" }',true);
+            //xmlhttp.send();
+            //post
+            xmlhttp.open("POST","c_user_manager.php",true);
+            xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+            xmlhttp.send('op=login&data={ "email":"fortest@meijia.com","pas":"1234" }');
+         //   var resopnse=eval('(' + xmlhttp.responseText + ')');
+           // document.getElementById("myDiv").innerHTML=resopnse.result;
+            //var resopnse;
+            //resopnse = json_decode(xmlhttp.responseText);
+
+        }
+    </script>
+</head>
+<html>
+<body>
+
+<div id="myDiv"><h3>Let AJAX change this text</h3></div>
+<button type="button" onclick="loadXMLDoc()">Change Content</button>
+
+</body>
+</html>

@@ -38,8 +38,13 @@ class SceneManager{
         $qs = "SELECT * FROM scene WHERE s_id ='$s_id'";
         //process query result
         $result = $db->query($qs);
-        $db->close();
         if($result->num_rows == 1){
+            $row = $result->fetch_assoc();
+            $n=$row['download_times'];
+            $n=$n+1;
+            $qs = "UPDATE scene set download_times = $n where s_id = '$s_id'";
+            $db->query($qs);
+            $db->close();
             try{
                 /*$exclude = array(realpath(Conf::DIR_DESIGN_FILE.$s_id.'/thumb.png'));
                 echo realpath(Conf::DIR_DESIGN_FILE.$s_id.'/thumb.png');*/
@@ -58,9 +63,11 @@ class SceneManager{
                 echo $zipdir;
                 unlink($zipdir);
             }
+
         }else{
             exit('{"status":"NO_SCENE"}');
         }
+
         //
     }
 

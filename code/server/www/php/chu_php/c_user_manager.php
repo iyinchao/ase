@@ -1,22 +1,22 @@
 <?php
 header("Content-Type: text/html;charset=utf-8");  //定义返回字符集
-chdir("../");
-include 'debug.php';
-include 'db_conn.php';   //需要修改
-include 'uuid.php';
+//chdir("../");
+include '../debug.php';
+include '../db_conn.php';   //需要修改
+include '../uuid.php';
 
 //取得XXX.php?op=xxx&data=xxx中的信息
 //op为option，即相关操作名称，如login，logout，reg等
 //data为客户端传来的json数据（json）
 //试试看：实现读post数据（_POST['XXX']）中的op和data，因为感觉这样更安全
-$op=$_GET['op'];
+$op=$_POST['op'];
 //echo $_GET['data'];
 //$data = json_decode($_GET['data']); //解析json（其实应该加上try/catch）
 //UserManager::login($data); //调用方法
 //echo "<br/>";
 switch ($op) {
     case 'login':
-        $data = json_decode($_GET['data']);  //解析json（其实应该加上try/catch）
+        $data = json_decode($_POST['data']);  //解析json（其实应该加上try/catch）
         UserManager::login($data); //调用方法
         break;
     case 'testLogin':    //这个我们估计用不到
