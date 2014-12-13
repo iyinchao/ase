@@ -17,16 +17,18 @@ bool ConfirmDlg::init()
 	dlgID = "test 0";
 
 	border = Sprite::create("BorderNormal.png");
-	border->setScale(2.f);
+	//border->setScale(2.f);
 	border->setPosition(origin.x + dlgSize.width / 4, origin.y + dlgSize.height / 2);
 	dlgBg->addChild(border, 1);
 	
 	string _download("download");
+	download->setFontName("Arial");
 	download = MenuItemFont::create(_download, CC_CALLBACK_1(ConfirmDlg::menuEnterCallback, this));
-	download->setPosition(origin.x + dlgSize.width/4, origin.y + dlgSize.height/7);
+	download->setPosition(origin.x + dlgSize.width/4, origin.y + dlgSize.height/7);	
 	dlgMenu->addChild(download, 1);
 
 	string _cancel("cancel");
+	cancel->setFontName("Arial");
 	cancel = MenuItemFont::create(_cancel, CC_CALLBACK_1(ConfirmDlg::menuCancelCallback, this));
 	cancel->setPosition(origin.x + dlgSize.width/4*3, origin.y + dlgSize.height/7);
 	dlgMenu->addChild(cancel, 1);
@@ -53,7 +55,6 @@ void ConfirmDlg::initLabel(std::string _intro, std::string _name)
 	// 如果已经下载成功，按钮不再显示“下载”而是显示“进入”
 	if(FileUtils::getInstance()->isFileExist(dlgID))
 		download->setString("enter");
-
 	dlgBg->addChild(name);
 	return;
 }
@@ -61,6 +62,10 @@ void ConfirmDlg::initLabel(std::string _intro, std::string _name)
 void ConfirmDlg::setID(std::string _dlgID)
 {
 	dlgID = _dlgID;
+	pic = Sprite::create(_dlgID + ".jpg");
+	pic->setPosition(origin.x + dlgSize.width / 4, origin.y + dlgSize.height / 2);
+	dlgBg->addChild(pic, 0);
+
 	return;
 }
 
@@ -116,11 +121,14 @@ void ConfirmDlg::menuEnterCallback(Ref* pSender)
 		//const char* postData = "op=client_download&data={\"s_id\": \"1234\"}";
 
 		requestDlg = new HttpRequest();
-		requestDlg->setRequestType(HttpRequest::Type::POST);
-		//requestDlg->setUrl("http://192.168.1.105/php/scene_api.php");
 		requestDlg->setUrl("http://www.baidu.com");
+		requestDlg->setRequestType(HttpRequest::Type::GET);
+
+		//requestDlg->setRequestType(HttpRequest::Type::POST);
+		//requestDlg->setUrl("http://192.168.1.106/php/scene_api.php");
+		//requestDlg->setRequestData(postData, strlen(postData));
+
 		requestDlg->setResponseCallback(CC_CALLBACK_2(ConfirmDlg::onHttpRequestComplete, this));
-		requestDlg->setRequestData(postData, strlen(postData));
 		requestDlg->setTag("scene");
 		HttpClient::getInstance()->send(requestDlg);
 		requestDlg->release();

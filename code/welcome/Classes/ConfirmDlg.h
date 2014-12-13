@@ -29,6 +29,7 @@ public:
 
 private:
 	cocos2d::Sprite *border;
+	cocos2d::Sprite *pic;
 	cocos2d::Label *intro;
 	cocos2d::LabelTTF *name;
 	cocos2d::MenuItemFont *download;

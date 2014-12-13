@@ -5,6 +5,7 @@
 #include "network\HttpClient.h"
 #include "network\HttpRequest.h"
 #include "network\HttpResponse.h"
+#include "LoginDlg.h"
 #define ITEMCOLS 3
 #define ITEMROWS 2
 
@@ -19,7 +20,7 @@ public:
     
     // a selector callback
     void menuSearchCallback(cocos2d::Ref* pSender);
-	void sceneItemCallback(cocos2d::Ref* pSender, int id);
+	void sceneBorderCallback(cocos2d::Ref* pSender, int id);
 	void menuLoginCallback(cocos2d::Ref* pSender);
 	void onHttpRequestComplete(cocos2d::network::HttpClient *sender, cocos2d::network::HttpResponse *reponse);
 
@@ -30,17 +31,24 @@ public:
     
     // implement the "static create()" method manually
     CREATE_FUNC(MeijiaMain);
-	void addSceneItems(cocos2d::Sprite* mainScene);
+	void addSceneBorder(cocos2d::Sprite* mainScene);
+	void addScenePic(cocos2d::Sprite* mainScene);
 
 	cocos2d::Texture2D* Base64toTex(std::string bfile);
+	void updateCustom(float dt);
+
+public:
+	cocos2d::MenuItemImage * userItem;
+	//bool* userVerify;
+	cocos2d::Menu* menu;
 
 private:
-	cocos2d::MenuItemImage * sceneItem[6];
-	cocos2d::MenuItemImage * userItem;
+	cocos2d::MenuItemImage * sceneBorder[6];
+	cocos2d::Sprite * scenePic[6];
 	cocos2d::MenuItemImage * settingItem;
 	cocos2d::MenuItemImage * searchItem;
-	cocos2d::Menu* menu;
 	cocos2d::network::HttpRequest* request;
+	LoginDlg *logintest;
 };
 
 #endif // __MEIJIA_MAIN_SCENE_H__
