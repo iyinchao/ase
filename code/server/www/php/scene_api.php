@@ -22,6 +22,11 @@ switch($_POST['op']){
         if(!isset($_POST['data'])) exit('{"status":"NO_REQ_DATA"}');
         $data = json_decode($_POST['data']);
         SceneManager::client_browse($data);
+        break;
+    case 'client_get_thumb':
+        if(!isset($_POST['data'])) exit('{"status":"NO_REQ_DATA"}');
+        $data = json_decode($_POST['data']);
+        SceneManager::cilent_get_thumb($data);
 }
 exit();
 

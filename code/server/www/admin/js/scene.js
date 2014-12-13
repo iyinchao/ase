@@ -30,16 +30,21 @@
         $('#scene-view').empty();
         json.scene.forEach(function (element, index, array) {
             var cell_info = JSON.parse(element);
-            //console.log(element);
+            console.log(cell_info);
             var cell = document.createElement('div');
             cell.classList.add('mj-scene-block');
             $('#scene-view').append(cell);
             var cell_mask = document.createElement('div');
-            cell_mask.innerHTML='<div class="d">'+
-                '<i class="fa fa-dashboard"></i>'+
+            cell_mask.innerHTML='<div class="cell-digit">'+
+                '<i class="fa fa-download"></i>'+
                 cell_info.download_times+
-                '</div>';
+                '<i class="fa fa-copy"></i>'+
+                cell_info.views_count+'</div>' +
+                '<div class="noselect cell-name">'+
+                cell_info.name
+                +'</div>';
             cell.appendChild(cell_mask);
+            //cell.style.backgroundImage = "url('"+Config.FILE_SRORE+"/design/"+cell_info.s_id+"/thumb.png')";
         });
         //console.log(json.scene[0]);
     }
