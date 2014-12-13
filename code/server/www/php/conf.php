@@ -13,5 +13,5 @@ class Conf{
     const FILESTORE = '../../filestore/';
     const DIR_USER_FILE = '../../filestore/user/';
     const DIR_DESIGN_FILE = '../../filestore/design/';
-    const DIR_TMP = '../../filestore/tmp';
+    const DIR_TMP = '../../filestore/tmp/';
 }

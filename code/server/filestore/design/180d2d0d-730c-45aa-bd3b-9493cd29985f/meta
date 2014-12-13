@@ -1,17 +1,20 @@
-3
-"sofa"
+2
+"cupboard"
 "object1_bace.exr"
 "object1_shader.exr"
 (color 255 255 255)
 0
-"wall"
+"drawer"
 "object2_bace.exr"
 "object2_shader.exr"
 (color 255 255 255)
 0
-"Carpet"
-"object3_bace.exr"
-"object3_shader.exr"
-(color 37 37 37)
-0
-0
+2
+"homelight"
+"light1.exr"
+(color 255 255 255)
+100
+"sunlight"
+"light2.exr"
+(color 255 255 255)
+100

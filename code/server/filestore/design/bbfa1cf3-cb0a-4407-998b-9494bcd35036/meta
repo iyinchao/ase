@@ -1,17 +1,18 @@
-3
-"sofa"
-"object1_bace.exr"
-"object1_shader.exr"
+0
+4
+"VR灯光03"
+"light1.exr"
 (color 255 255 255)
-0
-"wall"
-"object2_bace.exr"
-"object2_shader.exr"
+100
+"VR_光源02"
+"light2.exr"
 (color 255 255 255)
-0
-"Carpet"
-"object3_bace.exr"
-"object3_shader.exr"
-(color 37 37 37)
-0
-0
+100
+"VR_光源01"
+"light3.exr"
+(color 255 255 255)
+100
+"VR灯光01"
+"light4.exr"
+(color 255 255 255)
+100
