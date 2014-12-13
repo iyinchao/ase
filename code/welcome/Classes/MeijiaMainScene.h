@@ -39,7 +39,7 @@ public:
 
 public:
 	cocos2d::MenuItemImage * userItem;
-	//bool* userVerify;
+	bool userVerify;
 	cocos2d::Menu* menu;
 
 private:

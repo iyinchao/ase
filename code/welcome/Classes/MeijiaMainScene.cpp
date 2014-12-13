@@ -104,6 +104,8 @@ bool MeijiaMain::init()
     // add the sprite as a child to this layer
     this->addChild(mainBg, 0);
 
+	userVerify = false;
+
     return true;
 }
 
@@ -165,7 +167,7 @@ void MeijiaMain::menuSearchCallback(Ref* pSender)
 
 void MeijiaMain::menuLoginCallback(Ref* pSender)
 {
-	if(0){
+	if(userVerify){
 
 	}
 	else{
@@ -316,7 +318,7 @@ void MeijiaMain::updateCustom(float dt)
 		userItem->setNormalImage(normalSprite);
 		userItem->setSelectedImage(selectedSprite);
 
-		//mainUserNoVerify = false;
+		userVerify = true;
 		this->unschedule(schedule_selector(MeijiaMain::updateCustom));
 	}
 }

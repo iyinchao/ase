@@ -30,7 +30,7 @@ bool LoginDlg::init()
     
     emailBox->setFontColor(Color3B::RED);
 	
-    //emailBox->setPlaceHolder("E-mail..");
+    emailBox->setPlaceHolder("E-mail..");
 	emailBox->setPlaceholderFontColor(Color3B::GRAY);
     //emailBox->setMaxLength(8);
 	emailBox->setInputMode(EditBox::InputMode::EMAIL_ADDRESS);
