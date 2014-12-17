@@ -20,6 +20,16 @@ switch ($_GET['op']) {
         $data = json_decode($_GET['data']); //解析json（其实应该加上try/catch）
         SceneManager::view($data); //调用方法
         break;
+    case 'update':     //更新场景
+        if(!isset($_GET['data']))  exit('{"status:"NO_REQ_DATA"}');
+        $data = json_decode($_GET['data']); //解析json（其实应该加上try/catch）
+        SceneManager::update($data); //调用方法
+        break;
+    case 'delete':     //删除场景
+        if(!isset($_GET['data']))  exit('{"status:"NO_REQ_DATA"}');
+        $data = json_decode($_GET['data']); //解析json（其实应该加上try/catch）
+        SceneManager::delete($data); //调用方法
+        break;
     case 'get_tags':   //获得标签
         SceneManager::get_tags();
         break;
@@ -115,6 +125,81 @@ class SceneManager{
             //echo "<br/>";
             $response->page_all=ceil($n/6);
             echo json_encode($response);  //编码json，发回客户端
+        }
+        $db->close();  //一定记得在用完数据库后关闭！！
+    }
+
+    static public function update($data){
+        //database connect
+        try{
+            $db = DBConn::connect();
+        }catch (Exception $e){
+            exit('{"status":"ERROR_DB_CONN","error_message:"'.$e->getMessage().'"}');
+        }
+        if(!isset($data->{'s_id'})){
+            echo "ddd";
+            exit('{"status":"INVALID_DATA"}');
+        }
+        else { $s_id = mysqli_real_escape_string($db, $data->{'s_id'});}
+        $time = date("y-m-d h:i:s",time());  //会出现警告，好像date这个格式已经过时了
+        $query = "update scene set modify_date= '"."$time"."' ";
+        if(isset($data->{'name'}))
+        {
+            $name = mysqli_real_escape_string($db, $data->{'name'});
+            $query=$query.",name = '".$name."'";
+        }
+        if(isset($data->{'designer'}))
+        {
+            $designer = mysqli_real_escape_string($db, $data->{'designer'});
+            $query=$query.",designer = '$designer' ";
+        }
+        if(isset($data->{'views_count'}))
+        {
+            $views_count = mysqli_real_escape_string($db, $data->{'views_count'});
+            $query=$query.",views_count = $views_count ";
+        }
+        if(isset($data->{'desc'}))
+        {
+            $desc = mysqli_real_escape_string($db, $data->{'desc'});
+            $query=$query.",desc = 'desc' ";
+        }
+        $query=$query." where s_id = '".$s_id."'";
+        $result = $db->query($query);  //执行SQL
+        if($result){
+            $response = (object)array();
+            $response->result = 'ok';
+            echo json_encode($response);
+        }else{
+            $response = (object)array();
+            $response->result = 'no';
+            echo json_encode($response);
+        }
+        $db->close();  //一定记得在用完数据库后关闭！！
+    }
+
+    static public function delete($data){
+        //database connect
+        try{
+            $db = DBConn::connect();
+        }catch (Exception $e){
+            exit('{"status":"ERROR_DB_CONN","error_message:"'.$e->getMessage().'"}');
+        }
+        if(!isset($data->{'s_id'})){
+            echo "ddd";
+            exit('{"status":"INVALID_DATA"}');
+        }
+        else { $s_id = mysqli_real_escape_string($db, $data->{'s_id'});}
+        $query = "delete from scene where s_id='" . $s_id."'";
+        $result=$db->query($query);
+        if($result)
+        {
+            $response = (object)array();
+            $response->result = 'ok';  //这个转换到json就是 {"result":"ok"}
+            echo json_encode($response);  //编码json，发回客户端
+        } else{
+            $response = (object)array();
+            $response->result = 'no';
+            echo json_encode($response);
         }
         $db->close();  //一定记得在用完数据库后关闭！！
     }
