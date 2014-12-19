@@ -5,9 +5,11 @@
  * Date: 2014/11/28
  * Time: 19:49
  */
-include_once '../debug.php';
-include_once '../db_conn.php';
-include_once '../uuid.php';
+chdir("../");
+include_once 'debug.php';
+include_once 'db_conn.php';
+include_once 'uuid.php';
+include_once 'conf.php';
 
 //array test
 $con1=(object)array();
@@ -72,12 +74,41 @@ echo $data->result;
 echo "<br />";
 echo $data->string[0]->name;
 
+$s_id="1630b189-4383-4a1b-a955-cfeb228ed5bc";
+$dir=Conf::DIR_DESIGN_FILE.$s_id;
+fun::deldir($dir);
+
+
 //---------------------------
 
 echo '<br><h1>uuid</h1>';
 echo 'default-namespace-magic-number:'.UUID::DEF_NS_M.'<br>';
 echo 'default-namespace:'.UUID::DEF_NS.'<br>';
 echo 'test-uuid:'.UUID::v5(UUID::DEF_NS, 'charles');
+class fun{
+    static public  function deldir($dir) {
+        //先删除目录下的文件：
+        $dh=opendir($dir);
+        while ($file=readdir($dh)) {
+            if($file!="." && $file!="..") {
+                $fullpath=$dir."/".$file;
+                if(!is_dir($fullpath)) {
+                    unlink($fullpath);
+                } else {
+                    deldir($fullpath);
+                }
+            }
+        }
+
+        closedir($dh);
+        //删除当前文件夹：
+        if(rmdir($dir)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
 
 //---------------------------
 

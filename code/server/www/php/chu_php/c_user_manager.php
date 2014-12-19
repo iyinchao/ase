@@ -1,9 +1,9 @@
 <?php
 header("Content-Type: text/html;charset=utf-8");  //定义返回字符集
-//chdir("../");
-include '../debug.php';
-include '../db_conn.php';   //需要修改
-include '../uuid.php';
+chdir("../");
+include 'debug.php';
+include 'db_conn.php';   //需要修改
+include 'uuid.php';
 
 //取得XXX.php?op=xxx&data=xxx中的信息
 //op为option，即相关操作名称，如login，logout，reg等
