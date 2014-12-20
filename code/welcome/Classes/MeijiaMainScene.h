@@ -6,6 +6,8 @@
 #include "network\HttpRequest.h"
 #include "network\HttpResponse.h"
 #include "LoginDlg.h"
+#include "MScrollView.h"
+
 #define ITEMCOLS 3
 #define ITEMROWS 2
 
@@ -31,8 +33,8 @@ public:
     
     // implement the "static create()" method manually
     CREATE_FUNC(MeijiaMain);
-	void addSceneBorder(cocos2d::Sprite* mainScene);
-	void addScenePic(cocos2d::Sprite* mainScene);
+	void addSceneBorder(cocos2d::Layer* mainScene);
+	void addScenePic(cocos2d::Layer* mainScene);
 
 	cocos2d::Texture2D* Base64toTex(std::string bfile);
 	void updateCustom(float dt);
@@ -41,12 +43,12 @@ public:
 	cocos2d::MenuItemImage * userItem;
 	bool userVerify;
 	cocos2d::Menu* menu;
+	MScrollView* voidBg;
 
 private:
 	cocos2d::MenuItemImage * sceneBorder[6];
 	cocos2d::Sprite * scenePic[6];
 	cocos2d::MenuItemImage * settingItem;
-	cocos2d::MenuItemImage * searchItem;
 	cocos2d::network::HttpRequest* request;
 	LoginDlg *logintest;
 };

@@ -49,3 +49,9 @@ void DialogLayer::setSceneMenu(Menu *_sceneMenu)
 	sceneMenu = _sceneMenu;
 	return;
 }
+
+void DialogLayer::setOutMenu(Menu *_outMenu)
+{
+	outMenu = _outMenu;
+	return;
+}

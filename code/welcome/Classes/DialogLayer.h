@@ -20,6 +20,7 @@ public:
 	
 	void menuCloseCallback(cocos2d::Ref* pSender);
 	void setSceneMenu(cocos2d::Menu* _sceneMenu);
+	void setOutMenu(cocos2d::Menu* _outMenu);
 	CREATE_FUNC(DialogLayer);
 
 protected:
@@ -28,6 +29,7 @@ protected:
 	cocos2d::Sprite *dlgBg;
 	cocos2d::Menu *dlgMenu;
 	cocos2d::Menu *sceneMenu;
+	cocos2d::Menu *outMenu;
 	//cocos2d::Vector<cocos2d::MenuItem> menuItemArray;	// 所有菜单
     bool mTouchedMenu;									// 记录菜单点击
 };

@@ -158,6 +158,8 @@ void LoginDlg::menuCancelCallback(Ref* pSender)
 {
 	this->setVisible(false);
 	sceneMenu->setEnabled(true);
+	outMenu->setEnabled(true);
+	return;
 }
 
 void LoginDlg::menuRegCallback(Ref* pSender)

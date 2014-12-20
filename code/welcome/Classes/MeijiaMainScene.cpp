@@ -6,6 +6,7 @@
 #include "json\document.h"
 #include "json\writer.h"
 #include "json\stringbuffer.h"
+#include "MScrollView.h"
 
 USING_NS_CC;
 using namespace cocos2d::network;
@@ -69,86 +70,49 @@ bool MeijiaMain::init()
     Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-    // add a "close" icon to exit the progress. it's an autorelease object
-    auto searchItem = MenuItemImage::create(
-                                           "SearchNormal.png",
-                                           "SearchSelected.png",
-                                           CC_CALLBACK_1(MeijiaMain::menuSearchCallback, this));
-    
-	searchItem->setPosition(Vec2(origin.x + visibleSize.width - searchItem->getContentSize().width/2 - 20,
-        origin.y + searchItem->getContentSize().height/2 + 10));
+ //   // add a "close" icon to exit the progress. it's an autorelease object
+ //   auto searchItem = MenuItemImage::create(
+ //                                          "SearchNormal.png",
+ //                                          "SearchSelected.png",
+ //                                          CC_CALLBACK_1(MeijiaMain::menuSearchCallback, this));
+ //   
+	//searchItem->setPosition(Vec2(origin.x + visibleSize.width - searchItem->getContentSize().width/2 - 20,
+ //       origin.y + searchItem->getContentSize().height/2 + 10));
 
-	userItem = MenuItemImage::create(
-                                           "UserNormal.png",
-                                           "UserSelected.png",
-                                           CC_CALLBACK_1(MeijiaMain::menuLoginCallback, this));
+	//userItem = MenuItemImage::create(
+ //                                   "UserNormal.png",
+ //                                   "UserSelected.png",
+ //                                   CC_CALLBACK_1(MeijiaMain::menuLoginCallback, this));
 
-	userItem->setPosition(Vec2(origin.x + visibleSize.width - userItem->getContentSize().width/2 - 20,
-		visibleSize.height - userItem->getContentSize().height/2 - 30));
+	//userItem->setPosition(Vec2(origin.x + visibleSize.width - userItem->getContentSize().width/2 - 20,
+	//	visibleSize.height - userItem->getContentSize().height/2 - 30));
 
-    // create menu, it's an autorelease object
-    menu = Menu::create(searchItem, userItem, NULL);
-    menu->setPosition(Vec2::ZERO);
+ //   // create menu, it's an autorelease object
+ //   menu = Menu::create(searchItem, userItem, NULL);
+ //   menu->setPosition(Vec2::ZERO);
 
 	auto mainBg = Sprite::create("MainBg.png", Rect(0, 0, 1024, 768));
 	mainBg->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
 
-	auto voidBg = Sprite::create("voidBg.png");
-	voidBg->setPosition(mainBg->getContentSize().width/2, mainBg->getContentSize().height/2);
-	addSceneBorder(voidBg);
-	addScenePic(voidBg);
+	//auto voidBg = Layer::create();
+	//voidBg->setPosition(mainBg->getContentSize().width/2, mainBg->getContentSize().height/2);
+	voidBg = MScrollView::create();
+	voidBg->setPosition(0, 0);
+	//voidBg->setOutMenu(menu);
+
+	//addSceneBorder(voidBg);
+	//addScenePic(voidBg);
 
 	mainBg->addChild(voidBg, 0);
-	voidBg->addChild(menu, 1);
+	//voidBg->addChild(menu, 1);
 
     // add the sprite as a child to this layer
+
     this->addChild(mainBg, 0);
 
 	userVerify = false;
 
     return true;
-}
-
-void MeijiaMain::addSceneBorder(Sprite* mainScene)
-{
-	int index;
-	for(int i=0; i<ITEMROWS; i++)
-		for(int j=0; j<ITEMCOLS; j++)
-		{
-			index = i*ITEMCOLS + j;
-			sceneBorder[index] = MenuItemImage::create(
-												"BorderNormal.png",
-												"BorderSelected.png",
-												CC_CALLBACK_1(MeijiaMain::sceneBorderCallback, this, index));
-												//CC_CALLBACK_1(MeijiaMain::menuCloseCallback, this));
-			// sceneBorder[index]->setScale(2.f);
-			sceneBorder[index]->setPosition(Vec2( mainScene->getContentSize().width/(ITEMCOLS+1)*(j+1),
-					mainScene->getContentSize().height/(ITEMROWS+1)*(i+1)));
-
-			menu->addChild(sceneBorder[index], 1);
-		}
-
-	//// 预留接口在边框内添加文字、缩略图等
-	//auto label = LabelTTF::create("meijia", "Arial", 80);
-	//label->setPosition(Vec2(sceneItem[0]->getPosition().x, sceneItem[0]->getPosition().y));
-	//menu->addChild(label, 0);
-	return;
-}
-
-void MeijiaMain::addScenePic(Sprite* mainScene)
-{
-	int index;
-	for(int i=0; i<ITEMROWS; i++)
-		for(int j=0; j<ITEMCOLS; j++)
-		{
-			index = i*ITEMCOLS + j;
-			scenePic[index] = Sprite::create("6d05d6ba-4ca2-523c-8a15-adbbfe4f2265.jpg");
-			scenePic[index]->setPosition(sceneBorder[index]->getPosition().x, sceneBorder[index]->getPosition().y);
-
-			mainScene->addChild(scenePic[index], 0);
-		}
-
-	return;
 }
 
 void MeijiaMain::menuSearchCallback(Ref* pSender)
@@ -167,19 +131,21 @@ void MeijiaMain::menuSearchCallback(Ref* pSender)
 
 void MeijiaMain::menuLoginCallback(Ref* pSender)
 {
-	if(userVerify){
+	//if(userVerify){
 
-	}
-	else{
-		logintest = LoginDlg::create();
-		this->addChild(logintest, 10);
-		logintest->setSceneMenu(menu);
-		menu->setEnabled(false);
+	//}
+	//else{
+	//	logintest = LoginDlg::create();
+	//	this->addChild(logintest, 10);
+	//	logintest->setOutMenu(menu);
+	//	logintest->setSceneMenu(voidBg->menu);
+	//	voidBg->menu->setEnabled(false);
+	//	menu->setEnabled(false);
 
-		schedule(schedule_selector(MeijiaMain::updateCustom), 1.0f, kRepeatForever, 0);
-		//userVerify = true;
-	}
-	return;
+	//	schedule(schedule_selector(MeijiaMain::updateCustom), 1.0f, kRepeatForever, 0);
+	//	//userVerify = true;
+	//}
+	//return;
 }
 
 void MeijiaMain::sceneBorderCallback(cocos2d::Ref* pSender, int id)

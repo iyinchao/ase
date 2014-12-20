@@ -87,6 +87,7 @@ void ConfirmDlg::menuCancelCallback(Ref* pSender)
 {
 	this->setVisible(false);
 	sceneMenu->setEnabled(true);
+	//outMenu->setEnabled(true);
 	return;
 }
 
