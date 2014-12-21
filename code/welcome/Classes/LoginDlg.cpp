@@ -79,17 +79,16 @@ bool LoginDlg::init()
 	reg->setPosition(origin.x + dlgSize.width/4*3, origin.y + dlgSize.height/3);
 	dlgMenu->addChild(reg, 1);
 
-	//// add a "close" icon to exit the progress. it's an autorelease object
-    //auto closeItem = MenuItemImage::create(
-	//	"CloseNormal.png",
-	//	"CloseSelected.png",
-	//	CC_CALLBACK_1(LoginDlg::menuCloseCallback, this));
-	//closeItem->setPosition(Vec2(origin.x + dlgSize.width - closeItem->getContentSize().width/2 ,
-	//	origin.y + closeItem->getContentSize().height/2));
-	//dlgMenu->addChild(closeItem);
-
 	//** menu 一定要在 menuItem 添加之后再 addChild **
 	dlgBg->addChild(dlgMenu);
+
+	auto listener = EventListenerTouchOneByOne::create();
+	listener->setSwallowTouches(true);
+	listener->onTouchBegan = [](Touch* touch, Event* event)
+	{
+		return true;
+	};
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 
 	userVerify = false;
 	return true;
@@ -157,8 +156,9 @@ void LoginDlg::menuCloseCallback(Ref* pSender)
 void LoginDlg::menuCancelCallback(Ref* pSender)
 {
 	this->setVisible(false);
-	sceneMenu->setEnabled(true);
-	outMenu->setEnabled(true);
+	onExit();
+	//sceneMenu->setEnabled(true);
+	//outMenu->setEnabled(true);
 	return;
 }
 

@@ -251,10 +251,10 @@ void MScrollView::sceneBorderCallback(cocos2d::Ref* pSender, int id, cocos2d::Me
 	layertest->initLabel(intro, titlestr);
 
 	//auto tmpMenu = Menu::create(outMenu, menu);
-	layertest->setSceneMenu(menu);
+	//layertest->setSceneMenu(menu);
 	layertest->setOutMenu(outMenu);
 	this->addChild(layertest, 10);
-	menu->setEnabled(false);
+	//menu->setEnabled(false);
 	//outMenu->setEnabled(false);
 	return;
 }

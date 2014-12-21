@@ -35,6 +35,15 @@ bool ConfirmDlg::init()
 
 	//** menu 一定要在 menuItem 添加之后再 addChild **
 	dlgBg->addChild(dlgMenu);
+
+	auto listener = EventListenerTouchOneByOne::create();
+	listener->setSwallowTouches(true);
+	listener->onTouchBegan = [](Touch* touch, Event* event)
+	{
+		return true;
+	};
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+
 	return true;
 }
 
@@ -86,7 +95,8 @@ void ConfirmDlg::menuCloseCallback(Ref* pSender)
 void ConfirmDlg::menuCancelCallback(Ref* pSender)
 {
 	this->setVisible(false);
-	sceneMenu->setEnabled(true);
+	onExit();
+	//sceneMenu->setEnabled(true);
 	//outMenu->setEnabled(true);
 	return;
 }

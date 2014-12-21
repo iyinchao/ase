@@ -70,26 +70,26 @@ bool MeijiaMain::init()
     Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
- //   // add a "close" icon to exit the progress. it's an autorelease object
- //   auto searchItem = MenuItemImage::create(
- //                                          "SearchNormal.png",
- //                                          "SearchSelected.png",
- //                                          CC_CALLBACK_1(MeijiaMain::menuSearchCallback, this));
- //   
-	//searchItem->setPosition(Vec2(origin.x + visibleSize.width - searchItem->getContentSize().width/2 - 20,
- //       origin.y + searchItem->getContentSize().height/2 + 10));
+    // add a "close" icon to exit the progress. it's an autorelease object
+    auto searchItem = MenuItemImage::create(
+                                           "SearchNormal.png",
+                                           "SearchSelected.png",
+                                           CC_CALLBACK_1(MeijiaMain::menuSearchCallback, this));
+    
+	searchItem->setPosition(Vec2(origin.x + visibleSize.width - searchItem->getContentSize().width/2 - 20,
+        origin.y + searchItem->getContentSize().height/2 + 10));
 
-	//userItem = MenuItemImage::create(
- //                                   "UserNormal.png",
- //                                   "UserSelected.png",
- //                                   CC_CALLBACK_1(MeijiaMain::menuLoginCallback, this));
+	userItem = MenuItemImage::create(
+                                    "UserNormal.png",
+                                    "UserSelected.png",
+                                    CC_CALLBACK_1(MeijiaMain::menuLoginCallback, this));
 
-	//userItem->setPosition(Vec2(origin.x + visibleSize.width - userItem->getContentSize().width/2 - 20,
-	//	visibleSize.height - userItem->getContentSize().height/2 - 30));
+	userItem->setPosition(Vec2(origin.x + visibleSize.width - userItem->getContentSize().width/2 - 20,
+		visibleSize.height - userItem->getContentSize().height/2 - 30));
 
- //   // create menu, it's an autorelease object
- //   menu = Menu::create(searchItem, userItem, NULL);
- //   menu->setPosition(Vec2::ZERO);
+    // create menu, it's an autorelease object
+    menu = Menu::create(searchItem, userItem, NULL);
+    menu->setPosition(Vec2::ZERO);
 
 	auto mainBg = Sprite::create("MainBg.png", Rect(0, 0, 1024, 768));
 	mainBg->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
@@ -98,12 +98,12 @@ bool MeijiaMain::init()
 	//voidBg->setPosition(mainBg->getContentSize().width/2, mainBg->getContentSize().height/2);
 	voidBg = MScrollView::create();
 	voidBg->setPosition(0, 0);
-	//voidBg->setOutMenu(menu);
 
 	//addSceneBorder(voidBg);
 	//addScenePic(voidBg);
 
 	mainBg->addChild(voidBg, 0);
+	voidBg->addChild(menu, 0);
 	//voidBg->addChild(menu, 1);
 
     // add the sprite as a child to this layer
@@ -131,21 +131,21 @@ void MeijiaMain::menuSearchCallback(Ref* pSender)
 
 void MeijiaMain::menuLoginCallback(Ref* pSender)
 {
-	//if(userVerify){
+	if(userVerify){
 
-	//}
-	//else{
-	//	logintest = LoginDlg::create();
-	//	this->addChild(logintest, 10);
-	//	logintest->setOutMenu(menu);
-	//	logintest->setSceneMenu(voidBg->menu);
-	//	voidBg->menu->setEnabled(false);
-	//	menu->setEnabled(false);
+	}
+	else{
+		logintest = LoginDlg::create();
+		this->addChild(logintest, 10);
+		logintest->setOutMenu(menu);
+		logintest->setSceneMenu(voidBg->menu);
+		//voidBg->menu->setEnabled(false);
+		//menu->setEnabled(false);
 
-	//	schedule(schedule_selector(MeijiaMain::updateCustom), 1.0f, kRepeatForever, 0);
-	//	//userVerify = true;
-	//}
-	//return;
+		schedule(schedule_selector(MeijiaMain::updateCustom), 1.0f, kRepeatForever, 0);
+		//userVerify = true;
+	}
+	return;
 }
 
 void MeijiaMain::sceneBorderCallback(cocos2d::Ref* pSender, int id)
