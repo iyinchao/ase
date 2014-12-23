@@ -20,7 +20,7 @@ class SceneManager{
      *
      * @param $data object for scene
      */
-    static public function client_download($data){
+    public static function client_download($data){
         //test if s_id data is set
         if(!isset($data->s_id)){
             exit('{"status":"INVALID_DATA"}');
@@ -135,5 +135,30 @@ class SceneManager{
         $response->page_now = $page_now;
         $response->page_all = $page_all;
         echo json_encode($response);
+    }
+
+    public static function client_get_thumb($data){
+        //test if required data is set
+        if(!isset($data->s_id)){
+            exit('{"status":"INVALID_DATA"}');
+        }
+
+        $s_id = $data->s_id;  //TODO:check the data value?
+
+        if(file_exists(Conf::DIR_DESIGN_FILE.$s_id)){
+            if(file_exists(Conf::DIR_DESIGN_FILE.$s_id.'/'.'thumb.png')) {
+                $thumb = fopen(Conf::DIR_DESIGN_FILE.$s_id.'/'.'thumb.png', 'rb');
+                if(!$thumb){
+                    exit('{"status":"ERROR_OPEN_THUMB"}');
+                }
+                header('Content-Type: image/jpeg');
+                header('Content-Length: ' . filesize(Conf::DIR_DESIGN_FILE . $s_id.'/'.'thumb.png'));
+                fpassthru($thumb);
+            }else{
+                exit('{"status":"NO_THUMB"}');
+            }
+        }else{
+            exit('{"status":"NO_SCENE"}');
+        }
     }
 }
