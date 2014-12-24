@@ -3,7 +3,7 @@
  */
 
 (function(){
-    var SCENE_PER_PAGE = 8;
+    var SCENE_PER_PAGE = -1; //get all pages
     function load_scene(page, tags, search){
         var requ = {};
         requ.scene_per_page = SCENE_PER_PAGE;
@@ -19,13 +19,51 @@
                 if ((this.status >= 200 && this.status < 300) || this.status == 304) {
                     var resp = JSON.parse(this.responseText);
                     //refresh_scene_view(resp);
-                    console.log(resp);
+                    refresh_scene_table(resp);
+                    //console.log(resp);
                 }
             }
         });
         xhr.send(form);
     }
 
+    function refresh_scene_table(json){
+        var data = [];
+        for(var i = 0;i < json.scene.length; i++){
+            var cell = JSON.parse(json.scene[i]);
+
+            data.push(cell);
+        }
+        console.log(data);
+        var table = $('#scene-table').DataTable( {
+            destroy:true,
+            language:Config.TABLE_LANG,
+            data:data,
+            //autoWidth:false,
+            "lengthMenu": [[3, 10, 50], [3, 10, 50]],
+            //"scrollX": true,
+            "columnDefs": [
+                { className: "scene-table-id-column", "targets": [ 1 ] }
+            ],
+            columns:[
+                { "data": "name" },
+                { "data": "s_id" },
+                { "data": "modify_date" },
+                { "data": "download_times" },
+                { "data": "views_count" },
+                { "data": "desc" }
+            ]
+        });
+        //$('#container').css( 'display', 'block' );
+        console.log(table);
+        window.addEventListener('resize', function (e) {
+            table.columns.adjust().draw();
+            //console.log('ok');
+        });
+
+
+
+    }
     /*function refresh_scene_view(json){
         $('#scene-view').empty();
         json.scene.forEach(function (element, index, array) {
@@ -52,5 +90,19 @@
     function fill_scene_thumb(id, thumb){
     }
 
-    load_scene(0, []);
+    $(document).ready(function(){
+        $('#scene-table').dataTable( {
+            language:Config.TABLE_LANG
+        });
+        load_scene(0, []);
+        $('#scene-table tbody').on('mousemove', 'tr', function () {
+            var name = $('td', this).eq(1).text();
+            console.log( 'You clicked on '+name+'\'s row' );
+        } );
+
+        $('#scene-table tbody tr').mousemove(function(event){
+            var name = $('td', this).eq(1).text();
+            console.log( 'You entered on '+name+'\'s row' );
+        });
+    });
 })();

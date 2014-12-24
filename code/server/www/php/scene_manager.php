@@ -104,9 +104,16 @@ class SceneManager{
         if(isset($data->sort_by)){
 
         }
-        $now_page = $page_now * $scene_per_page; //Notice: page starts from 0;
-        $query_count = "SELECT COUNT(s_id) AS num FROM ($query)temp";
-        $query = $query." limit $scene_per_page offset $now_page";
+        if($scene_per_page >= 1) {
+            $now_page = $page_now * $scene_per_page; //Notice: page starts from 0;
+            $query_count = "SELECT COUNT(s_id) AS num FROM ($query)temp";
+            $query = $query . " limit $scene_per_page offset $now_page";
+            $result = $db->query($query_count);
+            $row = $result->fetch_assoc();
+            $page_all = ceil(((int)$row['num'])/(int)$scene_per_page);
+        }else{
+            $page_all = -1;
+        }
         //echo $query;
         $result = $db->query($query);
         $scene = array();
@@ -125,9 +132,7 @@ class SceneManager{
                 $scene[$i] = json_encode($scene_obj);
             }
         }
-        $result = $db->query($query_count);
-        $row = $result->fetch_assoc();
-        $page_all = ceil(((int)$row['num'])/(int)$scene_per_page);
+
 
         $response = (object)array();
         $response->status = 'OK';
