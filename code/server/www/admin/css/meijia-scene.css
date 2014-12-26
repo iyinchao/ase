@@ -45,8 +45,12 @@
   float: right;
 }
 .table-striped > tbody > tr:hover {
-  background: #65c3ff;
+  background: #428bca;
   color: #FFF;
+}
+#tags-toggle {
+  margin-bottom: 10px;
+  font-family: "Arial", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
 }
 .table-striped > tbody > tr {
   -webkit-touch-callout: none;
@@ -56,4 +60,20 @@
   -ms-user-select: none;
   user-select: none;
   cursor: pointer;
+}
+.btn.btn-primary.active.bt-tags-expand {
+  background: #E08800;
+  border-color: #935107;
+}
+.well {
+  font-family: "Arial", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+  padding: 10px;
+}
+#bt-new-scene {
+  float: right;
+  font-family: "Arial", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+}
+.btn-tag {
+  background: #EEE;
+  margin: 5px;
 }

@@ -50,7 +50,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a id="mj-main-title" class="navbar-brand" href="index.html">美家秀秀·后台管理系统</a>
+                <a id="mj-main-title" class="navbar-brand" href="index.php">美家秀秀·后台管理系统</a>
             </div>
             <!-- /.navbar-header -->
 
@@ -65,7 +65,7 @@
                         <li><a href="#"><i class="fa fa-gear fa-fw"></i><span>设置</span></a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i><span>退出登录</span></a>
+                        <li><a href="login.php"><i class="fa fa-sign-out fa-fw"></i><span>退出登录</span></a>
                         </li>
                     </ul>
                     <!-- /.dropdown-user -->
@@ -89,40 +89,10 @@
                             <!-- /input-group -->
                         </li>
                         <li>
-                            <a class="mj-sidebar-item active" href="index.html"><i class="fa fa-dashboard fa-fw"></i><span>控制台</span></a>
+                            <a class="mj-sidebar-item active" href="index.php"><i class="fa fa-dashboard fa-fw"></i><span>控制台</span></a>
                         </li>
                         <li>
-                            <a class="mj-sidebar-item" href="scene.html"><i class="fa fa-th fa-fw"></i><span>场景管理</span></a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa fa-sitemap fa-fw"></i> Multi-Level Dropdown<span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
-                                <li>
-                                    <a href="#">Second Level Item</a>
-                                </li>
-                                <li>
-                                    <a href="#">Second Level Item</a>
-                                </li>
-                                <li>
-                                    <a href="#">Third Level <span class="fa arrow"></span></a>
-                                    <ul class="nav nav-third-level">
-                                        <li>
-                                            <a href="#">Third Level Item</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Third Level Item</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Third Level Item</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Third Level Item</a>
-                                        </li>
-                                    </ul>
-                                    <!-- /.nav-third-level -->
-                                </li>
-                            </ul>
-                            <!-- /.nav-second-level -->
+                            <a class="mj-sidebar-item" href="scene.php"><i class="fa fa-th fa-fw"></i><span>场景管理</span></a>
                         </li>
 
                     </ul>

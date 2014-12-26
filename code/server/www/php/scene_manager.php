@@ -40,10 +40,14 @@ class SceneManager{
         $result = $db->query($qs);
         if($result->num_rows == 1){
             $row = $result->fetch_assoc();
-            $n=$row['download_times'];
-            $n=$n+1;
-            $qs = "UPDATE scene set download_times = $n where s_id = '$s_id'";
-            $db->query($qs);
+            if(isset($data->admin_op) && $data->admin_op == true){
+                $name = $row['name'];
+            }else {
+                $n = $row['download_times'];
+                $n = $n + 1;
+                $qs = "UPDATE scene set download_times = $n where s_id = '$s_id'";
+                $db->query($qs);
+            }
             $db->close();
             try{
                 /*$exclude = array(realpath(Conf::DIR_DESIGN_FILE.$s_id.'/thumb.png'));
@@ -56,7 +60,11 @@ class SceneManager{
                 //form response
                 header('Content-Type: application/zip');
                 header('Content-Length: ' . filesize($zipdir));
-                header('Content-Disposition: attachment; filename="scene.zip"');
+                if(isset($data->admin_op) && $data->admin_op == true && isset($name)){
+                    header('Content-Disposition: attachment; filename="scene-'.$name.'-'.$s_id.'.zip"');
+                }else{
+                    header('Content-Disposition: attachment; filename="'.$s_id.'.zip"');
+                }
                 readfile($zipdir);
                 unlink($zipdir); //remove temp
             }else{
@@ -129,7 +137,7 @@ class SceneManager{
                 }else{
                     //$scene_obj->thumb = '';
                 }*/
-                $scene[$i] = json_encode($scene_obj);
+                $scene[$i] = $scene_obj;
             }
         }
 
@@ -164,6 +172,222 @@ class SceneManager{
             }
         }else{
             exit('{"status":"NO_SCENE"}');
+        }
+    }
+
+    public static function get_meta_by_id($data){
+        //test if s_id data is set
+        if(!isset($data->s_id)){
+            exit('{"status":"INVALID_DATA"}');
+        }
+
+        //create connection
+        try{
+            $db = DBConn::connect();
+        }catch (Exception $e){
+            exit('{"status":"ERROR_DB_CONN","error_message:"'.$e->getMessage().'"}');
+        }
+        //prevent inject attack
+        //TODO: special check, such as length & charset
+        $s_id = mysqli_real_escape_string($db, $data->s_id);
+        $qs = "SELECT * FROM scene WHERE s_id ='$s_id'";
+        $result = $db->query($qs);
+        if($result->num_rows == 1){
+            $scene_obj = (object)array();
+            $row = $result->fetch_assoc();
+            foreach($row as $name => $value){
+                $scene_obj->$name = $value;
+            }
+            /*if(file_exists(Conf::DIR_DESIGN_FILE.$row['s_id'].'/thumb.png')){
+                //$scene_obj->thumb = base64_encode(file_get_contents(Conf::DIR_DESIGN_FILE.$row['s_id'].'/thumb.png'));
+            }else{
+                //$scene_obj->thumb = '';
+            }*/
+            echo json_encode($scene_obj);
+        }else{
+            exit('{"status":"NO_SCENE"}');
+        }
+
+    }
+
+    static public function update_one($data)
+    {
+        date_default_timezone_set('Asia/Shanghai');
+        //database connect
+        try {
+            $db = DBConn::connect();
+        } catch (Exception $e) {
+            exit('{"status":"ERROR_DB_CONN","error_message:"' . $e->getMessage() . '"}');
+        }
+        if (!isset($data->{'s_id'})) {
+            exit('{"status":"INVALID_DATA"}');
+        } else {
+            $s_id = mysqli_real_escape_string($db, $data->{'s_id'});
+        }
+        $time = date("Y-m-d H:i:s", time());
+        $query = "update scene set modify_date= '" . "$time" . "' ";
+        if (isset($data->{'name'})) {
+            $name = mysqli_real_escape_string($db, $data->{'name'});
+            $query = $query . ",name = '" . $name . "'";
+        }
+        if (isset($data->{'designer'})) {
+            $designer = mysqli_real_escape_string($db, $data->{'designer'});
+            $query = $query . ",designer = '$designer' ";
+        }
+        if (isset($data->{'views_count'})) {
+            $views_count = mysqli_real_escape_string($db, $data->{'views_count'});
+            $query = $query . ",views_count = '$views_count' ";
+        }
+        if (isset($data->{'desc'})) {
+            $desc = mysqli_real_escape_string($db, $data->{'desc'});
+            $query = $query . ",`desc` = '$desc' ";
+        }
+        $query = $query . " where s_id = '" . $s_id . "'";
+        $result = $db->query($query);  //执行SQL
+        if ($result) {
+            echo('{"status":"OK"}');
+        } else {
+            exit('{"status":"ERROR_UPDATE"}');
+        }
+        $db->close();  //一定记得在用完数据库后关闭！！
+    }
+
+    public static function get_new_b_id(){
+        $new_b_id = UUID::gen_b_id();
+        $response = (object)array();
+        $response->new_b_id = $new_b_id;
+        echo (json_encode($response));
+    }
+
+    public static function add($data){
+        date_default_timezone_set('Asia/Shanghai');
+        //database connect
+        try {
+            $db = DBConn::connect();
+        } catch (Exception $e) {
+            exit('{"status":"ERROR_DB_CONN","error_message:"' . $e->getMessage() . '"}');
+        }
+        if (!isset($data->{'s_id'})) {
+            exit('{"status":"INVALID_DATA"}');
+        } else {
+            $s_id = mysqli_real_escape_string($db, $data->{'s_id'});
+        }
+        if (!isset($data->{'b_id'})) {
+            exit('{"status":"INVALID_DATA"}');
+        } else {
+            $b_id = mysqli_real_escape_string($db, $data->{'b_id'});
+        }
+        if (!isset($data->{'name'})) {
+            exit('{"status":"INVALID_DATA"}');
+        } else {
+            $name = mysqli_real_escape_string($db, $data->{'name'});
+        }
+        if (!isset($data->{'views_count'})) {
+            exit('{"status":"INVALID_DATA"}');
+        } else {
+            $views_count = mysqli_real_escape_string($db, $data->{'views_count'});
+        }
+        if (!isset($data->{'desc'})) {
+            $desc = "";
+        } else {
+            $desc = mysqli_real_escape_string($db, $data->{'desc'});
+        }
+        if (!isset($data->{'designer'})) {
+            $designer = "";
+        } else {
+            $designer = mysqli_real_escape_string($db, $data->{'designer'});
+        }
+
+        $modify_date = date("Y-m-d H:i:s", time());
+
+        if(isset($_FILES) && isset($_FILES['file']) && $_FILES['file']['error'] != 1 && $_FILES['file']['tmp_name'] != ''){
+            $file = $_FILES['file'];
+        }else{
+            exit('{"status":"ERROR_INVALID_FILE"}');
+        }
+
+        $query = "insert into scene values('$s_id','$b_id','$name','$modify_date','$designer','$desc',0,'$views_count')";
+
+        $result = $db->query($query);  //执行SQL
+        if ($result) {
+            //move_uploaded_file();
+            //move_uploaded_file($file['tmp_name'], )
+            //$tmp = explode('\\',tempnam('/','unzip'));
+            //echo ($tmp[count($tmp) -1]);
+            //ZipCon::unzip($file['tmp_name'], Conf::DIR_TMP.$tmp[count($tmp) -1]);
+            if(file_exists(Conf::DIR_DESIGN_FILE.$s_id)){
+                if(is_dir(Conf::DIR_DESIGN_FILE.$s_id)){
+                    $it = new RecursiveDirectoryIterator(Conf::DIR_DESIGN_FILE.$s_id, RecursiveDirectoryIterator::SKIP_DOTS);
+                    $files = new RecursiveIteratorIterator($it,
+                        RecursiveIteratorIterator::CHILD_FIRST);
+                    foreach($files as $file) {
+                        if ($file->isDir()){
+                            rmdir($file->getRealPath());
+                        } else {
+                            unlink($file->getRealPath());
+                        }
+                    }
+                    rmdir(Conf::DIR_DESIGN_FILE.$s_id);
+                }else{
+                    unlink(Conf::DIR_DESIGN_FILE.$s_id);
+                }
+            }
+            try {
+                ZipCon::unzip($file['tmp_name'], Conf::DIR_DESIGN_FILE . $s_id);
+            }catch (Exception $e){
+                $query = "delete from scene where s_id = '$s_id'";
+                $db->query($query);
+                exit('{"status":"ERROR_UNZIP"}');
+            }
+        }else{
+            exit('{"status":"ERROR_DB_INSERT"}');
+        }
+
+        $db->close();
+
+        $response = (object)array();
+        $response->status = 'OK';
+        echo (json_encode($response));
+    }
+
+    public static function delete_one($data){
+        //database connect
+        try {
+            $db = DBConn::connect();
+        } catch (Exception $e) {
+            exit('{"status":"ERROR_DB_CONN","error_message:"' . $e->getMessage() . '"}');
+        }
+        if (!isset($data->{'s_id'})) {
+            echo "ddd";
+            exit('{"status":"INVALID_DATA"}');
+        } else {
+            $s_id = mysqli_real_escape_string($db, $data->{'s_id'});
+        }
+
+        $query = "delete from scene where s_id='" . $s_id . "'";
+
+        $result = $db->query($query);
+        if($result){
+            if(file_exists(Conf::DIR_DESIGN_FILE.$s_id)){
+                if(is_dir(Conf::DIR_DESIGN_FILE.$s_id)){
+                    $it = new RecursiveDirectoryIterator(Conf::DIR_DESIGN_FILE.$s_id, RecursiveDirectoryIterator::SKIP_DOTS);
+                    $files = new RecursiveIteratorIterator($it,
+                        RecursiveIteratorIterator::CHILD_FIRST);
+                    foreach($files as $file) {
+                        if ($file->isDir()){
+                            rmdir($file->getRealPath());
+                        } else {
+                            unlink($file->getRealPath());
+                        }
+                    }
+                    rmdir(Conf::DIR_DESIGN_FILE.$s_id);
+                }else{
+                    unlink(Conf::DIR_DESIGN_FILE.$s_id);
+                }
+            }
+            echo ('{"status":"OK"}');
+        }else{
+            echo ('{"status":"ERROR_DB_DELETE"}');
         }
     }
 }

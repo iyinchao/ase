@@ -21,15 +21,16 @@ public:
     static Scene* scene();  
        
 	CREATE_FUNC(MScrollView);  
-	void addSceneBorder(cocos2d::Sprite* sprite, int itemrows, int itemcols, int page, int itemnum);
-	void addScenePic(cocos2d::Sprite* sprite, int itemrows, int itemcols, int page, int itemnum);
+	//static MScrollView* createScroll(const int sceneNum);
+	void addSceneBorder(cocos2d::Sprite* mainScene, int itemrows, int itemcols, int page, int itemnum);
+	void addScenePic(cocos2d::Sprite* mainScene, int itemrows, int itemcols, int page, int itemnum);
    
     //ÏìÓ¦´¥ÃþÊÂ¼þ  
 	bool onTouchBegan(Touch* Touch, Event* Event);  
     void onTouchEnded(Touch* Touch, Event* Event); 
 
 	void setOutMenu(cocos2d::Menu* _outMenu);
-	void initScrollView();
+	void initScrollView(const int _sceneNum, std::vector<std::string>& _sceneID);
 
 	cocos2d::Menu* menu;
 
@@ -41,6 +42,7 @@ private:
 	Point ptDown;
     Node* _contaner;
 	int sceneNum;
+	std::vector<std::string> sceneID;
 	cocos2d::extension::ScrollView* view;
 };  
    

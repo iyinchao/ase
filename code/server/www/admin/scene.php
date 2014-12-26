@@ -49,7 +49,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a id="mj-main-title" class="navbar-brand" href="index.html">美家秀秀·场景管理</a>
+                <a id="mj-main-title" class="navbar-brand" href="index.php">美家秀秀·场景管理</a>
             </div>
             <!-- /.navbar-header -->
 
@@ -64,7 +64,7 @@
                         <li><a href="#"><i class="fa fa-gear fa-fw"></i><span>设置</span></a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i><span>退出登录</span></a>
+                        <li><a href="login.php"><i class="fa fa-sign-out fa-fw"></i><span>退出登录</span></a>
                         </li>
                     </ul>
                     <!-- /.dropdown-user -->
@@ -88,40 +88,10 @@
                             <!-- /input-group -->
                         </li>
                         <li>
-                            <a class="mj-sidebar-item" href="index.html"><i class="fa fa-dashboard fa-fw"></i><span>控制台</span></a>
+                            <a class="mj-sidebar-item" href="index.php"><i class="fa fa-dashboard fa-fw"></i><span>控制台</span></a>
                         </li>
                         <li>
-                            <a class="mj-sidebar-item active" href="scene.html"><i class="fa fa-th fa-fw"></i><span>场景管理</span></a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa fa-sitemap fa-fw"></i> Multi-Level Dropdown<span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
-                                <li>
-                                    <a href="#">Second Level Item</a>
-                                </li>
-                                <li>
-                                    <a href="#">Second Level Item</a>
-                                </li>
-                                <li>
-                                    <a href="#">Third Level <span class="fa arrow"></span></a>
-                                    <ul class="nav nav-third-level">
-                                        <li>
-                                            <a href="#">Third Level Item</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Third Level Item</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Third Level Item</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Third Level Item</a>
-                                        </li>
-                                    </ul>
-                                    <!-- /.nav-third-level -->
-                                </li>
-                            </ul>
-                            <!-- /.nav-second-level -->
+                            <a class="mj-sidebar-item active" href="scene.php"><i class="fa fa-th fa-fw"></i><span>场景管理</span></a>
                         </li>
 
                     </ul>
@@ -140,8 +110,34 @@
                 <!-- /.col-lg-12 -->
             </div>
             <div class="row">
-                <div class="col-lg-12">
+                <?php
+                if(isset($_POST['mode'])){
+                    if($_POST['mode'] == 'modify-success'){
+                        echo '<div class="alert alert-success tobefade" role="alert"><i class="fa fa-check"></i>&nbsp;成功修改场景元数据</div>';
+                    }
+                    if($_POST['mode'] == 'add-success'){
+                        echo '<div class="alert alert-success tobefade" role="alert"><i class="fa fa-check"></i>&nbsp;成功增加场景</div>';
+                    }
+                    if($_POST['mode'] == 'delete-success'){
+                        echo '<div class="alert alert-success tobefade" role="alert"><i class="fa fa-check"></i>&nbsp;成功删除场景</div>';
+                    }
+                }
+                ?>
 
+            </div>
+            <div class="row">
+
+                <div class="col-lg-12">
+                    <button id="bt-new-scene" type="button" class="btn btn-success" style="float:right"><i class="fa fa-plus"></i>&nbsp;添加场景</button>
+                    <a id="tags-toggle" class="btn btn-primary" data-toggle="collapse" href="#tags-panel" aria-expanded="false" aria-controls="collapseExample">
+                       按标签筛选&nbsp;<i class="fa fa-chevron-down"></i>
+                    </a>
+
+                    <div class="collapse" id="tags-panel">
+                        <div class="well">
+                            正在获取标签...
+                        </div>
+                    </div>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -154,6 +150,7 @@
                 <tr>
                     <th>场景名称</th>
                     <th>ID</th>
+                    <th>设计师</th>
                     <th>修改日期</th>
                     <th>下载次数</th>
                     <th>视角数目</th>
@@ -165,6 +162,7 @@
                 <tr>
                     <th>场景名称</th>
                     <th>ID</th>
+                    <th>设计师</th>
                     <th>修改日期</th>
                     <th>下载次数</th>
                     <th>视角数目</th>

@@ -5,7 +5,7 @@
 ~$*.doc*
 
 ############personal################
-#Yinchao
+##Yinchao
 #phpstorm project settings
 .idea
 
@@ -20,4 +20,7 @@
 
 #sass compile cache 
 .sass-cache
+
+#Too much test design scene, so decide to exclude filestore/design
+code/server/filestore/design/*
 #####################################
