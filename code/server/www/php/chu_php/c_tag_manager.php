@@ -17,7 +17,7 @@ switch ($_GET['op']) {
         $data = json_decode($_GET['data']); //解析json（其实应该加上try/catch）
         TagManager::update($data); //调用方法
         break;
-    case 'delete':     //删除场景
+    case 'delete':     //删除标签
         if(!isset($_GET['data']))  exit('{"status:"NO_REQ_DATA"}');
         $data = json_decode($_GET['data']); //解析json（其实应该加上try/catch）
         TagManager::delete($data); //调用方法
@@ -29,6 +29,11 @@ switch ($_GET['op']) {
         break;
     case 'get_tags':   //获得标签
         TagManager::get_tags();
+        break;
+    case 'update_tag_scene':   //更新场景的标签
+        if(!isset($_GET['data']))  exit('{"status:"NO_REQ_DATA"}');
+        $data = json_decode($_GET['data']); //解析json（其实应该加上try/catch）
+        TagManager::update_tag_scene($data); //调用方法
         break;
 }
 
@@ -146,4 +151,64 @@ class TagManager{
         $db->close();
     }
 
+    static public function update_tag_scene($data)     //更新场景标签
+    {
+        //database connect
+        try{
+            $db = DBConn::connect();
+        }catch (Exception $e){
+            exit('{"status":"ERROR_DB_CONN","error_message:"'.$e->getMessage().'"}');
+        }
+        if(!isset($data->{'s_id'})){
+            exit('{"status":"INVALID_DATA"}');
+        } else { $s_id = mysqli_real_escape_string($db, $data->{'s_id'});}
+        if(!isset($data->{'tags'})){
+            exit('{"status":"INVALID_DATA"}');
+        }else {$tags = (array)$data->tags;}
+
+        $response = (object)array();
+        $response->result = 'ok';
+        $query = "delete from tag_scene where s_id = '$s_id'";
+        $result=$db->query($query);
+        if(!$result) $response->result='no';
+        if(sizeof($tags) != 0){
+            for($i = 0; $i < sizeof($tags); $i++){
+                $tag = mysqli_real_escape_string($db,$tags[$i]);
+                $query = "insert into tag_scene values('$s_id',$tag)";
+                $result=$db->query($query);
+                if(!$result) $response->result='no';
+            }
+        }
+        echo json_encode($response);
+        $db->close();  //一定记得在用完数据库后关闭！！
+    }
+
+    static public function tag_delete_scene($s_id)  //删除场景的标签处理
+    {
+        try {
+            $db = DBConn::connect();
+        } catch (Exception $e) {
+            exit('{"status":"ERROR_DB_CONN","error_message:"' . $e->getMessage() . '"}');
+        }
+        $query = "delete from tag_scene where s_id = '$s_id'";
+        $result = $db->query($query);
+        $db->close();
+    }
+
+    static public function tag_delete_tag($tags)   //删除标签的处理,此处的输入为数组
+    {
+        try {
+            $db = DBConn::connect();
+        } catch (Exception $e) {
+            exit('{"status":"ERROR_DB_CONN","error_message:"' . $e->getMessage() . '"}');
+        }
+        if(sizeof($tags) != 0){
+            for($i = 0; $i < sizeof($tags); $i++){
+                $tag = mysqli_real_escape_string($db,$tags[$i]);
+                $query = "delete from tag_scene where tag= $tag";
+                $result=$db->query($query);
+            }
+        }
+        $db->close();
+    }
 }
