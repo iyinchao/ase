@@ -9,7 +9,10 @@
 #include "MScrollView.h"
 
 USING_NS_CC;
+USING_NS_CC_EXT;
+//using namespace gui;
 using namespace cocos2d::network;
+using namespace cocos2d;
 
 Scene* MeijiaMain::createScene()
 {
@@ -33,6 +36,54 @@ bool MeijiaMain::init()
     {
         return false;
     }
+    
+	sceneNum = SCENESUM;
+
+	// *** 客户端本地初始化 ***
+    Size visibleSize = Director::getInstance()->getVisibleSize();
+    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+    // add a "close" icon to exit the progress. it's an autorelease object
+    auto searchItem = MenuItemImage::create(
+                                           "SearchNormal.png",
+                                           "SearchSelected.png",
+                                           CC_CALLBACK_1(MeijiaMain::menuSearchCallback, this));
+    
+	searchItem->setPosition(Vec2(origin.x + visibleSize.width - searchItem->getContentSize().width/2 - 20,
+        origin.y + searchItem->getContentSize().height/2 + 10));
+
+	userItem = MenuItemImage::create(
+                                    "UserNormal.png",
+                                    "UserSelected.png",
+                                    CC_CALLBACK_1(MeijiaMain::menuLoginCallback, this));
+
+	userItem->setPosition(Vec2(origin.x + visibleSize.width - userItem->getContentSize().width/2 - 20,
+		visibleSize.height - userItem->getContentSize().height/2 - 30));
+
+    // create menu, it's an autorelease object
+    menu = Menu::create(searchItem, userItem, NULL);
+    menu->setPosition(Vec2::ZERO);
+
+	mainBg = Sprite::create("MainBg.png", Rect(0, 0, 1024, 768));
+	mainBg->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
+
+	vector<string> test;
+	//test.push_back("0b7587a9-940c-4965-9cbc-45c3a1380ae5");
+	for(int i=1; i<sceneNum; i++)
+		test.push_back("0b7587a9-940c-4965-9cbc-45c3a1380ae5");
+
+	//voidBg = MScrollView::create();
+	//voidBg->initScrollView(9, test);
+	//voidBg->setPosition(0, 0);
+	this->addScrollView(test.capacity(), test);
+
+	//mainBg->addChild(voidBg, 0);
+	//voidBg->addChild(menu, 0);
+	//voidBg->addChild(menu, 1);
+
+    this->addChild(mainBg, 0);
+
+	userVerify = false;
 
 	//// *** 客户端与服务器链接初始化 ***
 	//// 生成传输给服务器端的.json 文件
@@ -65,68 +116,32 @@ bool MeijiaMain::init()
 	//request->setTag("POST test");
 	//HttpClient::getInstance()->send(request);
 	//request->release();
-    
-	// *** 客户端本地初始化 ***
-    Size visibleSize = Director::getInstance()->getVisibleSize();
-    Vec2 origin = Director::getInstance()->getVisibleOrigin();
-
-    // add a "close" icon to exit the progress. it's an autorelease object
-    auto searchItem = MenuItemImage::create(
-                                           "SearchNormal.png",
-                                           "SearchSelected.png",
-                                           CC_CALLBACK_1(MeijiaMain::menuSearchCallback, this));
-    
-	searchItem->setPosition(Vec2(origin.x + visibleSize.width - searchItem->getContentSize().width/2 - 20,
-        origin.y + searchItem->getContentSize().height/2 + 10));
-
-	userItem = MenuItemImage::create(
-                                    "UserNormal.png",
-                                    "UserSelected.png",
-                                    CC_CALLBACK_1(MeijiaMain::menuLoginCallback, this));
-
-	userItem->setPosition(Vec2(origin.x + visibleSize.width - userItem->getContentSize().width/2 - 20,
-		visibleSize.height - userItem->getContentSize().height/2 - 30));
-
-    // create menu, it's an autorelease object
-    menu = Menu::create(searchItem, userItem, NULL);
-    menu->setPosition(Vec2::ZERO);
-
-	auto mainBg = Sprite::create("MainBg.png", Rect(0, 0, 1024, 768));
-	mainBg->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
-
-	//auto voidBg = Layer::create();
-	//voidBg->setPosition(mainBg->getContentSize().width/2, mainBg->getContentSize().height/2);
-	voidBg = MScrollView::create();
-	voidBg->setPosition(0, 0);
-
-	//addSceneBorder(voidBg);
-	//addScenePic(voidBg);
-
-	mainBg->addChild(voidBg, 0);
-	voidBg->addChild(menu, 0);
-	//voidBg->addChild(menu, 1);
-
-    // add the sprite as a child to this layer
-
-    this->addChild(mainBg, 0);
-
-	userVerify = false;
 
     return true;
 }
 
+void MeijiaMain::addScrollView(int _sceneNum, vector<string>& _test)
+{
+	voidBg = MScrollView::create();
+	voidBg->initScrollView(_sceneNum, _test);
+	voidBg->setPosition(0, 0);
+	mainBg->addChild(voidBg, 0);
+	voidBg->addChild(menu, 0);
+
+	return;
+}
+
 void MeijiaMain::menuSearchCallback(Ref* pSender)
 {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_WP8) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
-	MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.","Alert");
-    return;
-#endif
+	//auto uiLayout = cocostudio::GUIReader::getInstance()->widgetFromJsonFile("SelectPlane.json");
+	//Director::getInstance()->end();
 
-    Director::getInstance()->end();
-
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    exit(0);
-#endif
+	searchtest = SearchDlg::create();
+	this->addChild(searchtest, 10);
+	searchtest->setOutMenu(menu);
+	searchtest->setSceneMenu(voidBg->menu);
+	//voidBg->menu->setEnabled(false);
+	//menu->setEnabled(false);
 }
 
 void MeijiaMain::menuLoginCallback(Ref* pSender)
@@ -137,8 +152,8 @@ void MeijiaMain::menuLoginCallback(Ref* pSender)
 	else{
 		logintest = LoginDlg::create();
 		this->addChild(logintest, 10);
-		logintest->setOutMenu(menu);
-		logintest->setSceneMenu(voidBg->menu);
+		//logintest->setOutMenu(menu);
+		//logintest->setSceneMenu(voidBg->menu);
 		//voidBg->menu->setEnabled(false);
 		//menu->setEnabled(false);
 
@@ -148,55 +163,55 @@ void MeijiaMain::menuLoginCallback(Ref* pSender)
 	return;
 }
 
-void MeijiaMain::sceneBorderCallback(cocos2d::Ref* pSender, int id)
-{
-	ConfirmDlg *layertest = ConfirmDlg::create();
-	std::string _dlgID;
-	std::string titlestr("TITLE");
-	std::string intro("intro\nintro\nintro\nintro\n");
-	switch(id){
-	case 0:
-		//layertest = ConfirmDlg::create();
-		_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
-		layertest->setID(_dlgID);
-		break;
-	case 1:
-		//layertest = ConfirmDlg::create();
-		_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
-		layertest->setID(_dlgID);
-		break;
-	case 2:
-		//layertest = ConfirmDlg::create();
-		_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
-		layertest->setID(_dlgID);
-		break;
-	case 3:
-		//layertest = ConfirmDlg::create();
-		_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
-		layertest->setID(_dlgID);
-		break;
-	case 4:
-		layertest = ConfirmDlg::create();
-		_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
-		layertest->setID(_dlgID);
-		break;
-	case 5:
-		layertest = ConfirmDlg::create();
-		_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
-		layertest->setID(_dlgID);
-		break;
-	default:
-		MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.","Alert");
-		return;
-	}
-
-	// CCLOG(_dlgID);
-	layertest->initLabel(intro, titlestr);
-	layertest->setSceneMenu(menu);
-	this->addChild(layertest, 10);
-	menu->setEnabled(false);
-	return;
-}
+//void MeijiaMain::sceneBorderCallback(cocos2d::Ref* pSender, int id)
+//{
+//	ConfirmDlg *layertest = ConfirmDlg::create();
+//	std::string _dlgID;
+//	std::string titlestr("TITLE");
+//	std::string intro("intro\nintro\nintro\nintro\n");
+//	switch(id){
+//	case 0:
+//		//layertest = ConfirmDlg::create();
+//		_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
+//		layertest->setID(_dlgID);
+//		break;
+//	case 1:
+//		//layertest = ConfirmDlg::create();
+//		_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
+//		layertest->setID(_dlgID);
+//		break;
+//	case 2:
+//		//layertest = ConfirmDlg::create();
+//		_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
+//		layertest->setID(_dlgID);
+//		break;
+//	case 3:
+//		//layertest = ConfirmDlg::create();
+//		_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
+//		layertest->setID(_dlgID);
+//		break;
+//	case 4:
+//		layertest = ConfirmDlg::create();
+//		_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
+//		layertest->setID(_dlgID);
+//		break;
+//	case 5:
+//		layertest = ConfirmDlg::create();
+//		_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
+//		layertest->setID(_dlgID);
+//		break;
+//	default:
+//		MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.","Alert");
+//		return;
+//	}
+//
+//	// CCLOG(_dlgID);
+//	layertest->initLabel(intro, titlestr);
+//	layertest->setSceneMenu(menu);
+//	this->addChild(layertest, 10);
+//	menu->setEnabled(false);
+//	return;
+//}
 
 Texture2D* MeijiaMain::Base64toTex(std::string bfile)
 {

@@ -12,18 +12,36 @@ CCScene* MScrollView::scene()
     return scene;  
 }  
 
+//static MScrollView* MScrollView::createScroll(const int _sceneNum)
+//{ 
+//	MScrollView *pRet = new MScrollView();
+//	pRet->sceneNum = _sceneNum;
+//    if (pRet && pRet->init())
+//    {
+//        pRet->autorelease();
+//        return pRet;
+//    }
+//    else
+//    {
+//        delete pRet;
+//        pRet = NULL;
+//        return NULL;
+//    }
+//}
+
 bool MScrollView::init()  
 {  
     CCLayer::init();  
 	//this->setAnchorPoint(Vec2(0, 0));
-	sceneNum = SCENESUM;
-
-	initScrollView();
     return true;  
 }  
 
-void MScrollView::initScrollView()
+void MScrollView::initScrollView(const int _sceneNum, std::vector<std::string>& _sceneID)
 {
+	sceneNum	= _sceneNum;
+	sceneID		= _sceneID;
+	cocos2d::log(_sceneID[0].c_str());
+
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();  
    
     CCPoint center = ccp(winSize.width / 2, winSize.height / 2); 
@@ -33,6 +51,7 @@ void MScrollView::initScrollView()
    
     _contaner = c;  
     
+	int sumpage = (sceneNum%6 == 0)? (int)(sceneNum / 6) : (int)(sceneNum / 6 + 1);
 	for(int i = 0; i < (int)(sceneNum / 6); i++)  
     {  
 		Sprite* sprite = Sprite::create("voidBg.png");
@@ -46,10 +65,10 @@ void MScrollView::initScrollView()
    
         //给视图编号  
         char buf[10];  
-        sprintf(buf, "%d/%d", i + 1, (int)(sceneNum / 6 + 1));  
+        sprintf(buf, "%d/%d", i + 1, sumpage);  
         CCLabelTTF* label = CCLabelTTF::create(buf, "Arial", 36);     
         sprite->addChild(label);  
-        label->setPosition(center);  
+		label->setPosition(Vec2(winSize.width / 2, winSize.height / 8));  
     }  
 
 	// 防止出现最后一页填不满
@@ -68,7 +87,7 @@ void MScrollView::initScrollView()
         sprintf(buf, "%d/%d", sceneNum/6 + 1, (int)(sceneNum / 6 + 1));  
         CCLabelTTF* label = CCLabelTTF::create(buf, "Arial", 36);     
         sprite->addChild(label);  
-        label->setPosition(center);  
+        label->setPosition(Vec2(winSize.width / 2, winSize.height / 8));  
 	}
    
     //滚动视图  
@@ -81,7 +100,14 @@ void MScrollView::initScrollView()
 	view->setDirection(ScrollView::Direction::HORIZONTAL);  
    
     //设置视图的宽度和高度  
-    view->setContentSize(Size(winSize.width * (int)(sceneNum / 6 + 1), winSize.height));  
+	if(sceneNum % 6 == 0)
+	{
+		view->setContentSize(Size(winSize.width * (int)(sceneNum / 6), winSize.height)); 
+	}
+	else
+	{
+		view->setContentSize(Size(winSize.width * (int)(sceneNum / 6 + 1), winSize.height));  
+	}
    
      //取消ScrollView的弹性     
     view->setBounceable(false);    
@@ -156,6 +182,7 @@ void MScrollView::addSceneBorder(Sprite* sprite, int itemrows, int itemcols, int
 {
 	menu = Menu::create();
 	int index;
+	index += (page - 1) * 6;
 	for(int i=0; i<itemrows; i++)
 		for(int j=0; j<itemcols; j++)
 		{
@@ -166,7 +193,7 @@ void MScrollView::addSceneBorder(Sprite* sprite, int itemrows, int itemcols, int
 												"BorderSelected.png",
 												//CC_CALLBACK_2(MScrollView::sceneBorderCallback, this, index, menu));
 												CC_CALLBACK_1(MScrollView::sceneBorderCallback, this, index, menu));
-			// sceneBorder[index]->setScale(2.f);
+			sceneBorder[index]->setScale(0.9f);
 			sceneBorder[index]->setPosition(Vec2( sprite->getContentSize().width/(itemcols+1)*(j+1),
 				sprite->getContentSize().height - sprite->getContentSize().height/(itemrows+1)*(i+1) ));
 
@@ -188,7 +215,35 @@ void MScrollView::addSceneBorder(Sprite* sprite, int itemrows, int itemcols, int
 
 void MScrollView::addScenePic(Sprite* sprite, int itemrows, int itemcols, int page, int itemnum)
 {
-	int index;
+	int index = 0;
+    if(index+1 <= itemnum){
+		//scenePic[0] = Sprite::create("6d05d6ba-4ca2-523c-8a15-adbbfe4f2265.jpg");
+		//scenePic[0] = Sprite::create(sceneID[(page-1)*6 + index] + ".jpg");
+		scenePic[0] = Sprite::create(sceneID[0] + ".jpg");
+		log(sceneID[0].c_str());
+		index++;
+	}
+    if(index+1 <= itemnum){
+		scenePic[1] = Sprite::create("6d05d6ba-4ca2-523c-8a15-adbbfe4f2265.jpg");
+		index++;
+	}
+    if(index+1 <= itemnum){
+		scenePic[2] = Sprite::create("6d05d6ba-4ca2-523c-8a15-adbbfe4f2265.jpg");
+		index++;
+	}
+    if(index+1 <= itemnum){
+		scenePic[3] = Sprite::create("6d05d6ba-4ca2-523c-8a15-adbbfe4f2265.jpg");
+		index++;
+	}
+    if(index+1 <= itemnum){
+		scenePic[4] = Sprite::create("6d05d6ba-4ca2-523c-8a15-adbbfe4f2265.jpg");
+		index++;
+	}
+    if(index+1 <= itemnum){
+		scenePic[5] = Sprite::create("6d05d6ba-4ca2-523c-8a15-adbbfe4f2265.jpg");
+		index++;
+	}
+
 	for(int i=0; i<itemrows; i++)
 		for(int j=0; j<itemcols; j++)
 		{
@@ -196,7 +251,7 @@ void MScrollView::addScenePic(Sprite* sprite, int itemrows, int itemcols, int pa
 			// 防止最后一页不够放满 6 个
 			if(index+1 > itemnum) return;
 
-			scenePic[index] = Sprite::create("6d05d6ba-4ca2-523c-8a15-adbbfe4f2265.jpg");
+			//scenePic[index] = Sprite::create("6d05d6ba-4ca2-523c-8a15-adbbfe4f2265.jpg");
 			scenePic[index]->setPosition(sceneBorder[index]->getPosition().x, sceneBorder[index]->getPosition().y);
 
 			sprite->addChild(scenePic[index], 0);
@@ -211,41 +266,45 @@ void MScrollView::sceneBorderCallback(cocos2d::Ref* pSender, int id, cocos2d::Me
 	std::string _dlgID;
 	std::string titlestr("TITLE");
 	std::string intro("intro\nintro\nintro\nintro\n");
-	switch(id){
-	case 0:
-		//layertest = ConfirmDlg::create();
-		_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
-		layertest->setID(_dlgID);
-		break;
-	case 1:
-		//layertest = ConfirmDlg::create();
-		_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
-		layertest->setID(_dlgID);
-		break;
-	case 2:
-		//layertest = ConfirmDlg::create();
-		_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
-		layertest->setID(_dlgID);
-		break;
-	case 3:
-		//layertest = ConfirmDlg::create();
-		_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
-		layertest->setID(_dlgID);
-		break;
-	case 4:
-		layertest = ConfirmDlg::create();
-		_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
-		layertest->setID(_dlgID);
-		break;
-	case 5:
-		layertest = ConfirmDlg::create();
-		_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
-		layertest->setID(_dlgID);
-		break;
-	default:
-		MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.","Alert");
-		return;
-	}
+
+//// ***** new *****
+	layertest->setID(sceneID[id]);
+
+	//switch(id){
+	//case 0:
+	//	//layertest = ConfirmDlg::create();
+	//	_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
+	//	layertest->setID(_dlgID);
+	//	break;
+	//case 1:
+	//	//layertest = ConfirmDlg::create();
+	//	_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
+	//	layertest->setID(_dlgID);
+	//	break;
+	//case 2:
+	//	//layertest = ConfirmDlg::create();
+	//	_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
+	//	layertest->setID(_dlgID);
+	//	break;
+	//case 3:
+	//	//layertest = ConfirmDlg::create();
+	//	_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
+	//	layertest->setID(_dlgID);
+	//	break;
+	//case 4:
+	//	layertest = ConfirmDlg::create();
+	//	_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
+	//	layertest->setID(_dlgID);
+	//	break;
+	//case 5:
+	//	layertest = ConfirmDlg::create();
+	//	_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
+	//	layertest->setID(_dlgID);
+	//	break;
+	//default:
+	//	MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.","Alert");
+	//	return;
+	//}
 
 	// CCLOG(_dlgID);
 	layertest->initLabel(intro, titlestr);

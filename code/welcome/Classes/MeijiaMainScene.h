@@ -7,7 +7,12 @@
 #include "network\HttpResponse.h"
 #include "LoginDlg.h"
 #include "MScrollView.h"
+#include "SearchDlg.h"
+#include "cocos-ext.h"
+#include "ui\CocosGUI.h"
+#include "editor-support\cocostudio\CocoStudio.h"
 
+#define SCENESUM 9
 #define ITEMCOLS 3
 #define ITEMROWS 2
 
@@ -35,6 +40,7 @@ public:
     CREATE_FUNC(MeijiaMain);
 	void addSceneBorder(cocos2d::Layer* mainScene);
 	void addScenePic(cocos2d::Layer* mainScene);
+	void addScrollView(int _sceneNum, std::vector<std::string>& _test);
 
 	cocos2d::Texture2D* Base64toTex(std::string bfile);
 	void updateCustom(float dt);
@@ -44,6 +50,8 @@ public:
 	bool userVerify;
 	cocos2d::Menu* menu;
 	MScrollView* voidBg;
+	cocos2d::Sprite* mainBg;
+	int sceneNum;
 
 private:
 	cocos2d::MenuItemImage * sceneBorder[6];
@@ -51,6 +59,7 @@ private:
 	cocos2d::MenuItemImage * settingItem;
 	cocos2d::network::HttpRequest* request;
 	LoginDlg *logintest;
+	SearchDlg *searchtest;
 };
 
 #endif // __MEIJIA_MAIN_SCENE_H__
