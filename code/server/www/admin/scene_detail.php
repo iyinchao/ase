@@ -198,6 +198,10 @@
                         </div>
                     </div>
                 </div>
+                <label for="tag-panel">选择标签</label>
+                <div id="tag-panel" class="well">
+                    正在获取标签...
+                </div>
                 <div class="form-group">
                     <label class="control-label" for="form-desc">场景描述</label>
                     <textarea id="form-desc" class="form-control" rows="4" style="max-width: 450px"></textarea>
@@ -205,6 +209,7 @@
                 <button id="scene-submit" type="button" class="btn btn-primary">Text</button>
                 <button  id="scene-delete" type="button" class="btn btn-danger">删除场景</button>
             </div>
+
             <!-- /.col-lg-12 -->
         </div>
         <!-- /.row -->

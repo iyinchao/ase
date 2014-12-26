@@ -8,6 +8,55 @@
         var mode = ($("meta[name='mode']")[0]).getAttribute('content');
         var file_upload = null;
 
+        var tag_selected = {};
+        var form = new FormData();
+        form.append('op', 'get_all_tags');
+        var xhr_tag = new XMLHttpRequest();
+        xhr_tag.open('post', '../php/tag_api.php', true);
+        xhr_tag.addEventListener('readystatechange', function() {
+            if (this.readyState == 4) {
+                if ((this.status >= 200 && this.status < 300) || this.status == 304) {
+                    var json = JSON.parse(this.responseText);
+                    if (json['tags']) {
+                        $('#tag-panel').empty();
+                        (json['tags']).forEach(function (tag, i, array) {
+                            var dom = document.createElement('button');
+                            dom.className = 'btn btn-default btn-tag';
+                            dom.setAttribute('meta-id', tag['id']);
+                            dom.setAttribute('meta-desc', tag['desc']);
+                            if (tag['desc'] && tag['desc'] != '') {
+                                //data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"
+                                dom.setAttribute('data-toggle', 'tooltip');
+                                dom.setAttribute('data-placement', 'bottom');
+                                dom.setAttribute('title', tag['desc']);
+                            }
+                            dom.innerHTML = '<i class="fa fa-tag"></i>&nbsp;' + tag['name'];
+                            $('#tag-panel').append(dom);
+                            dom.addEventListener('click', function (e) {
+                                if (dom.classList.contains('active')) {
+                                    dom.classList.remove('active');
+                                    dom.classList.remove('btn-warning');
+                                    tag_selected[tag['id']] = false;
+                                } else {
+                                    dom.classList.add('active');
+                                    dom.classList.add('btn-warning');
+                                    tag_selected[tag['id']] = true;
+                                }
+                                var tags = [];
+                                for (var i in tag_selected) {
+                                    if (tag_selected.hasOwnProperty(i)) {
+                                        if (tag_selected[i])tags.push(parseInt(i));
+                                    }
+                                }
+                            });
+                        });
+                    }
+                    $('[data-toggle="tooltip"]').tooltip()
+                }
+            }
+        });
+        xhr_tag.send(form);
+
         /**
          * You first need to create a formatting function to pad numbers to two digits…
          **/
@@ -73,14 +122,14 @@
             };*/
 
 
-            var form = new FormData();
+            form = new FormData();
             form.append('op', 'client_get_thumb');
             form.append('data', JSON.stringify(
                 {
                     s_id:id
                 }
             ));
-            var xhr = new XMLHttpRequest();
+            xhr = new XMLHttpRequest();
             xhr.open('post', '../php/scene_api.php', true);
             xhr.responseType = 'blob';
             xhr.addEventListener('readystatechange', function(){
@@ -201,8 +250,8 @@
 
             var scene_del = $('#scene-delete');
             scene_del.popover({
-                title:'确认删除',
-                content:'确认要删除该场景吗？该操作无法恢复。<br>再次点击以删除<br>点击空白处关闭提示',
+                title:'提示',
+                content:'确认要删除该场景吗？<br><br>再次点击以删除<br>点击空白处关闭提示',
                 html:true,
                 placement:'top',
                 trigger:'manual'

@@ -130,7 +130,7 @@
                 <div class="col-lg-12">
                     <button id="bt-new-scene" type="button" class="btn btn-success" style="float:right"><i class="fa fa-plus"></i>&nbsp;添加场景</button>
                     <a id="tags-toggle" class="btn btn-primary" data-toggle="collapse" href="#tags-panel" aria-expanded="false" aria-controls="collapseExample">
-                       按标签筛选
+                       按标签筛选&nbsp;<i class="fa fa-chevron-down"></i>
                     </a>
 
                     <div class="collapse" id="tags-panel">

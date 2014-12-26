@@ -52,7 +52,7 @@ switch($_POST['op']){
         $data = json_decode($_POST['data']);
         SceneManager::delete_one($data);
         break;
+    default:
+        exit('{"status":"UNKNOWN_OP"}');
 }
 exit();
-
-?>
