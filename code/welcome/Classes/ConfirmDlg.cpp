@@ -71,6 +71,8 @@ void ConfirmDlg::initLabel(std::string _intro, std::string _name)
 void ConfirmDlg::setID(std::string _dlgID)
 {
 	dlgID = _dlgID;
+	//dlgSize	= dlgBg->getContentSize();
+	//origin	= Director::getInstance()->getVisibleOrigin();
 	pic = Sprite::create(_dlgID + ".jpg");
 	pic->setPosition(origin.x + dlgSize.width / 4, origin.y + dlgSize.height / 2);
 	dlgBg->addChild(pic, 0);
