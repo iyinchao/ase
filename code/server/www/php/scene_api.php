@@ -27,6 +27,31 @@ switch($_POST['op']){
         if(!isset($_POST['data'])) exit('{"status":"NO_REQ_DATA"}');
         $data = json_decode($_POST['data']);
         SceneManager::client_get_thumb($data);
+        break;
+    case 'get_meta_by_id':
+        if(!isset($_POST['data'])) exit('{"status":"NO_REQ_DATA"}');
+        $data = json_decode($_POST['data']);
+        SceneManager::get_meta_by_id($data);
+        break;
+    case 'update_one':
+        if(!isset($_POST['data'])) exit('{"status":"NO_REQ_DATA"}');
+        $data = json_decode($_POST['data']);
+        SceneManager::update_one($data);
+        break;
+    case 'get_new_b_id':
+        SceneManager::get_new_b_id();
+        break;
+    case 'add':     //增加场景
+        /*todo: upload_max_filesize & post_max_size is needed to be set up to 64MB!*/
+        if(!isset($_POST['data']))  exit('{"status:"NO_REQ_DATA"}');
+        $data = json_decode($_POST['data']);
+        SceneManager::add($data);
+        break;
+    case 'delete_one':
+        if(!isset($_POST['data'])) exit('{"status":"NO_REQ_DATA"}');
+        $data = json_decode($_POST['data']);
+        SceneManager::delete_one($data);
+        break;
 }
 exit();
 

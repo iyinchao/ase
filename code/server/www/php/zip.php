@@ -11,11 +11,13 @@
  */
 class ZipCon{
     /**
-     * see
+     *see
      * http://stackoverflow.com/questions/1334613/how-to-recursively-zip-a-directory-in-php
      *
      * @param $dir
-     * @param $exclude
+     * @param array $exclude
+     * @return string
+     * @throws Exception
      */
     static public function zip_dir($dir, $exclude = array()){
         if (!extension_loaded('zip') || !file_exists($dir)) {
@@ -23,8 +25,8 @@ class ZipCon{
         }
 
         $zip = new ZipArchive();
-        $tempdir = tempnam(Conf::DIR_TMP, "scene_zip");
-        if (!$zip->open($tempdir, ZIPARCHIVE::CREATE)) {
+        $temp_dir = tempnam(Conf::DIR_TMP, "scene_zip");
+        if (!$zip->open($temp_dir, ZIPARCHIVE::CREATE)) {
             throw new Exception('zip_dir:create temp fail.');
         }
 
@@ -69,6 +71,21 @@ class ZipCon{
             throw new Exception('zip_dir:create zip fail.');
         }
 
-        return $tempdir;
+        return $temp_dir;
+    }
+
+    static public function unzip($file_dir, $dist){
+        $zip = new ZipArchive();
+        $zip->open($file_dir);
+        //echo $dist;
+        if($zip){
+            if(@($zip->extractTo($dist))){
+
+            }else{
+                throw new Exception('Error:extract to dist');
+            }
+        }else{
+            throw new Exception('Error:open input file');
+        }
     }
 }

@@ -30,17 +30,17 @@
     function refresh_scene_table(json){
         var data = [];
         for(var i = 0;i < json.scene.length; i++){
-            var cell = JSON.parse(json.scene[i]);
+            var cell = json.scene[i];
 
             data.push(cell);
         }
-        console.log(data);
+        //console.log(data);
         var table = $('#scene-table').DataTable( {
             destroy:true,
             language:Config.TABLE_LANG,
             data:data,
             //autoWidth:false,
-            "lengthMenu": [[3, 10, 50], [3, 10, 50]],
+            "lengthMenu": [[5, 10, 50], [5, 10, 50]],
             //"scrollX": true,
             "columnDefs": [
                 { className: "scene-table-id-column", "targets": [ 1 ] }
@@ -48,6 +48,7 @@
             columns:[
                 { "data": "name" },
                 { "data": "s_id" },
+                { "data": "designer" },
                 { "data": "modify_date" },
                 { "data": "download_times" },
                 { "data": "views_count" },
@@ -55,11 +56,12 @@
             ]
         });
         //$('#container').css( 'display', 'block' );
-        console.log(table);
-        window.addEventListener('resize', function (e) {
+        //console.log(table);
+        table.columns.adjust().draw();
+        /*window.addEventListener('resize', function (e) {
             table.columns.adjust().draw();
             //console.log('ok');
-        });
+        });*/
 
 
 
@@ -91,18 +93,55 @@
     }
 
     $(document).ready(function(){
+        setTimeout(function(){
+            $('.tobefade').fadeOut(1000);
+        }, 3000);
+        $('#tags-toggle').click(function(){
+            //if(this.classList.contains('collapsed')){
+                //this.classList.remove('collapsed');
+            //}
+            if(this.getAttribute('aria-expanded') == 'false'){
+                this.classList.add('active');
+                this.classList.add('bt-tags-expand');
+            }else{
+                this.classList.remove('active');
+                this.classList.remove('bt-tags-expand');
+                load_scene(0, []);
+            }
+        });
+
         $('#scene-table').dataTable( {
             language:Config.TABLE_LANG
         });
         load_scene(0, []);
-        $('#scene-table tbody').on('mousemove', 'tr', function () {
-            var name = $('td', this).eq(1).text();
-            console.log( 'You clicked on '+name+'\'s row' );
+        $('#scene-table tbody').not($('.dataTables_empty')[0]).on('click', 'tr', function () {
+           /* var name = $('td', this).eq(1).text();
+            console.log( 'You clicked on '+name+'\'s row' );*/
+            //console.log(this);
+            var url = './scene_detail.php';
+            var form = $('<form action="' + url + '" method="post">' +
+            '<input type="text" name="id" value="' + $('td', this).eq(1).text() + '" />' +
+            '<input type="text" name="mode" value="modify" />' +
+            //'<input type="text" name="mode" value="modify" />' +
+            '</form>');
+            $('body').append(form);
+            form.submit();
         } );
 
-        $('#scene-table tbody tr').mousemove(function(event){
-            var name = $('td', this).eq(1).text();
-            console.log( 'You entered on '+name+'\'s row' );
+        $('#bt-new-scene').on('click', function () {
+            var url = './scene_detail.php';
+            var form = $('<form action="' + url + '" method="post">' +
+            '<input type="text" name="mode" value="new" />' +
+                //'<input type="text" name="mode" value="modify" />' +
+            '</form>');
+            $('body').append(form);
+            form.submit();
         });
+        /*$('#scene-table tbody').mouseenter(function(event){
+            console.log( 'enter' );
+        });
+        $('#scene-table').mouseout(function(event){
+            console.log( 'Out' );
+        });*/
     });
 })();
