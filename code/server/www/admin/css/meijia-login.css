@@ -1,0 +1,21 @@
+.login-panel.panel.panel-default {
+  -webkit-box-shadow: 0px 7px 23px 0px rgba(50, 50, 50, 0.75);
+  -moz-box-shadow: 0px 7px 23px 0px rgba(50, 50, 50, 0.75);
+  box-shadow: 0px 7px 23px 0px rgba(50, 50, 50, 0.75);
+  border: none;
+  font-family: "Arial", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+}
+.panel-default > .panel-heading {
+  font-size: 16pt;
+  font-weight: bold;
+  font-family: "Arial", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+  color: #FFFFFF;
+  text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.4);
+  background-color: #58a1ff;
+  background: -webkit-gradient(linear, left top, left bottom, from(#58a1ff), to(#3b72af));
+  background: -webkit-linear-gradient(top, #58a1ff, #3b72af);
+  background: -moz-linear-gradient(top, #58a1ff, #3b72af);
+  background: -ms-linear-gradient(top, #58a1ff, #3b72af);
+  background: -o-linear-gradient(top, #58a1ff, #3b72af);
+  text-align: center;
+}

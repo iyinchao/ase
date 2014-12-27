@@ -61,8 +61,12 @@
         //console.log(table);
         table.columns.adjust().draw();
 
-        $('.scene-table-id-column').css('width', '10px');
+        $('.scene-table-id-column').css('width', '30px');
         $('.scene-table-column').css('width', '200px');
+        //console.log($('.dataTables_empty')[0].parentNode);
+        /*if($('.dataTables_empty').length > 0) {
+            $('.dataTables_empty')[0].parentNode.style.pointerEvents = 'none';
+        }*/
         /*window.addEventListener('resize', function (e) {
             table.columns.adjust().draw();
             //console.log('ok');
@@ -120,7 +124,7 @@
                     if (this.readyState == 4) {
                         if ((this.status >= 200 && this.status < 300) || this.status == 304) {
                             var json = JSON.parse(this.responseText);
-                            console.log(json);
+                            //console.log(json);
                             if(json['tags']){
                                 $('#tags-panel>.well').empty();
                                 (json['tags']).forEach(function(tag, i, array){
@@ -172,7 +176,7 @@
             language:Config.TABLE_LANG
         });
         load_scene(0, []);
-        $('#scene-table tbody').not($('.dataTables_empty')[0]).on('click', 'tr', function () {
+        $('#scene-table tbody').not($('.dataTables_empty')[0]).on('click', 'tr[role="row"]', function () {
            /* var name = $('td', this).eq(1).text();
             console.log( 'You clicked on '+name+'\'s row' );*/
             //console.log(this);
