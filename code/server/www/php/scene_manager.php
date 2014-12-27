@@ -10,6 +10,7 @@ include_once 'db_conn.php';
 include_once 'debug.php';
 include_once 'uuid.php';
 include_once 'zip.php';
+include_once 'tag_manager.php';
 
 class SceneManager{
     /**
@@ -241,9 +242,21 @@ class SceneManager{
             $desc = mysqli_real_escape_string($db, $data->{'desc'});
             $query = $query . ",`desc` = '$desc' ";
         }
+
+        $tag_update_result = true;
+
+        if(isset($data->{'tags'})) {
+            $tag_data = (object)array();
+            $tag_data->{'s_id'} = $s_id;
+            $tag_data->{'tags'} = $data->{'tags'};
+            $tag_data->{'no_echo'} = true;
+            $tag_update_result = TagManager::update_tag_scene($tag_data);
+        }
+
         $query = $query . " where s_id = '" . $s_id . "'";
         $result = $db->query($query);  //执行SQL
-        if ($result) {
+
+        if ($result && ((isset($data->{'tags'}) && $tag_update_result) || !isset($data->{'tags'}))) {
             echo('{"status":"OK"}');
         } else {
             exit('{"status":"ERROR_UPDATE"}');

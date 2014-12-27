@@ -78,26 +78,108 @@ class TagManager{
         }
         if(!isset($data->{'s_id'})){
             exit('{"status":"INVALID_DATA"}');
-        } else { $s_id = mysqli_real_escape_string($db, $data->{'s_id'});}
+        } else {
+            $s_id = mysqli_real_escape_string($db, $data->{'s_id'});
+        }
         if(!isset($data->{'tags'})){
             exit('{"status":"INVALID_DATA"}');
-        }else {$tags = (array)$data->tags;}
+        }else {
+            $tags = (array)$data->tags;
+        }
+        $no_echo = false;
+        if(isset($data->{'no_echo'}) && $data->{'no_echo'} == true){
+            $no_echo = true;
+        }
 
         $response = (object)array();
-        $response->result = 'ok';
+        $response->status = 'OK';
         $query = "delete from tag_scene where s_id = '$s_id'";
         $result=$db->query($query);
-        if(!$result) $response->result='no';
+        if (!$result) {
+            if ($no_echo) {
+                return false;
+            } else {
+                $response->status = 'ERROR_DELETE';
+            }
+        }
         if(sizeof($tags) != 0){
             for($i = 0; $i < sizeof($tags); $i++){
                 $tag = mysqli_real_escape_string($db,$tags[$i]);
                 $query = "insert into tag_scene values('$s_id',$tag)";
                 $result=$db->query($query);
-                if(!$result) $response->result='no';
+                if (!$result) {
+                    if ($no_echo) {
+                        return false;
+                    } else {
+                        $response->status = 'ERROR_INSERT';
+                    }
+                }
             }
         }
+
+        $db->close();
+
+        if($no_echo){
+            return true;
+        }else {
+            echo json_encode($response);
+            if($response->status != 'OK'){
+                return false;
+            }else{
+                return true;
+            }
+        }
+    }
+
+    static public function get_one_scene_tags($data)  //获得场景的标签,返回的是一个数组
+    {
+        try{
+            $db = DBConn::connect();
+        }catch (Exception $e){
+            exit('{"status":"ERROR_DB_CONN","error_message:"'.$e->getMessage().'"}');
+        }
+
+        if(!isset($data->{'s_id'})){
+            exit('{"status":"INVALID_DATA"}');
+        } else {
+            $s_id = mysqli_real_escape_string($db, $data->{'s_id'});
+        }
+
+        $query = "select * from tag_scene where s_id='$s_id'";
+        $result = $db->query($query);
+        if(!$result){
+            exit('{"status":"ERROR_QUERY"}');
+        }else {
+            $response = (object)array();
+            $tags=array();
+            while($row = $result->fetch_assoc()){
+                array_push($tags, $row['tag']);
+            }
+            $response->status='OK';
+            $response->tags=$tags;
+            echo json_encode($response);
+        }
+        $db->close();
+       /* $response = (object)array();
+        if(($n = $result->num_rows) > 0) {
+            for ($i = 0; $i < $n; $i++) {
+                $row = $result->fetch_assoc();
+                $tags[$i] = (object)array();
+                $tags[$i]->id = $row['tag'];
+                $id=$row['tag'];
+                $query1 = "select * from tag where id= $id";
+                $result1=$db->query($query1);
+                $row1=$result1->fetch_assoc();
+                $tags[$i]->name=$row1['name'];
+                $tags[$i]->desc=$row1['desc'];
+            }
+            $response->status='OK';
+            $response->tags=$tags;
+        }else{
+            $response->status='no';
+        }
         echo json_encode($response);
-        $db->close();  //一定记得在用完数据库后关闭！！
+        $db->close();*/
     }
 }
 
