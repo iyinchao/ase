@@ -67,6 +67,38 @@ class TagManager{
         echo json_encode($response);
         $db->close();
     }
+
+    static public function update_tag_scene($data)     //更新场景标签
+    {
+        //database connect
+        try{
+            $db = DBConn::connect();
+        }catch (Exception $e){
+            exit('{"status":"ERROR_DB_CONN","error_message:"'.$e->getMessage().'"}');
+        }
+        if(!isset($data->{'s_id'})){
+            exit('{"status":"INVALID_DATA"}');
+        } else { $s_id = mysqli_real_escape_string($db, $data->{'s_id'});}
+        if(!isset($data->{'tags'})){
+            exit('{"status":"INVALID_DATA"}');
+        }else {$tags = (array)$data->tags;}
+
+        $response = (object)array();
+        $response->result = 'ok';
+        $query = "delete from tag_scene where s_id = '$s_id'";
+        $result=$db->query($query);
+        if(!$result) $response->result='no';
+        if(sizeof($tags) != 0){
+            for($i = 0; $i < sizeof($tags); $i++){
+                $tag = mysqli_real_escape_string($db,$tags[$i]);
+                $query = "insert into tag_scene values('$s_id',$tag)";
+                $result=$db->query($query);
+                if(!$result) $response->result='no';
+            }
+        }
+        echo json_encode($response);
+        $db->close();  //一定记得在用完数据库后关闭！！
+    }
 }
 
 

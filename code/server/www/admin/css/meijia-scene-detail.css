@@ -13,6 +13,7 @@
   text-align: center;
 }
 #thumb > img {
+  max-width: 100%;
   margin-top: 20px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;

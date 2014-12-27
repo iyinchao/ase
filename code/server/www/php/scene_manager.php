@@ -337,6 +337,25 @@ class SceneManager{
             }catch (Exception $e){
                 $query = "delete from scene where s_id = '$s_id'";
                 $db->query($query);
+
+                if(file_exists(Conf::DIR_DESIGN_FILE.$s_id)){
+                    if(is_dir(Conf::DIR_DESIGN_FILE.$s_id)){
+                        $it = new RecursiveDirectoryIterator(Conf::DIR_DESIGN_FILE.$s_id, RecursiveDirectoryIterator::SKIP_DOTS);
+                        $files = new RecursiveIteratorIterator($it,
+                            RecursiveIteratorIterator::CHILD_FIRST);
+                        foreach($files as $file) {
+                            if ($file->isDir()){
+                                rmdir($file->getRealPath());
+                            } else {
+                                unlink($file->getRealPath());
+                            }
+                        }
+                        rmdir(Conf::DIR_DESIGN_FILE.$s_id);
+                    }else{
+                        unlink(Conf::DIR_DESIGN_FILE.$s_id);
+                    }
+                }
+
                 exit('{"status":"ERROR_UNZIP"}');
             }
         }else{
