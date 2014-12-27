@@ -5,28 +5,9 @@
  * Date: 2014/12/24
  * Time: 15:34
  */
-
-switch ($_GET['op']) {
-    case 'client_update':     //修改标签
-        if(!isset($_GET['data']))  exit('{"status:"NO_REQ_DATA"}');
-        $data = json_decode($_GET['data']); //解析json（其实应该加上try/catch）
-        TagManager::update($data); //调用方法
-        break;
-    case 'client_delete':     //删除场景
-        if(!isset($_GET['data']))  exit('{"status:"NO_REQ_DATA"}');
-        $data = json_decode($_GET['data']); //解析json（其实应该加上try/catch）
-        TagManager::delete($data); //调用方法
-        break;
-    case 'client_add':     //增加标签
-        if(!isset($_GET['data']))  exit('{"status:"NO_REQ_DATA"}');
-        $data = json_decode($_GET['data']); //解析json（其实应该加上try/catch）
-        TagManager::add($data); //调用方法
-        break;
-    case 'get_all_tags':   //获得标签
-        TagManager::get_all();
-        break;
-}
-
+include_once 'conf.php';
+include_once 'db_conn.php';
+include_once 'debug.php';
 
 class TagManager{
     static public function update($data){
@@ -38,13 +19,20 @@ class TagManager{
         }
         if(!isset($data->{'id'})){
             exit('{"status":"INVALID_DATA"}');
+        } else {
+            $id = mysqli_real_escape_string($db, $data->{'id'});
         }
-        else { $id = mysqli_real_escape_string($db, $data->{'id'});}
         if(!isset($data->{'name'})){
             exit('{"status":"INVALID_DATA"}');
+        } else {
+            $name = mysqli_real_escape_string($db, $data->{'name'});
         }
-        else { $name = mysqli_real_escape_string($db, $data->{'name'});}
-        $query="update tag set name='$name' where id= $id";
+        if(!isset($data->{'desc'})){
+            $desc = '';
+        }else{
+            $desc = mysqli_real_escape_string($db, $data->{'desc'});
+        }
+        $query="update tag set name='$name', `desc`='$desc' where id= '$id'";
         $result = $db->query($query);  //执行SQL
         if($result){
             $response = (object)array();
@@ -55,7 +43,29 @@ class TagManager{
             $response->result = 'no';
             echo json_encode($response);
         }
-        $db->close();  //一定记得在用完数据库后关闭！！
+        $db->close();
+    }
+
+    static public function get_all_tags(){
+        try{
+            $db = DBConn::connect();
+        }catch (Exception $e){
+            exit('{"status":"ERROR_DB_CONN","error_message:"'.$e->getMessage().'"}');
+        }
+        $query = "select * from tag";
+        $result = $db->query($query);
+        $tags=array();
+        while ($row = $result->fetch_array()) {
+            $term = (object)array();
+            $term->id = $row['id'];
+            $term->name = $row['name'];
+            $term->desc = $row['desc'];
+            array_push($tags, $term);
+        }
+        $response = (object)array();
+        $response->tags=$tags;
+        echo json_encode($response);
+        $db->close();
     }
 }
 

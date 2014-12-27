@@ -64,12 +64,16 @@
 .btn.btn-primary.active.bt-tags-expand {
   background: #E08800;
   border-color: #935107;
-  color: #000;
 }
 .well {
   font-family: "Arial", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+  padding: 10px;
 }
 #bt-new-scene {
   float: right;
   font-family: "Arial", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+}
+.btn-tag {
+  background: #EEE;
+  margin: 5px;
 }
