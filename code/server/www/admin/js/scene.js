@@ -163,6 +163,7 @@
                                         search_keep = function(){
                                             $('#scene-table_filter input[type="search"]').val(search_str);
                                             $('#scene-table_filter input[type="search"]').keyup();
+                                            $('#scene-table').off('init.dt', search_keep);
                                         };
 
                                         load_scene(0, tags);

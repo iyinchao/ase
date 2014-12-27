@@ -1,3 +1,34 @@
+<?php
+include_once '../php/db_conn.php';
+include_once '../php/debug.php';
+
+if(isset($_COOKIE['MEIJIA_UID'])){
+    session_start();
+    if(!isset($_SESSION['user_id'])){
+        //create connection
+        try{
+            $db = DBConn::connect();
+        }catch (Exception $e){
+            exit('{"status":"ERROR_DB_CONN","error_message:"'.$e->getMessage().'"}');
+        }
+
+        $uid = $_COOKIE['MEIJIA_UID'];
+        $query = "select * from user where u_id = '$uid'";
+        $result = $db->query($query);  //执行SQL
+        if ($result->num_rows == 1) {
+            $row = $result->fetch_assoc();
+            $_SESSION['user_id'] = $row['u_id'];
+        }
+        $db->close();
+    }
+}else{
+    session_start();
+    if(!isset($_SESSION['user_id'])){
+        header("Location: http://localhost/admin/login.php");
+        die();
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 

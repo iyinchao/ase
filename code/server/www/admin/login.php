@@ -38,29 +38,36 @@
 
 <body>
 
-    <div class="container">
+    <div class="container" >
         <div class="row">
             <div class="col-md-4 col-md-offset-4">
-                <div class="login-panel panel panel-default">
+                <div style="display: none;" id="panel" class="login-panel panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">美家秀秀·管理系统</h3>
                     </div>
                     <div class="panel-body">
+                        <?php
+                        if(isset($_POST['message'])){
+                            if($_POST['message'] == 'logout'){
+                                echo '<div class="alert alert-info tobefade" role="alert" style="text-align: center"><i class="fa fa-lock"></i>&nbsp;&nbsp;您已登出</div>';
+                            }
+                        }
+                        ?>
                         <form role="form">
                             <fieldset>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="E-mail" name="email" type="email" autofocus>
+                                    <input id="form-email" class="form-control" placeholder="E-mail" name="email" type="email" autofocus>
                                 </div>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="Password" name="password" type="password" value="">
+                                    <input id="form-password" class="form-control" placeholder="密码" name="password" type="password" value="">
                                 </div>
                                 <div class="checkbox">
                                     <label>
-                                        <input name="remember" type="checkbox" value="Remember Me">记住我
+                                        <input id="form-rem" name="remember" type="checkbox" value="Remember Me">一周内免登录
                                     </label>
                                 </div>
                                 <!-- Change this to a button or input when using this as a form -->
-                                <a href="index.php" class="btn btn-lg btn-success btn-block">Login</a>
+                                <a id="form-submit" class="btn btn-lg btn-primary btn-block">登&nbsp;录</a>
                             </fieldset>
                         </form>
                     </div>
@@ -80,6 +87,11 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="js/sb-admin-2.js"></script>
+
+    <!-- Meijia JS-->
+    <script src="js/config.js"></script>
+
+    <script src="js/login.js"></script>
 
 </body>
 
