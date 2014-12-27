@@ -310,6 +310,10 @@ class SceneManager{
             $designer = mysqli_real_escape_string($db, $data->{'designer'});
         }
 
+        if(!isset($data->{'tags'})) {
+            exit('{"status":"INVALID_DATA"}');
+        }
+
         $modify_date = date("Y-m-d H:i:s", time());
 
         if(isset($_FILES) && isset($_FILES['file']) && $_FILES['file']['error'] != 1 && $_FILES['file']['tmp_name'] != ''){
@@ -349,7 +353,6 @@ class SceneManager{
             }catch (Exception $e){
                 $query = "delete from scene where s_id = '$s_id'";
                 $db->query($query);
-
                 if(file_exists(Conf::DIR_DESIGN_FILE.$s_id)){
                     if(is_dir(Conf::DIR_DESIGN_FILE.$s_id)){
                         $it = new RecursiveDirectoryIterator(Conf::DIR_DESIGN_FILE.$s_id, RecursiveDirectoryIterator::SKIP_DOTS);
@@ -367,9 +370,15 @@ class SceneManager{
                         unlink(Conf::DIR_DESIGN_FILE.$s_id);
                     }
                 }
-
                 exit('{"status":"ERROR_UNZIP"}');
             }
+
+            $tag_data = (object)array();
+            $tag_data->{'s_id'} = $s_id;
+            $tag_data->{'tags'} = $data->{'tags'};
+            $tag_data->{'no_echo'} = true;
+            TagManager::update_tag_scene($tag_data);
+
         }else{
             exit('{"status":"ERROR_DB_INSERT"}');
         }

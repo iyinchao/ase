@@ -434,7 +434,8 @@
                             download_times:0,
                             views_count:$('#form-vc').val(),
                             desc:$('#form-desc').val().trim(),
-                            modify_date:new Date().toMysqlFormat()
+                            modify_date:new Date().toMysqlFormat(),
+                            tags:tags
                         }
                     );
                     form.append('data', json);

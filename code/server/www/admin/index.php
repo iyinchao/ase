@@ -20,8 +20,6 @@
     <!-- Custom CSS -->
     <link href="css/sb-admin-2.css" rel="stylesheet">
 
-
-
     <!-- Custom Fonts -->
     <link href="css/font-awesome.css" rel="stylesheet" type="text/css">
 
@@ -128,7 +126,6 @@
 
     <!-- Metis Menu Plugin JavaScript -->
     <script src="js/plugins/metisMenu/metisMenu.min.js"></script>
-
 
     <!-- Custom Theme JavaScript -->
     <script src="js/sb-admin-2.js"></script>
