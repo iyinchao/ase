@@ -62,11 +62,11 @@ private:
 	void setTableState();
 	void setCurtainState();
 
-	cocos2d::ui::CheckBox* orderNamed;
-	cocos2d::ui::CheckBox* orderDated;
+	cocos2d::ui::CheckBox* orderDes;
+	cocos2d::ui::CheckBox* orderAsc;
 	bool orderSelected[2];
-	void setOrderNamedState();
-	void setOrderDatedState();
+	void setDateDesState();
+	void setDateAscState();
 };
 
 #endif

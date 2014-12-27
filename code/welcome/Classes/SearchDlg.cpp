@@ -40,87 +40,87 @@ bool SearchDlg::init()
 
 // ************ object select ************
 
-	bed = ui::CheckBox::create("SettingNormal.png",
-                                 "CloseSelected.png",
-                                 "CloseSelected.png",
-                                 "CloseNormal.png",
-                                 "CloseNormal.png");
+	bed = ui::CheckBox::create("check_box_bed_normal.png",
+                                 "check_box_bed_normal.png",
+                                 "check_box_active.png",
+                                 "check_box_bed_normal.png",
+                                 "check_box_bed_normal.png");
 	//button->setTitleText("Text Button");
 	bed->setPosition(Vec2(origin.x + dlgSize.width / 4, origin.y + dlgSize.height / 3 * 2 + 10));
 	bed->addTouchEventListener(CC_CALLBACK_0(SearchDlg::setBedState, this));
 	dlgBg->addChild(bed, 1);
 
-	carbinet = ui::CheckBox::create("SettingNormal.png",
-                                 "CloseSelected.png",
-                                 "CloseSelected.png",
-                                 "CloseNormal.png",
-                                 "CloseNormal.png");
+	carbinet = ui::CheckBox::create("check_box_carbinet_normal.png",
+                                 "check_box_carbinet_normal.png",
+                                 "check_box_active.png",
+                                 "check_box_carbinet_normal.png",
+                                 "check_box_carbinet_normal.png");
 	//button->setTitleText("Text Button");
 	carbinet->setPosition(Vec2(origin.x + dlgSize.width / 2, origin.y + dlgSize.height / 3 * 2 + 10));
 	carbinet->addTouchEventListener(CC_CALLBACK_0(SearchDlg::setCarbinetState, this));
 	dlgBg->addChild(carbinet, 1);
 
-	light = ui::CheckBox::create("SettingNormal.png",
-                                 "CloseSelected.png",
-                                 "CloseSelected.png",
-                                 "CloseNormal.png",
-                                 "CloseNormal.png");
+	light = ui::CheckBox::create("check_box_light_normal.png",
+                                 "check_box_light_normal.png",
+                                 "check_box_active.png",
+                                 "check_box_light_normal.png",
+                                 "check_box_light_normal.png");
 	//button->setTitleText("Text Button");
 	light->setPosition(Vec2(origin.x + dlgSize.width / 4 * 3, origin.y + dlgSize.height / 3 * 2 + 10));
 	light->addTouchEventListener(CC_CALLBACK_0(SearchDlg::setLightState, this));
 	dlgBg->addChild(light, 1);
 
-	land = ui::CheckBox::create("SettingNormal.png",
-                                 "CloseSelected.png",
-                                 "CloseSelected.png",
-                                 "CloseNormal.png",
-                                 "CloseNormal.png");
+	land = ui::CheckBox::create("check_box_land_normal.png",
+                                 "check_box_land_normal.png",
+                                 "check_box_active.png",
+                                 "check_box_land_normal.png",
+                                 "check_box_land_normal.png");
 	//button->setTitleText("Text Button");
 	land->setPosition(Vec2(origin.x + dlgSize.width / 4, origin.y + dlgSize.height / 3 * 2 - 60));
 	land->addTouchEventListener(CC_CALLBACK_0(SearchDlg::setLandState, this));
 	dlgBg->addChild(land, 1);
 
-	table = ui::CheckBox::create("SettingNormal.png",
-                                 "CloseSelected.png",
-                                 "CloseSelected.png",
-                                 "CloseNormal.png",
-                                 "CloseNormal.png");
+	table = ui::CheckBox::create("check_box_table_normal.png",
+                                 "check_box_table_normal.png",
+                                 "check_box_active.png",
+                                 "check_box_table_normal.png",
+                                 "check_box_table_normal.png");
 	//button->setTitleText("Text Button");
 	table->setPosition(Vec2(origin.x + dlgSize.width / 2, origin.y + dlgSize.height / 3 * 2 - 60));
 	table->addTouchEventListener(CC_CALLBACK_0(SearchDlg::setTableState, this));
 	dlgBg->addChild(table, 1);
 
-	curtain = ui::CheckBox::create("SettingNormal.png",
-                                 "CloseSelected.png",
-                                 "CloseSelected.png",
-                                 "CloseNormal.png",
-                                 "CloseNormal.png");
+	curtain = ui::CheckBox::create("check_box_curtain_normal.png",
+                                 "check_box_curtain_normal.png",
+                                 "check_box_active.png",
+                                 "check_box_curtain_normal.png",
+                                 "check_box_curtain_normal.png");
 	//button->setTitleText("Text Button");
 	curtain->setPosition(Vec2(origin.x + dlgSize.width / 4 * 3, origin.y + dlgSize.height / 3 * 2 - 60));
 	curtain->addTouchEventListener(CC_CALLBACK_0(SearchDlg::setCurtainState, this));
 	dlgBg->addChild(curtain, 1);
 
 // ************ order select ************
-	orderNamed = ui::CheckBox::create("CloseNormal.png",
-                                 "CloseSelected.png",
-                                 "CloseSelected.png",
-                                 "CloseNormal.png",
-                                 "CloseNormal.png");
+	orderDes = ui::CheckBox::create("order_check_box_date_des_normal.png",
+                                 "order_check_box_date_des_normal.png",
+                                 "order_check_box_active.png",
+                                 "order_check_box_date_des_normal.png",
+                                 "order_check_box_date_des_normal.png");
 	//button->setTitleText("Text Button");
-	orderNamed->setPosition(Vec2(origin.x + dlgSize.width / 4 + 20, origin.y + dlgSize.height / 3 - 10));
-	orderNamed->addTouchEventListener(CC_CALLBACK_0(SearchDlg::setOrderNamedState, this));
-	dlgBg->addChild(orderNamed, 1);
-	orderNamed->setSelectedState(true);
+	orderDes->setPosition(Vec2(origin.x + dlgSize.width / 4 + 20, origin.y + dlgSize.height / 3 - 10));
+	orderDes->addTouchEventListener(CC_CALLBACK_0(SearchDlg::setDateDesState, this));
+	dlgBg->addChild(orderDes, 1);
+	orderDes->setSelectedState(true);
 
-	orderDated = ui::CheckBox::create("CloseNormal.png",
-                                 "CloseSelected.png",
-                                 "CloseSelected.png",
-                                 "CloseNormal.png",
-                                 "CloseNormal.png");
+	orderAsc = ui::CheckBox::create("order_check_box_date_asc_normal.png",
+                                 "order_check_box_date_asc_normal.png",
+                                 "order_check_box_active.png",
+                                 "order_check_box_date_asc_normal.png",
+                                 "order_check_box_date_asc_normal.png");
 	//button->setTitleText("Text Button");
-	orderDated->setPosition(Vec2(origin.x + dlgSize.width / 4 * 3 - 20, origin.y + dlgSize.height / 3 - 10));
-	orderDated->addTouchEventListener(CC_CALLBACK_0(SearchDlg::setOrderDatedState, this));
-	dlgBg->addChild(orderDated, 1);
+	orderAsc->setPosition(Vec2(origin.x + dlgSize.width / 4 * 3 - 20, origin.y + dlgSize.height / 3 - 10));
+	orderAsc->addTouchEventListener(CC_CALLBACK_0(SearchDlg::setDateAscState, this));
+	dlgBg->addChild(orderAsc, 1);
 	
 // ************ function button ************
 	string _download("select");
@@ -170,41 +170,41 @@ void SearchDlg::setLightState()
 
 void SearchDlg::setLandState()
 {
-	objectSelected[2] = land->getSelectedState();
+	objectSelected[3] = land->getSelectedState();
 	CCLOG("%d", objectSelected[3]);
 }
 
 void SearchDlg::setTableState()
 {
-	objectSelected[2] = table->getSelectedState();
+	objectSelected[4] = table->getSelectedState();
 	CCLOG("%d", objectSelected[4]);
 }
 
 void SearchDlg::setCurtainState()
 {
-	objectSelected[2] = curtain->getSelectedState();
+	objectSelected[5] = curtain->getSelectedState();
 	CCLOG("%d", objectSelected[5]);
 }
 
-void SearchDlg::setOrderNamedState()
+void SearchDlg::setDateDesState()
 {
-	orderSelected[0] = orderNamed->getSelectedState();
+	orderSelected[0] = orderDes->getSelectedState();
 	
 	// 保持排序单选框的效果
-	if(orderDated->getSelectedState()){
-		orderDated->setSelectedState(false);
+	if(orderAsc->getSelectedState()){
+		orderAsc->setSelectedState(false);
 	}
 
 	CCLOG("%d", orderSelected[0]);
 }
 
-void SearchDlg::setOrderDatedState()
+void SearchDlg::setDateAscState()
 {
-	orderSelected[1] = orderDated->getSelectedState();
+	orderSelected[1] = orderAsc->getSelectedState();
 
 	// 保持排序单选框的效果
-	if(orderNamed->getSelectedState()){
-		orderNamed->setSelectedState(false);
+	if(orderDes->getSelectedState()){
+		orderDes->setSelectedState(false);
 	}
 
 	CCLOG("%d", orderSelected[1]);
@@ -234,23 +234,22 @@ void SearchDlg::menuSelectCallback(Ref* pSender)
 	if(land->getSelectedState())		tagArr.PushBack(4, allocator);
 	if(table->getSelectedState())		tagArr.PushBack(5, allocator);
 	if(curtain->getSelectedState())		tagArr.PushBack(6, allocator);
-	
-	//object.AddMember("bool", true, allocator);
-	//object.AddMember("hello", "你好", allocator);
-	//array.PushBack(object, allocator);
  
 	document.AddMember("tag", tagArr, allocator);
 	document.AddMember("page_now", 0, allocator);
 	document.AddMember("scene_per_page", -1, allocator);
 
-	if(orderDated->getSelectedState())
-		document.AddMember("sort_by", "modify_date", allocator);
-	else if(orderNamed->getSelectedState())
-		document.AddMember("sort_by", "name", allocator);
-	else
-		document.AddMember("sort_by", "", allocator);
+	//if(orderDated->getSelectedState())
+	document.AddMember("sort_by", "modify_date", allocator);
+	//else if(orderNamed->getSelectedState())
+	//	document.AddMember("sort_by", "name", allocator);
+	//else
+	//	document.AddMember("sort_by", "", allocator);
 
-	document.AddMember("order", "DES", allocator);
+	if(orderDes->getSelectedState())
+		document.AddMember("order", "DES", allocator);
+	else if(orderAsc->getSelectedState())
+		document.AddMember("order", "ASC", allocator);
  
 	rapidjson::StringBuffer buffer;
 	rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
