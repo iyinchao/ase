@@ -8,8 +8,8 @@ bool DialogLayer::init()
 		return false;
 
 	//** CCLayerColor不同于Layer, 默认占满整个屏幕，设置颜色和透明度即可 **
-	setColor(ccc3(88, 88, 88));
-    setOpacity(128);
+	setColor(ccc3(44, 44, 44));
+    setOpacity(200);
      
     CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 	dlgMenu = Menu::create();
