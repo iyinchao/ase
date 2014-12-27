@@ -98,9 +98,6 @@
         //console.log(json.scene[0]);
     }*/
 
-    function fill_scene_thumb(id, thumb){
-    }
-
     $(document).ready(function(){
         setTimeout(function(){
             $('.tobefade').fadeOut(1000);

@@ -141,7 +141,6 @@ class SceneManager{
             }
         }
 
-
         $response = (object)array();
         $response->status = 'OK';
         $response->scene = $scene;
@@ -159,13 +158,13 @@ class SceneManager{
         $s_id = $data->s_id;  //TODO:check the data value?
 
         if(file_exists(Conf::DIR_DESIGN_FILE.$s_id)){
-            if(file_exists(Conf::DIR_DESIGN_FILE.$s_id.'/'.'thumb.png')) {
-                $thumb = fopen(Conf::DIR_DESIGN_FILE.$s_id.'/'.'thumb.png', 'rb');
+            if(file_exists(Conf::DIR_DESIGN_FILE.$s_id.'/main/'.'thumb.png')) {
+                $thumb = fopen(Conf::DIR_DESIGN_FILE.$s_id.'/main/'.'thumb.png', 'rb');
                 if(!$thumb){
                     exit('{"status":"ERROR_OPEN_THUMB"}');
                 }
                 header('Content-Type: image/jpeg');
-                header('Content-Length: ' . filesize(Conf::DIR_DESIGN_FILE . $s_id.'/'.'thumb.png'));
+                header('Content-Length: ' . filesize(Conf::DIR_DESIGN_FILE . $s_id.'/main/'.'thumb.png'));
                 fpassthru($thumb);
             }else{
                 exit('{"status":"NO_THUMB"}');
