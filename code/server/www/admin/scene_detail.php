@@ -29,6 +29,12 @@ if(isset($_COOKIE['MEIJIA_UID'])){
     }
 }
 ?>
+<?php
+if(!isset($_POST['mode'])){
+    header("Location: http://localhost/admin/scene.php");
+    die();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
