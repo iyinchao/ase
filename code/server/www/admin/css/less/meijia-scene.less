@@ -53,7 +53,7 @@
   float: right;
 }
 
-.table-striped>tbody>tr:hover{
+.table-striped>tbody>tr[role="row"]:hover{
   //.gradient(@startColor: #64ccff, @endColor: #3b72af);
   background: #428bca;
   color:#FFF;
@@ -64,7 +64,7 @@
   font-family: @mj-title-font;
 }
 
-.table-striped>tbody>tr {
+.table-striped>tbody>tr[role="row"] {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;

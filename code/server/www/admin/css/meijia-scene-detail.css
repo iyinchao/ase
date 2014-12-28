@@ -6,12 +6,14 @@
   width: 65%;
   max-width: 450px;
   font-family: "Arial", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+  margin-bottom: 30px;
 }
 #thumb {
   width: 100%;
   text-align: center;
 }
 #thumb > img {
+  max-width: 100%;
   margin-top: 20px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;

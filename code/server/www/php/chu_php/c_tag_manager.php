@@ -35,6 +35,11 @@ switch ($_GET['op']) {
         $data = json_decode($_GET['data']); //解析json（其实应该加上try/catch）
         TagManager::update_tag_scene($data); //调用方法
         break;
+    case 'get_scene_tag':   //获得场景的标签
+        if(!isset($_GET['data']))  exit('{"status:"NO_REQ_DATA"}');
+        $data = json_decode($_GET['data']); //解析json（其实应该加上try/catch）
+        TagManager::get_scene_tags($data); //调用方法
+        break;
 }
 
 class TagManager{
@@ -181,6 +186,39 @@ class TagManager{
         }
         echo json_encode($response);
         $db->close();  //一定记得在用完数据库后关闭！！
+    }
+
+    static public function  get_scene_tags($data)  //获得场景的标签,返回的是一个数组
+    {
+        try{
+            $db = DBConn::connect();
+        }catch (Exception $e){
+            exit('{"status":"ERROR_DB_CONN","error_message:"'.$e->getMessage().'"}');
+        }
+        if(!isset($data->{'s_id'})){
+            exit('{"status":"INVALID_DATA"}');
+        } else { $s_id = mysqli_real_escape_string($db, $data->{'s_id'});}
+        $query = "select * from tag_scene where s_id='$s_id'";
+        $tags=array();
+        $result = $db->query($query);
+        $response = (object)array();
+        if(($n = $result->num_rows) > 0) {
+            for ($i = 0; $i < $n; $i++) {
+                $row = $result->fetch_assoc();
+                $tags[$i] = (object)array();
+                $tags[$i]->id = $row['tag'];
+                $id=$row['tag'];
+                $query1 = "select * from tag where id= $id";
+                $result1=$db->query($query1);
+                $row1=$result1->fetch_assoc();
+                $tags[$i]->name=$row1['name'];
+                $tags[$i]->desc=$row1['desc'];
+            }
+            $response->result='OK';
+            $response->tags=$tags;
+        }else{$response->result='no';}
+        echo json_encode($response);
+        $db->close();
     }
 
     static public function tag_delete_scene($s_id)  //删除场景的标签处理

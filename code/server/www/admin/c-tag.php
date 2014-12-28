@@ -1,34 +1,3 @@
-<?php
-include_once '../php/db_conn.php';
-include_once '../php/debug.php';
-
-if(isset($_COOKIE['MEIJIA_UID'])){
-    session_start();
-    if(!isset($_SESSION['user_id'])){
-        //create connection
-        try{
-            $db = DBConn::connect();
-        }catch (Exception $e){
-            exit('{"status":"ERROR_DB_CONN","error_message:"'.$e->getMessage().'"}');
-        }
-
-        $uid = $_COOKIE['MEIJIA_UID'];
-        $query = "select * from user where u_id = '$uid'";
-        $result = $db->query($query);  //执行SQL
-        if ($result->num_rows == 1) {
-            $row = $result->fetch_assoc();
-            $_SESSION['user_id'] = $row['u_id'];
-        }
-        $db->close();
-    }
-}else{
-    session_start();
-    if(!isset($_SESSION['user_id'])){
-        header("Location: http://localhost/admin/login.php");
-        die();
-    }
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -40,13 +9,13 @@ if(isset($_COOKIE['MEIJIA_UID'])){
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>美家秀秀·后台管理系统</title>
+    <title>美家秀秀·标签管理</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- MetisMenu CSS -->
-    <link href="css/plugins/metisMenu/metisMenu.min.css" rel="stylesheet">
+    <!-- DataTable CSS-->
+    <link href="css/plugins/dataTables/jquery.dataTables.css">
+    <link href="css/plugins/dataTables/dataTables.bootstrap.css">
 
     <!-- Custom CSS -->
     <link href="css/sb-admin-2.css" rel="stylesheet">
@@ -56,11 +25,12 @@ if(isset($_COOKIE['MEIJIA_UID'])){
 
     <!-- Meijia Customize css-->
     <link href="css/meijia-core.css" rel="stylesheet">
+    <link href="css/meijia-scene.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
@@ -79,7 +49,7 @@ if(isset($_COOKIE['MEIJIA_UID'])){
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a id="mj-main-title" class="navbar-brand" href="index.php">美家秀秀·后台管理系统</a>
+                <a id="mj-main-title" class="navbar-brand" href="index.php">美家秀秀·标签管理</a>
             </div>
             <!-- /.navbar-header -->
 
@@ -118,10 +88,13 @@ if(isset($_COOKIE['MEIJIA_UID'])){
                             <!-- /input-group -->
                         </li>
                         <li>
-                            <a class="mj-sidebar-item active" href="index.php"><i class="fa fa-dashboard fa-fw"></i><span>控制台</span></a>
+                            <a class="mj-sidebar-item" href="index.php"><i class="fa fa-dashboard fa-fw"></i><span>控制台</span></a>
                         </li>
                         <li>
-                            <a class="mj-sidebar-item" href="scene.php"><i class="fa fa-th fa-fw"></i><span>场景管理</span></a>
+                            <a class="mj-sidebar-item active" href="scene.php"><i class="fa fa-th fa-fw"></i><span>场景管理</span></a>
+                        </li>
+                        <li>
+                            <a class="mj-sidebar-item active" href="c-tag.php"><i class="fa fa-th fa-fw"></i><span>标签管理</span></a>
                         </li>
 
                     </ul>
@@ -132,14 +105,57 @@ if(isset($_COOKIE['MEIJIA_UID'])){
         </nav>
 
         <div id="page-wrapper">
+            <div id="page-mask"></div>
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="mj-page-title page-header">控制台</h1>
+                    <h1 id="page-title" class="mj-page-title page-header">浏览标签数据字典</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <div class="row">
+                <?php
+                if(isset($_POST['mode'])){
+                    if($_POST['mode'] == 'modify-success'){
+                        echo '<div class="alert alert-success tobefade" role="alert"><i class="fa fa-check"></i>&nbsp;成功修改标签数据</div>';
+                    }
+                    if($_POST['mode'] == 'add-success'){
+                        echo '<div class="alert alert-success tobefade" role="alert"><i class="fa fa-check"></i>&nbsp;成功增加标签</div>';
+                    }
+                    if($_POST['mode'] == 'delete-success'){
+                        echo '<div class="alert alert-success tobefade" role="alert"><i class="fa fa-check"></i>&nbsp;成功删除标签</div>';
+                    }
+                }
+                ?>
+
+            </div>
+            <div class="row">
+
+                <div class="col-lg-12">
+                    <button id="bt-new-tag" type="button" class="btn btn-success" style="float:right"><i class="fa fa-plus"></i>&nbsp;添加标签</button>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
             <!-- /.row -->
+            <!--<div class="row" id="scene-table">
 
+            </div>-->
+            <table id="tag-table" class="table table-striped table-bordered dataTable no-footer display compact" cellspacing="0" width="100%">
+                <thead>
+                <tr>
+                    <th>标签ID</th>
+                    <th>标签名称</th>
+                    <th>标签描述</th>
+                </tr>
+                </thead>
+
+                <tfoot>
+                <tr>
+                    <th>标签ID</th>
+                    <th>标签名称</th>
+                    <th>标签描述</th>
+                </tr>
+                </tfoot>
+            </table>
             <!-- /.row -->
 
             <!-- /.row -->
@@ -158,8 +174,18 @@ if(isset($_COOKIE['MEIJIA_UID'])){
     <!-- Metis Menu Plugin JavaScript -->
     <script src="js/plugins/metisMenu/metisMenu.min.js"></script>
 
+
     <!-- Custom Theme JavaScript -->
     <script src="js/sb-admin-2.js"></script>
+
+    <!-- DataTable plugin JS-->
+    <script src="js/plugins/dataTables/jquery.dataTables.js"></script>
+    <script src="js/plugins/dataTables/dataTables.bootstrap.js"></script>
+
+    <!-- Meijia JS-->
+    <script src="js/config.js"></script>
+
+    <script src="js/c-tags.js"></script>
 
 </body>
 

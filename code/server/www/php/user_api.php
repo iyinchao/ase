@@ -14,7 +14,7 @@ header("Content-Type: application/json;charset=utf-8");
 if(!isset($_POST['op'])) exit('{"status":"NO_REQ_OP"}');
 switch($_POST['op']){
     case 'client_login':
-        if(!isset($_POST['data'])) exit('{"status:"NO_REQ_DATA"}');
+        if(!isset($_POST['data'])) exit('{"status":"NO_REQ_DATA"}');
         $data = json_decode($_POST['data']);
         UserManager::client_login($data);
         break;
@@ -22,5 +22,7 @@ switch($_POST['op']){
         /*if(!isset($_POST['data'])) exit('{"status":"NO_REQ_DATA"}');
         $data = json_decode($_POST['data']);
         SceneManager::client_browse($data);*/
+    default:
+        exit('{"status":"UNKNOWN_OP"}');
 }
-exit();
+//exit();

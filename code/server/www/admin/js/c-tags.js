@@ -1,25 +1,21 @@
 /**
- * Created by 尹超 on 2014/12/13.
+ * Created by lenovo on 2014/12/27.
  */
 
 (function(){
-    var SCENE_PER_PAGE = -1; //get all pages
-    function load_scene(page, tags, search){
+   // var SCENE_PER_PAGE = -1; //get all pages
+    function load_tags(){
         var requ = {};
-        requ.scene_per_page = SCENE_PER_PAGE;
-        requ.tag = tags;
-        requ.page_now = page;
         var form = new FormData();
-        form.append('op', 'client_browse');
-        form.append('data', JSON.stringify(requ));
+        form.append('op', 'get_tags');
         var xhr = new XMLHttpRequest();
-        xhr.open('post', '../php/scene_api.php', true);
+        xhr.open('post', '../php/chu_php/c_tag_manager.php', true);
         xhr.addEventListener('readystatechange', function(e){
             if (this.readyState == 4) {
                 if ((this.status >= 200 && this.status < 300) || this.status == 304) {
                     var resp = JSON.parse(this.responseText);
                     //refresh_scene_view(resp);
-                    refresh_scene_table(resp);
+                    refresh_tag_table(resp);
                     //console.log(resp);
                 }
             }
@@ -27,15 +23,14 @@
         xhr.send(form);
     }
 
-    function refresh_scene_table(json){
+    function refresh_tag_table(json){
         var data = [];
-        for(var i = 0;i < json.scene.length; i++){
-            var cell = json.scene[i];
-
+        for(var i = 0;i < json.num; i++){
+            var cell = json.tags[i];
             data.push(cell);
         }
         //console.log(data);
-        var table = $('#scene-table').DataTable( {
+        var table = $('#tag-table').DataTable( {
             destroy:true,
             language:Config.TABLE_LANG,
             data:data,
@@ -43,60 +38,59 @@
             "lengthMenu": [[5, 10, 50], [5, 10, 50]],
             //"scrollX": true,
             "columnDefs": [
-                { className:"scene-table-id-column", "targets": [ 1 ] },
-                { className:"scene-table-column", "targets": [ 0,2,3,4,5,6 ] }
+               // { className:"tag-table-id-column", "targets": [ 1 ] },
+                { className:"tag-table-column", "targets": [ 0,1,2] }
 
             ],
             columns:[
+                { "data": "id" },
                 { "data": "name" },
-                { "data": "s_id" },
-                { "data": "designer" },
-                { "data": "modify_date" },
-                { "data": "download_times" },
-                { "data": "views_count" },
-                { "data": "desc" }
+                { "data": "desc" },
             ]
         });
         //$('#container').css( 'display', 'block' );
         //console.log(table);
         table.columns.adjust().draw();
 
-        $('.scene-table-id-column').css('width', '30px');
-        $('.scene-table-column').css('width', '200px');
+       // $('.tag-table-id-column').css('width', '30px');
+        //$('.tag-table-column').css('width', '200px');
         //console.log($('.dataTables_empty')[0].parentNode);
         /*if($('.dataTables_empty').length > 0) {
-            $('.dataTables_empty')[0].parentNode.style.pointerEvents = 'none';
-        }*/
+         $('.dataTables_empty')[0].parentNode.style.pointerEvents = 'none';
+         }*/
         /*window.addEventListener('resize', function (e) {
-            table.columns.adjust().draw();
-            //console.log('ok');
-        });*/
+         table.columns.adjust().draw();
+         //console.log('ok');
+         });*/
 
 
 
     }
     /*function refresh_scene_view(json){
-        $('#scene-view').empty();
-        json.scene.forEach(function (element, index, array) {
-            var cell_info = JSON.parse(element);
-            console.log(cell_info);
-            var cell = document.createElement('div');
-            cell.classList.add('mj-scene-block');
-            $('#scene-view').append(cell);
-            var cell_mask = document.createElement('div');
-            cell_mask.innerHTML='<div class="cell-digit">'+
-                '<i class="fa fa-download"></i>'+
-                cell_info.download_times+
-                '<i class="fa fa-copy"></i>'+
-                cell_info.views_count+'</div>' +
-                '<div class="noselect cell-name">'+
-                cell_info.name
-                +'</div>';
-            cell.appendChild(cell_mask);
-            //cell.style.backgroundImage = "url('"+Config.FILE_SRORE+"/design/"+cell_info.s_id+"/thumb.png')";
-        });
-        //console.log(json.scene[0]);
-    }*/
+     $('#scene-view').empty();
+     json.scene.forEach(function (element, index, array) {
+     var cell_info = JSON.parse(element);
+     console.log(cell_info);
+     var cell = document.createElement('div');
+     cell.classList.add('mj-scene-block');
+     $('#scene-view').append(cell);
+     var cell_mask = document.createElement('div');
+     cell_mask.innerHTML='<div class="cell-digit">'+
+     '<i class="fa fa-download"></i>'+
+     cell_info.download_times+
+     '<i class="fa fa-copy"></i>'+
+     cell_info.views_count+'</div>' +
+     '<div class="noselect cell-name">'+
+     cell_info.name
+     +'</div>';
+     cell.appendChild(cell_mask);
+     //cell.style.backgroundImage = "url('"+Config.FILE_SRORE+"/design/"+cell_info.s_id+"/thumb.png')";
+     });
+     //console.log(json.scene[0]);
+     }*/
+
+    function fill_scene_thumb(id, thumb){
+    }
 
     $(document).ready(function(){
         setTimeout(function(){
@@ -104,11 +98,10 @@
         }, 3000);
 
         var tag_selected = {};
-        var search_keep;
 
         $('#tags-toggle').click(function(){
             //if(this.classList.contains('collapsed')){
-                //this.classList.remove('collapsed');
+            //this.classList.remove('collapsed');
             //}
             if(this.getAttribute('aria-expanded') == 'false'){
                 tag_selected = {};
@@ -154,21 +147,7 @@
                                                 if(tag_selected[i])tags.push(parseInt(i));
                                             }
                                         }
-                                        //console.log();
-                                        var search_field = $('#scene-table_filter input[type="search"]');
-                                        var search_str = search_field.val();
-                                        if(search_keep) {
-                                            $('#scene-table').off('init.dt', search_keep);
-                                        }
-                                        search_keep = function(){
-                                            $('#scene-table_filter input[type="search"]').val(search_str);
-                                            $('#scene-table_filter input[type="search"]').keyup();
-                                            $('#scene-table').off('init.dt', search_keep);
-                                        };
-
                                         load_scene(0, tags);
-
-                                        $('#scene-table').on('init.dt', search_keep);
                                     });
                                 });
                             }
@@ -184,26 +163,25 @@
             }
         });
 
-        $('#scene-table').dataTable( {
+        $('#tag-table').dataTable( {
             language:Config.TABLE_LANG
         });
-        load_scene(0, []);
-        $('#scene-table tbody').on('click', 'tr[role="row"]', function () {
-           /* var name = $('td', this).eq(1).text();
-            console.log( 'You clicked on '+name+'\'s row' );*/
+        load_tags(0, []);
+        $('#tag-table tbody').not($('.dataTables_empty')[0]).on('click', 'tr[role="row"]', function () {
+            /* var name = $('td', this).eq(1).text();
+             console.log( 'You clicked on '+name+'\'s row' );*/
             //console.log(this);
-            var url = './scene_detail.php';
+            var url = './c-tag-detail.php';
             var form = $('<form action="' + url + '" method="post">' +
-            '<input type="text" name="id" value="' + $('td', this).eq(1).text() + '" />' +
+            '<input type="text" name="id" value="' + $('td', this).eq(0).text() + '" />' +
             '<input type="text" name="mode" value="modify" />' +
-            //'<input type="text" name="mode" value="modify" />' +
             '</form>');
             $('body').append(form);
             form.submit();
         } );
 
-        $('#bt-new-scene').on('click', function () {
-            var url = './scene_detail.php';
+        $('#bt-new-tag').on('click', function () {
+            var url = './c-tag-detail.php';
             var form = $('<form action="' + url + '" method="post">' +
             '<input type="text" name="mode" value="new" />' +
                 //'<input type="text" name="mode" value="modify" />' +
@@ -212,10 +190,10 @@
             form.submit();
         });
         /*$('#scene-table tbody').mouseenter(function(event){
-            console.log( 'enter' );
-        });
-        $('#scene-table').mouseout(function(event){
-            console.log( 'Out' );
-        });*/
+         console.log( 'enter' );
+         });
+         $('#scene-table').mouseout(function(event){
+         console.log( 'Out' );
+         });*/
     });
 })();

@@ -9,6 +9,7 @@
         var file_upload = null;
 
         var tag_selected = {};
+        var tags = [];
         var form = new FormData();
         form.append('op', 'get_all_tags');
         var xhr_tag = new XMLHttpRequest();
@@ -42,7 +43,7 @@
                                     dom.classList.add('btn-warning');
                                     tag_selected[tag['id']] = true;
                                 }
-                                var tags = [];
+                                tags = [];
                                 for (var i in tag_selected) {
                                     if (tag_selected.hasOwnProperty(i)) {
                                         if (tag_selected[i])tags.push(parseInt(i));
@@ -51,7 +52,29 @@
                             });
                         });
                     }
-                    $('[data-toggle="tooltip"]').tooltip()
+                    $('[data-toggle="tooltip"]').tooltip();
+                    var form_st = new FormData();
+                    form_st.append('op', 'get_one_scene_tags');
+                    form_st.append('data', '{"s_id":"'+ id +'"}');
+                    var xhr_st = new XMLHttpRequest();
+                    xhr_st.open('post', '../php/tag_api.php', true);
+                    xhr_st.addEventListener('readystatechange', function() {
+                        if (xhr_st.readyState == 4) {
+                            if ((xhr_st.status >= 200 && xhr_st.status < 300) || xhr_st.status == 304) {
+                                var json = JSON.parse(xhr_st.responseText);
+                                if(json['status'] && json['status'] == "OK"){
+                                    json['tags'].forEach(function(element){
+                                        var active_bt = $('.btn-tag[meta-id="'+ element +'"]')[0];
+                                        active_bt.classList.add('active');
+                                        active_bt.classList.add('btn-warning');
+                                        tag_selected[element] = true;
+                                        tags.push(element);
+                                    });
+                                }
+                            }
+                        }
+                    });
+                    xhr_st.send(form_st);
                 }
             }
         });
@@ -208,7 +231,8 @@
                             designer:$('#form-scene-designer')[0].value.trim(),
                             desc:$('#form-desc')[0].value,
                             views_count:$('#form-vc')[0].value,
-                            modify_date:new Date().toMysqlFormat()
+                            modify_date:new Date().toMysqlFormat(),
+                            tags:tags
                         }
                     );
                     form.append('data', json);
@@ -230,6 +254,7 @@
                         }
                     });
                     xhr.send(form);
+                    //console.log(json);
                 }
             });
 
@@ -409,7 +434,8 @@
                             download_times:0,
                             views_count:$('#form-vc').val(),
                             desc:$('#form-desc').val().trim(),
-                            modify_date:new Date().toMysqlFormat()
+                            modify_date:new Date().toMysqlFormat(),
+                            tags:tags
                         }
                     );
                     form.append('data', json);

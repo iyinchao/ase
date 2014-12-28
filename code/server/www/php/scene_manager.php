@@ -10,6 +10,7 @@ include_once 'db_conn.php';
 include_once 'debug.php';
 include_once 'uuid.php';
 include_once 'zip.php';
+include_once 'tag_manager.php';
 
 class SceneManager{
     /**
@@ -141,7 +142,6 @@ class SceneManager{
             }
         }
 
-
         $response = (object)array();
         $response->status = 'OK';
         $response->scene = $scene;
@@ -159,13 +159,13 @@ class SceneManager{
         $s_id = $data->s_id;  //TODO:check the data value?
 
         if(file_exists(Conf::DIR_DESIGN_FILE.$s_id)){
-            if(file_exists(Conf::DIR_DESIGN_FILE.$s_id.'/'.'thumb.png')) {
-                $thumb = fopen(Conf::DIR_DESIGN_FILE.$s_id.'/'.'thumb.png', 'rb');
+            if(file_exists(Conf::DIR_DESIGN_FILE.$s_id.'/main/'.'thumb.png')) {
+                $thumb = fopen(Conf::DIR_DESIGN_FILE.$s_id.'/main/'.'thumb.png', 'rb');
                 if(!$thumb){
                     exit('{"status":"ERROR_OPEN_THUMB"}');
                 }
                 header('Content-Type: image/jpeg');
-                header('Content-Length: ' . filesize(Conf::DIR_DESIGN_FILE . $s_id.'/'.'thumb.png'));
+                header('Content-Length: ' . filesize(Conf::DIR_DESIGN_FILE . $s_id.'/main/'.'thumb.png'));
                 fpassthru($thumb);
             }else{
                 exit('{"status":"NO_THUMB"}');
@@ -242,9 +242,21 @@ class SceneManager{
             $desc = mysqli_real_escape_string($db, $data->{'desc'});
             $query = $query . ",`desc` = '$desc' ";
         }
+
+        $tag_update_result = true;
+
+        if(isset($data->{'tags'})) {
+            $tag_data = (object)array();
+            $tag_data->{'s_id'} = $s_id;
+            $tag_data->{'tags'} = $data->{'tags'};
+            $tag_data->{'no_echo'} = true;
+            $tag_update_result = TagManager::update_tag_scene($tag_data);
+        }
+
         $query = $query . " where s_id = '" . $s_id . "'";
         $result = $db->query($query);  //执行SQL
-        if ($result) {
+
+        if ($result && ((isset($data->{'tags'}) && $tag_update_result) || !isset($data->{'tags'}))) {
             echo('{"status":"OK"}');
         } else {
             exit('{"status":"ERROR_UPDATE"}');
@@ -298,6 +310,10 @@ class SceneManager{
             $designer = mysqli_real_escape_string($db, $data->{'designer'});
         }
 
+        if(!isset($data->{'tags'})) {
+            exit('{"status":"INVALID_DATA"}');
+        }
+
         $modify_date = date("Y-m-d H:i:s", time());
 
         if(isset($_FILES) && isset($_FILES['file']) && $_FILES['file']['error'] != 1 && $_FILES['file']['tmp_name'] != ''){
@@ -337,8 +353,32 @@ class SceneManager{
             }catch (Exception $e){
                 $query = "delete from scene where s_id = '$s_id'";
                 $db->query($query);
+                if(file_exists(Conf::DIR_DESIGN_FILE.$s_id)){
+                    if(is_dir(Conf::DIR_DESIGN_FILE.$s_id)){
+                        $it = new RecursiveDirectoryIterator(Conf::DIR_DESIGN_FILE.$s_id, RecursiveDirectoryIterator::SKIP_DOTS);
+                        $files = new RecursiveIteratorIterator($it,
+                            RecursiveIteratorIterator::CHILD_FIRST);
+                        foreach($files as $file) {
+                            if ($file->isDir()){
+                                rmdir($file->getRealPath());
+                            } else {
+                                unlink($file->getRealPath());
+                            }
+                        }
+                        rmdir(Conf::DIR_DESIGN_FILE.$s_id);
+                    }else{
+                        unlink(Conf::DIR_DESIGN_FILE.$s_id);
+                    }
+                }
                 exit('{"status":"ERROR_UNZIP"}');
             }
+
+            $tag_data = (object)array();
+            $tag_data->{'s_id'} = $s_id;
+            $tag_data->{'tags'} = $data->{'tags'};
+            $tag_data->{'no_echo'} = true;
+            TagManager::update_tag_scene($tag_data);
+
         }else{
             exit('{"status":"ERROR_DB_INSERT"}');
         }

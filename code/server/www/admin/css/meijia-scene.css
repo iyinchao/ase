@@ -44,7 +44,7 @@
 #scene-table_paginate {
   float: right;
 }
-.table-striped > tbody > tr:hover {
+.table-striped > tbody > tr[role="row"]:hover {
   background: #428bca;
   color: #FFF;
 }
@@ -52,7 +52,7 @@
   margin-bottom: 10px;
   font-family: "Arial", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
 }
-.table-striped > tbody > tr {
+.table-striped > tbody > tr[role="row"] {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
