@@ -5,9 +5,11 @@
 #include "network\HttpClient.h"
 #include "network\HttpRequest.h"
 #include "network\HttpResponse.h"
+#include "DialogLayer.h"
 #include "LoginDlg.h"
 #include "MScrollView.h"
 #include "SearchDlg.h"
+#include "SimpleAudioEngine.h"
 #include "cocos-ext.h"
 #include "ui\CocosGUI.h"
 #include "editor-support\cocostudio\CocoStudio.h"
@@ -29,6 +31,7 @@ public:
     void menuSearchCallback(cocos2d::Ref* pSender);
 	void sceneBorderCallback(cocos2d::Ref* pSender, int id);
 	void menuLoginCallback(cocos2d::Ref* pSender);
+	void menuUpdateCallback(cocos2d::Ref* pSender);
 	void onHttpRequestComplete(cocos2d::network::HttpClient *sender, cocos2d::network::HttpResponse *reponse);
 
 	//virtual bool onTouchBegan(cocos2d::Touch *pTouch, cocos2d::Event *pEvent);
@@ -44,22 +47,26 @@ public:
 
 	cocos2d::Texture2D* Base64toTex(std::string bfile);
 	void updateCustom(float dt);
+	void updateSceneInfo();
 
 public:
 	cocos2d::MenuItemImage * userItem;
+	cocos2d::MenuItemImage * updateItem;
 	bool userVerify;
 	cocos2d::Menu* menu;
 	MScrollView* voidBg;
 	cocos2d::Sprite* mainBg;
 	int sceneNum;
+	std::map<std::string, std::string> intro;
+	std::map<std::string, std::string> sname;
 
 private:
-	cocos2d::MenuItemImage * sceneBorder[6];
-	cocos2d::Sprite * scenePic[6];
-	cocos2d::MenuItemImage * settingItem;
-	cocos2d::network::HttpRequest* request;
-	LoginDlg *logintest;
-	SearchDlg *searchtest;
+	cocos2d::MenuItemImage* sceneBorder[6];
+	cocos2d::Sprite* scenePic[6];
+	cocos2d::MenuItemImage* settingItem;
+	SearchDlg* searchtest;
+	DialogLayer* updateLayer;
+	cocos2d::network::HttpRequest* MhttpRequest;
 };
 
 #endif // __MEIJIA_MAIN_SCENE_H__

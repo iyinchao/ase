@@ -1,5 +1,5 @@
-#ifndef _CONFIRM_DLG_H_
-#define _CONFIRM_DLG_H_
+#ifndef _SEARCH_DLG_H_
+#define _SEARCH_DLG_H_
 
 #include "MScrollView.h"
 #include "DialogLayer.h"

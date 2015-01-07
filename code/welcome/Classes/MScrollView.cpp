@@ -1,5 +1,7 @@
 #include "MScrollView.h"
 #include "ConfirmDlg.h"
+#include "MeijiaMainScene.h"
+#include "SearchDlg.h"
 
 CCScene* MScrollView::scene()  
 {  
@@ -12,27 +14,16 @@ CCScene* MScrollView::scene()
     return scene;  
 }  
 
-//static MScrollView* MScrollView::createScroll(const int _sceneNum)
-//{ 
-//	MScrollView *pRet = new MScrollView();
-//	pRet->sceneNum = _sceneNum;
-//    if (pRet && pRet->init())
-//    {
-//        pRet->autorelease();
-//        return pRet;
-//    }
-//    else
-//    {
-//        delete pRet;
-//        pRet = NULL;
-//        return NULL;
-//    }
-//}
-
 bool MScrollView::init()  
 {  
     CCLayer::init();  
-	//this->setAnchorPoint(Vec2(0, 0));
+	sceneNum = SCENESUM;
+
+	for(int i=0; i<sceneNum; i++)
+	{
+		intromap.insert(pair<string, string>("0b7587a9-940c-4965-9cbc-45c3a1380ae5", "intro\nintro\nintro\nintro\n"));
+		snamemap.insert(pair<string, string>("0b7587a9-940c-4965-9cbc-45c3a1380ae5", "TITLE"));
+	}
     return true;  
 }  
 
@@ -66,9 +57,11 @@ void MScrollView::initScrollView(const int _sceneNum, std::vector<std::string>& 
         //给视图编号  
         char buf[10];  
         sprintf(buf, "%d/%d", i + 1, sumpage);  
-        CCLabelTTF* label = CCLabelTTF::create(buf, "Arial", 36);     
+        LabelTTF* label = LabelTTF::create(buf, "Arial", 36);    
+		label->setString(buf);
+		label->setColor(ccc3(66, 66, 66));
         sprite->addChild(label);  
-		label->setPosition(Vec2(winSize.width / 2, winSize.height / 8));  
+		label->setPosition(Vec2(winSize.width / 2, winSize.height / 12));  
     }  
 
 	// 防止出现最后一页填不满
@@ -85,9 +78,11 @@ void MScrollView::initScrollView(const int _sceneNum, std::vector<std::string>& 
         //给视图编号  
         char buf[10];  
         sprintf(buf, "%d/%d", sceneNum/6 + 1, (int)(sceneNum / 6 + 1));  
-        CCLabelTTF* label = CCLabelTTF::create(buf, "Arial", 36);     
+        LabelTTF* label = LabelTTF::create(buf, "Arial", 36); 
+		label->setString(buf);
         sprite->addChild(label);  
-        label->setPosition(Vec2(winSize.width / 2, winSize.height / 8));  
+		label->setColor(ccc3(66, 66, 66));
+        label->setPosition(Vec2(winSize.width / 2, winSize.height / 12));  
 	}
    
     //滚动视图  
@@ -115,6 +110,16 @@ void MScrollView::initScrollView(const int _sceneNum, std::vector<std::string>& 
     //注册触摸事件  
     setTouchEnabled(true);  
     setTouchMode(kCCTouchesOneByOne);  
+}
+
+void MScrollView::setScrollInfo(std::map<std::string, std::string>& _snamemap, std::map<std::string, std::string>& _intromap)
+{
+	intromap.clear();
+	snamemap.clear();
+
+	intromap = _intromap;
+	snamemap = _snamemap;
+	return;
 }
    
 //鼠标点下的时候  
@@ -270,51 +275,19 @@ void MScrollView::sceneBorderCallback(cocos2d::Ref* pSender, int id, cocos2d::Me
 //// ***** new *****
 	layertest->setID(sceneID[id]);
 
-	//switch(id){
-	//case 0:
-	//	//layertest = ConfirmDlg::create();
-	//	_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
-	//	layertest->setID(_dlgID);
-	//	break;
-	//case 1:
-	//	//layertest = ConfirmDlg::create();
-	//	_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
-	//	layertest->setID(_dlgID);
-	//	break;
-	//case 2:
-	//	//layertest = ConfirmDlg::create();
-	//	_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
-	//	layertest->setID(_dlgID);
-	//	break;
-	//case 3:
-	//	//layertest = ConfirmDlg::create();
-	//	_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
-	//	layertest->setID(_dlgID);
-	//	break;
-	//case 4:
-	//	layertest = ConfirmDlg::create();
-	//	_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
-	//	layertest->setID(_dlgID);
-	//	break;
-	//case 5:
-	//	layertest = ConfirmDlg::create();
-	//	_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
-	//	layertest->setID(_dlgID);
-	//	break;
-	//default:
-	//	MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.","Alert");
-	//	return;
+	//map<string, string> intromap;
+	//for(int i=0; i<sceneNum; i++)
+	//{
+	//	intromap.insert(pair<string, string>("0b7587a9-940c-4965-9cbc-45c3a1380ae5", "intro"));
 	//}
 
 	// CCLOG(_dlgID);
-	layertest->initLabel(intro, titlestr);
+	//layertest->initLabel(intro, titlestr);
+	layertest->initLabel(intromap[sceneID[id]], titlestr);
+	//layertest->initLabel(((MeijiaMain*)this->getParent())->intro[sceneID[id]], ((MeijiaMain*)this->getParent())->sname[sceneID[id]]);
 
-	//auto tmpMenu = Menu::create(outMenu, menu);
-	//layertest->setSceneMenu(menu);
 	layertest->setOutMenu(outMenu);
 	this->addChild(layertest, 10);
-	//menu->setEnabled(false);
-	//outMenu->setEnabled(false);
 	return;
 }
 
