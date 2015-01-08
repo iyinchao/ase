@@ -11,33 +11,38 @@ include 'debug.php';      //出错的处理
 include 'db_conn.php';    //数据库连接
 include 'uuid.php';      //好像是解析user-id所需要的
 
-switch ($_GET['op']) {
+switch ($_POST['op']) {
     case 'update':     //修改标签
-        if(!isset($_GET['data']))  exit('{"status:"NO_REQ_DATA"}');
-        $data = json_decode($_GET['data']); //解析json（其实应该加上try/catch）
+        if(!isset($_POST['data']))  exit('{"status:"NO_REQ_DATA"}');
+        $data = json_decode($_POST['data']); //解析json（其实应该加上try/catch）
         TagManager::update($data); //调用方法
         break;
+    case 'get_one_tag':     //根据id获得标签
+        if(!isset($_POST['data']))  exit('{"status:"NO_REQ_DATA"}');
+        $data = json_decode($_POST['data']); //解析json（其实应该加上try/catch）
+        TagManager::get_one_tag($data); //调用方法
+        break;
     case 'delete':     //删除标签
-        if(!isset($_GET['data']))  exit('{"status:"NO_REQ_DATA"}');
-        $data = json_decode($_GET['data']); //解析json（其实应该加上try/catch）
+        if(!isset($_POST['data']))  exit('{"status:"NO_REQ_DATA"}');
+        $data = json_decode($_POST['data']); //解析json（其实应该加上try/catch）
         TagManager::delete($data); //调用方法
         break;
     case 'add':     //增加标签
-        if(!isset($_GET['data']))  exit('{"status:"NO_REQ_DATA"}');
-        $data = json_decode($_GET['data']); //解析json（其实应该加上try/catch）
+        if(!isset($_POST['data']))  exit('{"status:"NO_REQ_DATA"}');
+        $data = json_decode($_POST['data']); //解析json（其实应该加上try/catch）
         TagManager::add($data); //调用方法
         break;
     case 'get_tags':   //获得标签
         TagManager::get_tags();
         break;
     case 'update_tag_scene':   //更新场景的标签
-        if(!isset($_GET['data']))  exit('{"status:"NO_REQ_DATA"}');
-        $data = json_decode($_GET['data']); //解析json（其实应该加上try/catch）
+        if(!isset($_POST['data']))  exit('{"status:"NO_REQ_DATA"}');
+        $data = json_decode($_POST['data']); //解析json（其实应该加上try/catch）
         TagManager::update_tag_scene($data); //调用方法
         break;
     case 'get_scene_tag':   //获得场景的标签
-        if(!isset($_GET['data']))  exit('{"status:"NO_REQ_DATA"}');
-        $data = json_decode($_GET['data']); //解析json（其实应该加上try/catch）
+        if(!isset($_POST['data']))  exit('{"status:"NO_REQ_DATA"}');
+        $data = json_decode($_POST['data']); //解析json（其实应该加上try/catch）
         TagManager::get_scene_tags($data); //调用方法
         break;
 }
@@ -60,7 +65,11 @@ class TagManager{
             exit('{"status":"INVALID_DATA"}');
         }
         else { $name = mysqli_real_escape_string($db, $data->{'name'});}
-        $query="update tag set name='$name' where id= $id";
+        if(!isset($data->{'desc'})){
+            exit('{"status":"INVALID_DATA"}');
+        }
+        else { $desc = mysqli_real_escape_string($db, $data->{'desc'});}
+        $query="update tag set name='$name',`desc`='$desc' where id= $id";
         $result = $db->query($query);  //执行SQL
         if($result){
             $response = (object)array();
@@ -71,6 +80,32 @@ class TagManager{
             $response->result = 'no';
             echo json_encode($response);
         }
+        $db->close();  //一定记得在用完数据库后关闭！！
+    }
+
+    static public function get_one_tag($data){
+        //database connect
+        try{
+            $db = DBConn::connect();
+        }catch (Exception $e){
+            exit('{"status":"ERROR_DB_CONN","error_message:"'.$e->getMessage().'"}');
+        }
+        if(!isset($data->{'id'})){
+            exit('{"status":"INVALID_DATA"}');
+        }
+        else { $id = mysqli_real_escape_string($db, $data->{'id'});}
+
+        $query = "select * from tag where id='$id'";
+        $result = $db->query($query);  //执行SQL
+        $response = (object)array();
+        if ($result->num_rows == 1) {
+            $response = (object)array();
+            $response->result = 'ok';
+            $row = $result->fetch_assoc();
+            $response->name=$row['name'];
+            $response->desc=$row['desc'];
+        }else{$response->result = 'no';}
+        echo json_encode($response);
         $db->close();  //一定记得在用完数据库后关闭！！
     }
 
@@ -85,11 +120,11 @@ class TagManager{
             exit('{"status":"INVALID_DATA"}');
         }
         else { $name = mysqli_real_escape_string($db, $data->{'name'});}
-        if(!isset($data->{'name'})){
+        if(!isset($data->{'desc'})){
             exit('{"status":"INVALID_DATA"}');
-        }
+        }else { $desc = mysqli_real_escape_string($db, $data->{'desc'});}
 
-        $query = "insert into tag (name) values('$name')";
+        $query = "insert into tag (name,`desc`) values('$name','$desc')";
 
         $result = $db->query($query);  //执行SQL
         if($result){
@@ -145,6 +180,7 @@ class TagManager{
             $term = (object)array();
             $term->id = $row['id'];
             $term->name = $row['name'];
+            $term->desc = $row['desc'];
             $tags[$i] = $term;
             $i = $i + 1;
         }
