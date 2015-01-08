@@ -7,12 +7,15 @@
 #include "json\writer.h"
 #include "json\stringbuffer.h"
 #include "MScrollView.h"
+#include "SearchDlg.h"
+#include <map>
 
 USING_NS_CC;
 USING_NS_CC_EXT;
 //using namespace gui;
 using namespace cocos2d::network;
 using namespace cocos2d;
+using namespace std;
 
 Scene* MeijiaMain::createScene()
 {
@@ -36,8 +39,20 @@ bool MeijiaMain::init()
     {
         return false;
     }
-    
+	CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("TheRain.mp3", true);
 	sceneNum = SCENESUM;
+	intro.clear();
+	sname.clear();
+
+	vector<string> test;
+	for(int i=1; i<sceneNum; i++)
+		test.push_back("0b7587a9-940c-4965-9cbc-45c3a1380ae5");
+
+	for(int i=0; i<sceneNum; i++)
+	{
+		intro.insert(pair<string, string>("0b7587a9-940c-4965-9cbc-45c3a1380ae5", "intro"));
+		sname.insert(pair<string, string>("0b7587a9-940c-4965-9cbc-45c3a1380ae5", "name"));
+	}
 
 	// *** 客户端本地初始化 ***
     Size visibleSize = Director::getInstance()->getVisibleSize();
@@ -50,27 +65,30 @@ bool MeijiaMain::init()
                                            CC_CALLBACK_1(MeijiaMain::menuSearchCallback, this));
     
 	searchItem->setPosition(Vec2(origin.x + visibleSize.width - searchItem->getContentSize().width/2 - 20,
-        origin.y + searchItem->getContentSize().height/2 + 10));
+        origin.y + searchItem->getContentSize().height/2 + 30));
 
-	userItem = MenuItemImage::create(
-                                    "UserNormal.png",
-                                    "UserSelected.png",
-                                    CC_CALLBACK_1(MeijiaMain::menuLoginCallback, this));
+	//userItem = MenuItemImage::create(
+ //                                   "UserNormal.png",
+ //                                   "UserSelected.png",
+ //                                   CC_CALLBACK_1(MeijiaMain::menuLoginCallback, this));
 
-	userItem->setPosition(Vec2(origin.x + visibleSize.width - userItem->getContentSize().width/2 - 20,
-		visibleSize.height - userItem->getContentSize().height/2 - 30));
+	//userItem->setPosition(Vec2(origin.x + visibleSize.width - userItem->getContentSize().width/2 - 20,
+	//	visibleSize.height - userItem->getContentSize().height/2 - 30));
+
+	updateItem = MenuItemImage::create(
+                                    "update.png",
+                                    "update.png",
+                                    CC_CALLBACK_1(MeijiaMain::menuUpdateCallback, this));
+
+	updateItem->setPosition(Vec2(origin.x + visibleSize.width - updateItem->getContentSize().width/2 - 20,
+		visibleSize.height - updateItem->getContentSize().height/2 - 30));
 
     // create menu, it's an autorelease object
-    menu = Menu::create(searchItem, userItem, NULL);
+    menu = Menu::create(searchItem, updateItem, NULL);
     menu->setPosition(Vec2::ZERO);
 
-	mainBg = Sprite::create("MainBg.png", Rect(0, 0, 1024, 768));
+	mainBg = Sprite::create("MainBg2.png", Rect(0, 0, 1024, 768));
 	mainBg->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
-
-	vector<string> test;
-	//test.push_back("0b7587a9-940c-4965-9cbc-45c3a1380ae5");
-	for(int i=1; i<sceneNum; i++)
-		test.push_back("0b7587a9-940c-4965-9cbc-45c3a1380ae5");
 
 	//voidBg = MScrollView::create();
 	//voidBg->initScrollView(9, test);
@@ -85,39 +103,44 @@ bool MeijiaMain::init()
 
 	userVerify = false;
 
-	//// *** 客户端与服务器链接初始化 ***
-	//// 生成传输给服务器端的.json 文件
-	//rapidjson::Document writedoc;
-	//writedoc.SetObject();
-	//rapidjson::Document::AllocatorType& allocator = writedoc.GetAllocator();
-	//rapidjson::Value array(rapidjson::kArrayType);
-	//rapidjson::Value object(rapidjson::kObjectType);
-	//
-	//// json object 格式添加 “名称/值” 对
-	//object.AddMember("inttag", 1, allocator);
-	//object.AddMember("doubletag", 1.0, allocator);
-	//object.AddMember("booltag", true, allocator);
-	//object.AddMember("hellotag", "helloworld", allocator);
-	//
-	//// json 加入数组
-	//array.PushBack(object, allocator);
-	//
-	//// json object 格式添加 “名称/值” 对
-	//writedoc.AddMember("json", "json string", allocator);
-	//writedoc.AddMember("array", array, allocator);
-
-	//// 将 .json 文件转为字符流传送给服务器
-	//const char* postData = writedoc.GetString();
-	//request = new HttpRequest();
-	//request->setRequestType(HttpRequest::Type::POST);
-	//request->setUrl("http://www.baidu.com");
-	//request->setResponseCallback(CC_CALLBACK_2(MeijiaMain::onHttpRequestComplete, this));
-	//request->setRequestData(postData, strlen(postData));
-	//request->setTag("POST test");
-	//HttpClient::getInstance()->send(request);
-	//request->release();
-
     return true;
+}
+
+void MeijiaMain::updateSceneInfo()
+{
+	rapidjson::Document document;
+	document.SetObject();
+	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+	rapidjson::Value array(rapidjson::kArrayType);
+	rapidjson::Value object(rapidjson::kObjectType);
+	rapidjson::Value tagArr(rapidjson::kArrayType);
+	
+	document.AddMember("page_now", 0, allocator);
+	document.AddMember("scene_per_page", -1, allocator);
+ 
+	rapidjson::StringBuffer buffer;
+	rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+	document.Accept(writer);
+	//CCLog(buffer.GetString());  
+
+	char jsonData[200]; 
+	strcpy(jsonData, buffer.GetString());
+	char postData[250];
+	sprintf(postData, "op=client_browse&data=%s", jsonData); 
+	CCLog(postData);  
+
+	MhttpRequest = new HttpRequest();
+	MhttpRequest->setUrl("http://www.baidu.com");
+	MhttpRequest->setRequestType(HttpRequest::Type::GET);
+	
+	//MhttpRequest->setUrl("http://192.168.1.106/php/scene_api.php");
+	//MhttpRequest->setRequestType(HttpRequest::Type::POST);
+	//MhttpRequest->setRequestData(postData, strlen(postData));
+
+	MhttpRequest->setTag("select");
+	MhttpRequest->setResponseCallback(CC_CALLBACK_2(MeijiaMain::onHttpRequestComplete, this));
+	HttpClient::getInstance()->send(MhttpRequest);
+	MhttpRequest->release();
 }
 
 void MeijiaMain::addScrollView(int _sceneNum, vector<string>& _test)
@@ -133,6 +156,10 @@ void MeijiaMain::addScrollView(int _sceneNum, vector<string>& _test)
 
 void MeijiaMain::menuSearchCallback(Ref* pSender)
 {
+	// 停止旋转，恢复原状 test
+	updateItem->stopAllActions();
+	updateItem->setRotation(0);
+
 	//auto uiLayout = cocostudio::GUIReader::getInstance()->widgetFromJsonFile("SelectPlane.json");
 	//Director::getInstance()->end();
 
@@ -144,74 +171,51 @@ void MeijiaMain::menuSearchCallback(Ref* pSender)
 	//menu->setEnabled(false);
 }
 
-void MeijiaMain::menuLoginCallback(Ref* pSender)
-{
-	if(userVerify){
-
-	}
-	else{
-		logintest = LoginDlg::create();
-		this->addChild(logintest, 10);
-		//logintest->setOutMenu(menu);
-		//logintest->setSceneMenu(voidBg->menu);
-		//voidBg->menu->setEnabled(false);
-		//menu->setEnabled(false);
-
-		schedule(schedule_selector(MeijiaMain::updateCustom), 1.0f, kRepeatForever, 0);
-		//userVerify = true;
-	}
-	return;
-}
-
-//void MeijiaMain::sceneBorderCallback(cocos2d::Ref* pSender, int id)
+//void MeijiaMain::menuLoginCallback(Ref* pSender)
 //{
-//	ConfirmDlg *layertest = ConfirmDlg::create();
-//	std::string _dlgID;
-//	std::string titlestr("TITLE");
-//	std::string intro("intro\nintro\nintro\nintro\n");
-//	switch(id){
-//	case 0:
-//		//layertest = ConfirmDlg::create();
-//		_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
-//		layertest->setID(_dlgID);
-//		break;
-//	case 1:
-//		//layertest = ConfirmDlg::create();
-//		_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
-//		layertest->setID(_dlgID);
-//		break;
-//	case 2:
-//		//layertest = ConfirmDlg::create();
-//		_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
-//		layertest->setID(_dlgID);
-//		break;
-//	case 3:
-//		//layertest = ConfirmDlg::create();
-//		_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
-//		layertest->setID(_dlgID);
-//		break;
-//	case 4:
-//		layertest = ConfirmDlg::create();
-//		_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
-//		layertest->setID(_dlgID);
-//		break;
-//	case 5:
-//		layertest = ConfirmDlg::create();
-//		_dlgID = "6d05d6ba-4ca2-523c-8a15-adbbfe4f2265";
-//		layertest->setID(_dlgID);
-//		break;
-//	default:
-//		MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.","Alert");
-//		return;
-//	}
+//	if(userVerify){
 //
-//	// CCLOG(_dlgID);
-//	layertest->initLabel(intro, titlestr);
-//	layertest->setSceneMenu(menu);
-//	this->addChild(layertest, 10);
-//	menu->setEnabled(false);
+//	}
+//	else{
+//		logintest = LoginDlg::create();
+//		this->addChild(logintest, 10);
+//		//logintest->setOutMenu(menu);
+//		//logintest->setSceneMenu(voidBg->menu);
+//		//voidBg->menu->setEnabled(false);
+//		//menu->setEnabled(false);
+//
+//		schedule(schedule_selector(MeijiaMain::updateCustom), 1.0f, kRepeatForever, 0);
+//		//userVerify = true;
+//	}
 //	return;
 //}
+
+void MeijiaMain::menuUpdateCallback(Ref* pSender)
+{
+	RotateBy* rotate = RotateBy::create(1, 360);
+	RepeatForever* repeatRotate = RepeatForever::create(rotate);
+	//updateItem->runAction(Spawn::create(rotate, NULL));
+	updateItem->runAction(repeatRotate);
+
+	auto winSize = Director::getInstance()->getWinSize();
+	updateLayer = DialogLayer::create();
+	auto updating = LabelTTF::create("updating... please wait", "Arial", 36);
+	// ************ 触摸吞噬 ************
+	auto listener = EventListenerTouchOneByOne::create();
+	listener->setSwallowTouches(true);
+	listener->onTouchBegan = [](Touch* touch, Event* event)
+	{
+		return true;
+	};
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, updating);
+
+	updating->setPosition(winSize.width/2, winSize.height/2);
+	updateLayer->addChild(updating);
+	this->addChild(updateLayer, 10);
+	//updateSceneInfo();
+
+	return;
+}
 
 Texture2D* MeijiaMain::Base64toTex(std::string bfile)
 {
@@ -243,12 +247,15 @@ void MeijiaMain::onHttpRequestComplete(HttpClient *sender, HttpResponse* respons
     if (0 != strlen(response->getHttpRequest()->getTag()))
     {
         log("%s completed", response->getHttpRequest()->getTag());
-    }    
-    //int statusCode = response->getResponseCode();
-    //log("response code: %d", statusCode);
+    } 
+
+	// 没错我就是想看到 200
+    int statusCode = response->getResponseCode();
+	log("response code: %d", statusCode);    
+	
     char statusString[64] = {};
-    sprintf(statusString, "HTTP tag = %s", response->getHttpRequest()->getTag());
-  
+    log(statusString, "HTTP Status, tag = %s", response->getHttpRequest()->getTag());
+
     if (!response->isSucceed())
     {
         log("response failed");
@@ -256,50 +263,85 @@ void MeijiaMain::onHttpRequestComplete(HttpClient *sender, HttpResponse* respons
         return;
     }
 
-	// dump data
-	std::vector<char> *buffer = response->getResponseData();
-    log("Http Test, dump data: ");
-	log("%s", buffer);
-	unsigned char* save = new unsigned char[buffer->size()];
-    for (unsigned int i = 0; i < buffer->size(); i++)
+    // dump data
+    std::vector<char> *buffer = response->getResponseData();
+	log("Http Test, dump data: ");
+	log("%s", response->getResponseData());
+
+	char* sceneData = new char[buffer->size()];
+	int t=0;
+	for (long i = 0; i < buffer->size(); i++)
     {
-        save[i] =  (*buffer)[i];
+        sceneData[i] =  (*buffer)[i];
     }
-	log("%s", save);
 
-	// 如果是 base64 码，则需转码
-	if (response->getHttpRequest()->getTag() == "base64")
+	// local file test
+	ssize_t bufferSize;
+	unsigned char* jsondata = FileUtils::getInstance()->getFileData("test.json", "r", &bufferSize);
+	std::string load = std::string((const char*)jsondata, bufferSize);
+
+	rapidjson::Document readdoc;
+	readdoc.Parse<0>(load.c_str());
+    if (readdoc.HasParseError())
+    {
+		CCLog("GetParseError:%s\n",readdoc.GetParseError());
+    }
+
+	rapidjson::Value& _json = readdoc["status"];
+	const char* ch = _json.GetString();
+	cocos2d::log(ch);
+	cocos2d::log(_json.GetString());
+
+	rapidjson::Value& _array = readdoc["scene"];
+	const char* s_id;
+
+	if(_array.IsArray())
 	{
-		unsigned char *buffer;  
-		int len = base64Decode((unsigned char*)save, strlen((char*)save), &buffer);  
+		CCLOG("test");
+		sname.clear();
+		intro.clear();
+
+		for(int i=0; i<_array.Capacity(); i++)
+		{
+			//CCLOG("%d", i);
+			rapidjson::Value& arraydoc = _array[i];
+			if(arraydoc.HasMember("s_id"))
+			{
+				s_id = arraydoc["s_id"].GetString();
+			}
+			if(arraydoc.HasMember("name"))
+			{
+				const char* name = arraydoc["name"].GetString();
+				sname.insert(pair<string, string>(s_id, name));
+			}
+			if(arraydoc.HasMember("desc"))
+			{
+				const char* desc = arraydoc["desc"].GetString();
+				intro.insert(pair<string, string>(s_id, desc));
+			}
+		}
 	}
 
-	// 将下载的文件保存为.zip格式
-	auto path = FileUtils::getInstance()->getWritablePath();
-	path.append("baidu.html");
-    log("MeijiaMainScene save file path = %s",path.c_str());  
-      
-	FILE* file = fopen(path.c_str(), "wb");
-	if(file)
-	{
-		fputs((char*)save, file);
-		fclose(file);
-	}
-	delete[] save;
+	// 停止更新（旋转），恢复原状 test
+	updateItem->stopAllActions();
+	updateItem->setRotation(0);
+	updateLayer->setVisible(false);
+	updateLayer->onExit();
+
 	return;
 }
 
-void MeijiaMain::updateCustom(float dt)
-{
-	if(logintest->userVerify){
-		log("%d", logintest->userVerify);
-
-		Node *normalSprite = Sprite::create("VerifiedUserNormal.png");
-		Node *selectedSprite = Sprite::create("VerifiedUserSelected.png");
-		userItem->setNormalImage(normalSprite);
-		userItem->setSelectedImage(selectedSprite);
-
-		userVerify = true;
-		this->unschedule(schedule_selector(MeijiaMain::updateCustom));
-	}
-}
+//void MeijiaMain::updateCustom(float dt)
+//{
+//	if(logintest->userVerify){
+//		log("%d", logintest->userVerify);
+//
+//		Node *normalSprite = Sprite::create("VerifiedUserNormal.png");
+//		Node *selectedSprite = Sprite::create("VerifiedUserSelected.png");
+//		userItem->setNormalImage(normalSprite);
+//		userItem->setSelectedImage(selectedSprite);
+//
+//		userVerify = true;
+//		this->unschedule(schedule_selector(MeijiaMain::updateCustom));
+//	}
+//}

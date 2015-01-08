@@ -1,5 +1,5 @@
-#ifndef __MScrollView_H__  
-#define __MScrollView_H__  
+#ifndef __MSCROLL_VIEW_H__  
+#define __MSCROLL_VIEW_H__  
    
 #include "cocos2d.h"  
 #include "cocos-ext.h"  
@@ -31,6 +31,7 @@ public:
 
 	void setOutMenu(cocos2d::Menu* _outMenu);
 	void initScrollView(const int _sceneNum, std::vector<std::string>& _sceneID);
+	void setScrollInfo(std::map<std::string, std::string>& _snamemap, std::map<std::string, std::string>& _intromap);
 
 	cocos2d::Menu* menu;
 
@@ -43,7 +44,10 @@ private:
     Node* _contaner;
 	int sceneNum;
 	std::vector<std::string> sceneID;
+	std::map<std::string, std::string> intromap;
+	std::map<std::string, std::string> snamemap;
 	cocos2d::extension::ScrollView* view;
+	//cocos2d::LabelTTF* label;
 };  
    
 #endif // __ScrollView_H__

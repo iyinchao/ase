@@ -212,8 +212,9 @@ void SearchDlg::setDateAscState()
 
 void SearchDlg::menuCancelCallback(Ref* pSender)
 {
-	this->setVisible(false);
-	onExit();
+	//this->setVisible(false);
+	this->removeFromParentAndCleanup(true);
+	//onExit();
 	//sceneMenu->setEnabled(true);
 	//outMenu->setEnabled(true);
 	return;
