@@ -24,7 +24,7 @@ if(isset($_COOKIE['MEIJIA_UID'])){
 }else{
     session_start();
     if(!isset($_SESSION['user_id'])){
-        header("Location: http://localhost/admin/login.php");
+        header("Location: login.php");
         die();
     }
 }
@@ -56,6 +56,7 @@ if(isset($_COOKIE['MEIJIA_UID'])){
 
     <!-- Meijia Customize css-->
     <link href="css/meijia-core.css" rel="stylesheet">
+    <link href="css/meijia-index.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -139,7 +140,68 @@ if(isset($_COOKIE['MEIJIA_UID'])){
                 <!-- /.col-lg-12 -->
             </div>
             <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            全局API状态
+                            <button type="button" class="btn btn-primary pull-right">
+                                <i class="fa fa-cog fa-spin"></i>
+                                开始测试
+                            </button>
+                        </div>
+                        <div class="panel-body">
+                            <div style="margin-bottom: 10px;text-align: center;">
+                            <button type="button" class="btn btn-primary">
+                                <i class="fa fa-cog fa-spin"></i>
+                                开始测试
+                            </button>
+                            </div>
+                            <label for="scene-api-lg">场景API</label>
+                            <div class="list-group" id="scene-api-lg">
+                                <div  class="list-group-item">
+                                    <i class="fa fa-circle-o-notch fa-spin"></i>
+                                    <i class="fa fa-question"></i>
+                                    <i class="fa fa-question-circle"></i>
+                                    <i class="fa fa-check-circle"></i>
+                                    <i class="fa fa-times-circle"></i>
+                                    <i class="fa fa-dot-circle-o"></i>
+                                    [add]
+                                    <span class="pull-right text-muted small"><em>测试中...</em>
+                                    </span>
+                                </div>
+                                <div  class="list-group-item">
+                                    <i class="fa fa-circle-o-notch fa-spin"></i>
+                                    <i class="fa fa-question"></i>
+                                    <i class="fa fa-question-circle"></i>
+                                    <i class="fa fa-check-circle"></i>
+                                    <i class="fa fa-times-circle"></i>
+                                    <i class="fa fa-dot-circle-o"></i>
+                                    [add]
+                                    <span class="pull-right text-muted small"><em>测试中...</em>
+                                    </span>
+                                </div>
+                                <div class="list-group-item">
+                                    <i class="fa fa-circle-o-notch fa-spin"></i>
+                                    client_download
+                                    <span class="pull-right text-muted small"><em>测试中...</em>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">系统状态</h3>
+                        </div>
+                        <div class="panel-body">
 
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- /.row -->
 
             <!-- /.row -->

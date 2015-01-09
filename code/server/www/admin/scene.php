@@ -24,7 +24,7 @@ if(isset($_COOKIE['MEIJIA_UID'])){
 }else{
     session_start();
     if(!isset($_SESSION['user_id'])){
-        header("Location: http://localhost/admin/login.php");
+        header("Location: login.php");
         die();
     }
 }

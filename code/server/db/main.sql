@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `bhouse` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `bhouse`;
 -- MySQL dump 10.13  Distrib 5.6.17, for Win64 (x86_64)
 --
 -- Host: localhost    Database: bhouse
@@ -64,7 +62,7 @@ CREATE TABLE `scene` (
   `modify_date` datetime NOT NULL,
   `designer` varchar(80) DEFAULT NULL,
   `desc` varchar(300) DEFAULT NULL,
-  `download_times` bigint(20) unsigned zerofill NOT NULL,
+  `download_times` bigint(10) unsigned NOT NULL,
   `views_count` int(3) NOT NULL,
   PRIMARY KEY (`s_id`),
   UNIQUE KEY `s_id_UNIQUE` (`s_id`),
@@ -79,7 +77,7 @@ CREATE TABLE `scene` (
 
 LOCK TABLES `scene` WRITE;
 /*!40000 ALTER TABLE `scene` DISABLE KEYS */;
-INSERT INTO `scene` VALUES ('0b7587a9-940c-4965-9cbc-45c3a1380ae5','503d5728-fc6c-52f1-a151-537778c296a5','Test2','2014-12-04 21:48:47','ShuYi','This the test scene',00000000000000000000,1),('1630b189-4383-4a1b-a955-cfeb228ed5bc','503d5728-fc6c-52f1-a151-537778c296a5','Test3','2014-12-04 21:48:47','YangCheng','This the test scene',00000000000000000000,1),('180d2d0d-730c-45aa-bd3b-9493cd29985f','7918c182-6581-42cb-8805-0508e15aa0b5','Test4','2014-12-04 21:48:46','YinChao','This the test scene',00000000000000000000,1),('276ab768-ca9e-44a7-969c-be7bafcd6bb9','7918c182-6581-42cb-8805-0508e15aa0b5','Test8','2014-12-04 21:48:42','ChaoGe','This the test scene',00000000000000000000,1),('51ff6575-53fa-4ad6-be5b-426de31b500c','7918c182-6581-42cb-8805-0508e15aa0b5','Test6','2014-12-04 21:48:44','LaoYang','This the test scene',00000000000000000000,1),('6d05d6ba-4ca2-523c-8a15-adbbfe4f2265','503d5728-fc6c-52f1-a151-537778c296a5','Test','2014-12-03 10:59:01','Charles','This the test scene',00000000000000000009,1),('bbfa1cf3-cb0a-4407-998b-9494bcd35036','7918c182-6581-42cb-8805-0508e15aa0b5','Test5','2014-12-04 21:48:45','ChuJieyu','This the test scene',00000000000000000000,1),('d6dd5a71-5101-415b-9cc8-cb016e17e10f','7918c182-6581-42cb-8805-0508e15aa0b5','Test7','2014-12-04 21:48:43','PengYe','This the test scene',00000000000000000000,1);
+INSERT INTO `scene` VALUES ('36dc3fbc-3c2a-4e68-9bee-f4dea7deb425','503d5728-fc6c-52f1-a151-537778c296a5','厨房场景2','2014-12-28 14:29:38','DALAB','测试场景',0,1),('3d97adf8-fa20-4fd4-850d-bd00b57ac22a','503d5728-fc6c-52f1-a151-537778c296a5','厨房场景','2014-12-28 14:11:36','DALAB','这是个厨房',0,1),('450a653f-3d3a-455f-9772-504a3237337a','503d5728-fc6c-52f1-a151-537778c296a5','cvdfasdf','2014-12-30 08:38:16','adfasdfaf','adfasdfadfafd',0,3),('7a38b72e-63c3-459f-89c4-0633ab2540da','503d5728-fc6c-52f1-a151-537778c296a5','sdfasd','2014-12-28 21:22:26','asdfadsf','',0,1),('94a3b955-3d0d-496c-873b-8d47ea263b5d','503d5728-fc6c-52f1-a151-537778c296a5','又是一个测试','2014-12-28 21:20:17','DALAB','',0,2),('a90cb734-83e7-498f-bc5b-1f4e84f074f3','503d5728-fc6c-52f1-a151-537778c296a5','多视角测试','2014-12-28 12:55:52','舒弋','多个视角文件的测试支持',14,2),('ba1af250-05ed-426a-b210-2471af24083f','503d5728-fc6c-52f1-a151-537778c296a5','tasrt','2014-12-28 12:31:23','adsfasdf','',0,2),('e7d9c34b-f629-4798-ad3a-1c30206c85cb','503d5728-fc6c-52f1-a151-537778c296a5','客厅场景','2014-12-28 10:48:26','超哥','',0,1);
 /*!40000 ALTER TABLE `scene` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -97,7 +95,7 @@ CREATE TABLE `tag` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -106,7 +104,7 @@ CREATE TABLE `tag` (
 
 LOCK TABLES `tag` WRITE;
 /*!40000 ALTER TABLE `tag` DISABLE KEYS */;
-INSERT INTO `tag` VALUES (1,'Child','Suitable for children'),(2,'Young couple',NULL),(3,'SOHO',NULL),(4,'Bright',NULL);
+INSERT INTO `tag` VALUES (1,'床上用品',''),(2,'柜子',NULL),(3,'灯具',NULL),(4,'地面','可更换地面纹理的场景'),(5,'桌椅',NULL),(6,'窗帘','');
 /*!40000 ALTER TABLE `tag` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -133,7 +131,7 @@ CREATE TABLE `tag_scene` (
 
 LOCK TABLES `tag_scene` WRITE;
 /*!40000 ALTER TABLE `tag_scene` DISABLE KEYS */;
-INSERT INTO `tag_scene` VALUES ('0b7587a9-940c-4965-9cbc-45c3a1380ae5',1),('1630b189-4383-4a1b-a955-cfeb228ed5bc',2),('180d2d0d-730c-45aa-bd3b-9493cd29985f',3),('276ab768-ca9e-44a7-969c-be7bafcd6bb9',4),('51ff6575-53fa-4ad6-be5b-426de31b500c',4),('6d05d6ba-4ca2-523c-8a15-adbbfe4f2265',3),('bbfa1cf3-cb0a-4407-998b-9494bcd35036',2),('d6dd5a71-5101-415b-9cc8-cb016e17e10f',1),('6d05d6ba-4ca2-523c-8a15-adbbfe4f2265',2),('6d05d6ba-4ca2-523c-8a15-adbbfe4f2265',4),('0b7587a9-940c-4965-9cbc-45c3a1380ae5',3),('0b7587a9-940c-4965-9cbc-45c3a1380ae5',4);
+INSERT INTO `tag_scene` VALUES ('e7d9c34b-f629-4798-ad3a-1c30206c85cb',1),('e7d9c34b-f629-4798-ad3a-1c30206c85cb',3),('e7d9c34b-f629-4798-ad3a-1c30206c85cb',4),('e7d9c34b-f629-4798-ad3a-1c30206c85cb',5),('e7d9c34b-f629-4798-ad3a-1c30206c85cb',6),('ba1af250-05ed-426a-b210-2471af24083f',2),('ba1af250-05ed-426a-b210-2471af24083f',3),('a90cb734-83e7-498f-bc5b-1f4e84f074f3',1),('a90cb734-83e7-498f-bc5b-1f4e84f074f3',2),('a90cb734-83e7-498f-bc5b-1f4e84f074f3',3),('3d97adf8-fa20-4fd4-850d-bd00b57ac22a',2),('3d97adf8-fa20-4fd4-850d-bd00b57ac22a',3),('3d97adf8-fa20-4fd4-850d-bd00b57ac22a',4),('36dc3fbc-3c2a-4e68-9bee-f4dea7deb425',2),('36dc3fbc-3c2a-4e68-9bee-f4dea7deb425',3),('36dc3fbc-3c2a-4e68-9bee-f4dea7deb425',4),('94a3b955-3d0d-496c-873b-8d47ea263b5d',1),('94a3b955-3d0d-496c-873b-8d47ea263b5d',2),('94a3b955-3d0d-496c-873b-8d47ea263b5d',3),('94a3b955-3d0d-496c-873b-8d47ea263b5d',6),('7a38b72e-63c3-459f-89c4-0633ab2540da',1),('7a38b72e-63c3-459f-89c4-0633ab2540da',2),('450a653f-3d3a-455f-9772-504a3237337a',2),('450a653f-3d3a-455f-9772-504a3237337a',3),('450a653f-3d3a-455f-9772-504a3237337a',4);
 /*!40000 ALTER TABLE `tag_scene` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -172,9 +170,10 @@ DROP TABLE IF EXISTS `user`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user` (
   `u_id` char(36) NOT NULL,
-  `password` char(40) NOT NULL,
-  `email` varchar(80) NOT NULL,
   `name` varchar(80) NOT NULL,
+  `email` varchar(80) NOT NULL,
+  `password` char(40) NOT NULL,
+  `salt` char(8) NOT NULL,
   `join_date` datetime NOT NULL,
   PRIMARY KEY (`u_id`),
   UNIQUE KEY `u_id_UNIQUE` (`u_id`),
@@ -188,7 +187,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('00000000-0000-0000-0000-000000000000','2fd4e1c67a2d28fced849ee1bb76e7391b93eb12','test@meijia.com','test','2014-11-26 18:45:00');
+INSERT INTO `user` VALUES ('00000000-0000-0000-0000-000000000000','test','test@meijia.com','2fd4e1c67a2d28fced849ee1bb76e7391b93eb12','00000000','2014-11-26 18:45:00'),('00000000-0000-0000-0000-000000000001','admin','admin@meijia.com','669ed24adebd6daa5f60e1e591d1633c54aae133','89515871','2014-11-26 18:45:00');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -236,4 +235,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-12-04 22:29:38
+-- Dump completed on 2015-01-09 22:27:56
