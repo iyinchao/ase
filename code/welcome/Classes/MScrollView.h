@@ -28,10 +28,16 @@ public:
     //ÏìÓ¦´¥ÃþÊÂ¼þ  
 	bool onTouchBegan(Touch* Touch, Event* Event);  
     void onTouchEnded(Touch* Touch, Event* Event); 
+	// void onTouchMoved(Touch* Touch, Event* Event); 
 
 	void setOutMenu(cocos2d::Menu* _outMenu);
 	void initScrollView(const int _sceneNum, std::vector<std::string>& _sceneID);
-	void setScrollInfo(std::map<std::string, std::string>& _snamemap, std::map<std::string, std::string>& _intromap);
+	void setScrollInfo(
+		std::map<std::string, std::string>& _snamemap, 
+		std::map<std::string, std::string>& _intromap,
+		std::map<std::string, std::string>& _designermap,
+		std::map<std::string, std::string>& _mdatemap
+		);
 
 	cocos2d::Menu* menu;
 
@@ -46,6 +52,8 @@ private:
 	std::vector<std::string> sceneID;
 	std::map<std::string, std::string> intromap;
 	std::map<std::string, std::string> snamemap;
+	std::map<std::string, std::string> designermap;
+	std::map<std::string, std::string> mdatemap;
 	cocos2d::extension::ScrollView* view;
 	//cocos2d::LabelTTF* label;
 };  

@@ -52,6 +52,8 @@ bool MeijiaMain::init()
 	{
 		intro.insert(pair<string, string>("0b7587a9-940c-4965-9cbc-45c3a1380ae5", "intro"));
 		sname.insert(pair<string, string>("0b7587a9-940c-4965-9cbc-45c3a1380ae5", "name"));
+		designer.insert(pair<string, string>("0b7587a9-940c-4965-9cbc-45c3a1380ae5", "designer"));
+		mdate.insert(pair<string, string>("0b7587a9-940c-4965-9cbc-45c3a1380ae5", "date"));
 	}
 
 	// *** 客户端本地初始化 ***
@@ -300,6 +302,8 @@ void MeijiaMain::onHttpRequestComplete(HttpClient *sender, HttpResponse* respons
 		CCLOG("test");
 		sname.clear();
 		intro.clear();
+		designer.clear();
+		mdate.clear();
 
 		for(int i=0; i<_array.Capacity(); i++)
 		{
@@ -311,16 +315,28 @@ void MeijiaMain::onHttpRequestComplete(HttpClient *sender, HttpResponse* respons
 			}
 			if(arraydoc.HasMember("name"))
 			{
-				const char* name = arraydoc["name"].GetString();
-				sname.insert(pair<string, string>(s_id, name));
+				const char* tname = arraydoc["name"].GetString();
+				sname.insert(pair<string, string>(s_id, tname));
 			}
 			if(arraydoc.HasMember("desc"))
 			{
-				const char* desc = arraydoc["desc"].GetString();
-				intro.insert(pair<string, string>(s_id, desc));
+				const char* tdesc = arraydoc["desc"].GetString();
+				intro.insert(pair<string, string>(s_id, tdesc));
+			}
+			if(arraydoc.HasMember("designer"))
+			{
+				const char* tdesigner = arraydoc["designer"].GetString();
+				designer.insert(pair<string, string>(s_id, tdesigner));
+			}
+			if(arraydoc.HasMember("mod_date"))
+			{
+				const char* tmdate = arraydoc["mod_date"].GetString();
+				mdate.insert(pair<string, string>(s_id, tmdate));
 			}
 		}
 	}
+
+	voidBg->setScrollInfo(sname, intro, designer, mdate);
 
 	// 停止更新（旋转），恢复原状 test
 	updateItem->stopAllActions();

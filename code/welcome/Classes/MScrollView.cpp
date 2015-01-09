@@ -23,7 +23,53 @@ bool MScrollView::init()
 	{
 		intromap.insert(pair<string, string>("0b7587a9-940c-4965-9cbc-45c3a1380ae5", "intro\nintro\nintro\nintro\n"));
 		snamemap.insert(pair<string, string>("0b7587a9-940c-4965-9cbc-45c3a1380ae5", "TITLE"));
+		mdatemap.insert(pair<string, string>("0b7587a9-940c-4965-9cbc-45c3a1380ae5", "date"));
+		designermap.insert(pair<string, string>("0b7587a9-940c-4965-9cbc-45c3a1380ae5", "designer"));
 	}
+
+	// ************ 触摸吞噬 ************
+	auto listener = EventListenerTouchOneByOne::create();
+	listener->setSwallowTouches(true);
+	listener->onTouchBegan = CC_CALLBACK_2(MScrollView::onTouchBegan, this);
+	listener->onTouchEnded = CC_CALLBACK_2(MScrollView::onTouchEnded, this);
+//	listener->onTouchMoved = [&](Touch *touch, Event *event){  
+//		float start, end; 
+//        start = touch->getStartLocation().x;  
+//        end = touch->getLocation().x;  
+//		float offset = end - start;  
+//		//view->setContentOffset(Vec2(current_offset + offset * 2, 0)); 
+//
+//		//当两个位置的距离的平方小于25时(认为是点击，否则是滑动)  
+//		if(pow(offset, 2) >= 16)  
+//		{ 
+//			//滑动    
+//			int x = _contaner->getPositionX();         
+//			int sumpage = (sceneNum%6 == 0)? (int)(sceneNum / 6) : (int)(sceneNum / 6 + 1);
+//
+//			if (x >= -(sumpage-1) * 1024 && x <= 0)    
+//			{    
+//				// adjust    
+//				// 0, -1024, -2048, -3072, -4096    
+//				//int idx = (-x + winSize.width/2)/ winSize.width; 
+//				int idx = (-x + 512) / 1024;
+//				//x = -idx * winSize.width;  
+//				x = -idx * 1024;
+//			}
+//			else if(x >=0)
+//			{
+//				x = 0;
+//			}
+//			else
+//			{
+//				x = -(sumpage-1) * 1024;
+//			}
+//     
+///*			MoveTo* moveTo = MoveTo::create(0.001f, ccp(x, this->_contaner->getPositionY()));    
+//			this->_contaner->runAction(moveTo); */   
+//			view->setContentOffsetInDuration(Vec2(x, this->_contaner->getPositionY()), 0.001f);
+//		} 
+//	}; 
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
     return true;  
 }  
 
@@ -39,8 +85,6 @@ void MScrollView::initScrollView(const int _sceneNum, std::vector<std::string>& 
 
 	//创建一个结点  
     CCNode* c = CCNode::create(); 
-   
-    _contaner = c;  
     
 	int sumpage = (sceneNum%6 == 0)? (int)(sceneNum / 6) : (int)(sceneNum / 6 + 1);
 	for(int i = 0; i < (int)(sceneNum / 6); i++)  
@@ -88,11 +132,16 @@ void MScrollView::initScrollView(const int _sceneNum, std::vector<std::string>& 
     //滚动视图  
     //第一个参数：在窗口显示的视图大小  
     //第二个参数：结点CCNode  
-    view = ScrollView::create(winSize, c);  
-    addChild(view);  
-   
-    //设置视图运动的方向为水平运动  
-	view->setDirection(ScrollView::Direction::HORIZONTAL);  
+    //view = ScrollView::create(winSize, c);
+	c->setContentSize(CCSizeMake(sumpage* winSize.width, winSize.height));
+    _contaner = c;  
+
+	view = ScrollView::create(CCSizeMake(1024, 768), c);
+	view->setContentOffset(CCPointZero);
+	//设置视图运动的方向为水平运动  
+	view->setDirection(ScrollView::Direction::HORIZONTAL); 
+	view->setPosition(CCPointZero);
+    this->addChild(view);  
    
     //设置视图的宽度和高度  
 	if(sceneNum % 6 == 0)
@@ -112,13 +161,21 @@ void MScrollView::initScrollView(const int _sceneNum, std::vector<std::string>& 
     setTouchMode(kCCTouchesOneByOne);  
 }
 
-void MScrollView::setScrollInfo(std::map<std::string, std::string>& _snamemap, std::map<std::string, std::string>& _intromap)
+void MScrollView::setScrollInfo(
+		std::map<std::string, std::string>& _snamemap, 
+		std::map<std::string, std::string>& _intromap,
+		std::map<std::string, std::string>& _designermap,
+		std::map<std::string, std::string>& _mdatemap)
 {
 	intromap.clear();
 	snamemap.clear();
+	designermap.clear();
+	mdatemap.clear();
 
 	intromap = _intromap;
 	snamemap = _snamemap;
+	designermap = _designermap;
+	mdatemap = _mdatemap;
 	return;
 }
    
@@ -129,6 +186,13 @@ bool MScrollView::onTouchBegan(Touch* touch, Event* event)
     ptDown = touch->getStartLocation();  
     return true;  
 }  
+
+//void MScrollView::onTouchMoved(Touch* touch, Event* event)  
+//{  
+//	//得到鼠标点下去的时候的位置  
+//    ptDown = touch->getStartLocation();  
+//    // return true;  
+//} 
    
 //鼠标起来的时候  
 void MScrollView::onTouchEnded(Touch* touch, Event* event)  
@@ -142,44 +206,41 @@ void MScrollView::onTouchEnded(Touch* touch, Event* event)
     Point ptUp = touch->getLocation();  
    
     //当两个位置的距离的平方小于25时(认为是点击，否则是滑动)  
-	if(pow(ptUp.x - ptDown.x, 2) <= 16)  
-    {  
-  //      //检查点击的是哪一个图片  
-  //      //将世界坐标转换成结点坐标  
-  //      Point ptInContainer = _contaner->convertToNodeSpace(ptUp);  
-  // 
-  //      //定义一个数组保存5个精灵  
-		//Vector<Node*> arr = _contaner->getChildren();  
-  // 
-  //      for(int i = 0; i < 5; ++i)  
-  //      {  
-  //          // 获取精灵的索引(获取点击的是哪个精灵)  
-		//	CCSprite* sprite = (CCSprite*)arr.at(i);  
-  //             
-  //          //boundingBox()获取精灵的边框(判断触摸点是否在边框内，当在的时候，打印精灵的编号)  
-  //          if(sprite->boundingBox().containsPoint(ptInContainer))  
-  //          {  
-  //              CCLog("click i is %d", i);  
-  //              break;  
-  //          }  
-  //      }  
-    }  
-    else  
-    {  
+	if(pow(ptUp.x - ptDown.x, 2) >= 16)  
+	{ 
         //滑动    
-        int x = _contaner->getPositionX();    
-             
-		if (x >= -(int)(sceneNum / 6 + 1) * winSize.width && x <= 0)    
+        int x = _contaner->getPositionX();         
+		int sumpage = (sceneNum%6 == 0)? (int)(sceneNum / 6) : (int)(sceneNum / 6 + 1);
+
+		if (x >= -(sumpage-1) * winSize.width && x <= 0)    
         {    
             // adjust    
             // 0, -1024, -2048, -3072, -4096    
-            int idx = (-x + winSize.width/2)/ winSize.width;    
-            x = -idx * winSize.width;    
+            //int idx = (-x + winSize.width/2)/ winSize.width; 
+			int idx = (-x + 512) / 1024;
+            //x = -idx * winSize.width;  
+			x = -idx * 1024;
+		}
+		else if(x >=0)
+		{
+			x = 0;
+		}
+		else
+		{
+			x = -(sumpage-1) * winSize.width;
+		}
      
-            MoveTo* moveTo = MoveTo::create(0.2f, ccp(x, this->_contaner->getPositionY()));    
-                 
-            this->_contaner->runAction(moveTo);    
-        }    
+        MoveTo* moveTo = MoveTo::create(0.001f, ccp(x, this->_contaner->getPositionY()));    
+        this->_contaner->runAction(moveTo);    
+		view->setContentOffsetInDuration(Vec2(x, this->_contaner->getPositionY()), 0.001f);
+
+		//if(ptUp.x - ptDown.x > 0)
+		//{
+		//	if(x >= 0) x = 0;
+		//	if(x <= )
+		//	MoveTo* moveTo = MoveTo::create(0.001f, ccp(x, this->_contaner->getPositionY()));    
+  //          this->_contaner->runAction(moveTo); 
+		//}
     }    
 }
 

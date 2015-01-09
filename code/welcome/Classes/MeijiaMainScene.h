@@ -59,6 +59,8 @@ public:
 	int sceneNum;
 	std::map<std::string, std::string> intro;
 	std::map<std::string, std::string> sname;
+	std::map<std::string, std::string> mdate;
+	std::map<std::string, std::string> designer;
 
 private:
 	cocos2d::MenuItemImage* sceneBorder[6];
