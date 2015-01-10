@@ -74,18 +74,18 @@ if(isset($_COOKIE['MEIJIA_UID'])){
     <div class="container" >
         <div class="row">
             <div class="col-md-4 col-md-offset-4">
+                <?php
+                if(isset($_POST['message'])){
+                    if($_POST['message'] == 'logout'){
+                        echo '<div class="alert alert-info tobefade" role="alert" style="text-align: center;margin-top: 20px;position: absolute;left: 20px;right: 20px;"><i class="fa fa-lock"></i>&nbsp;&nbsp;您已登出</div>';
+                    }
+                }
+                ?>
                 <div style="display: none;" id="panel" class="login-panel panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">美家秀秀·管理系统</h3>
                     </div>
                     <div class="panel-body">
-                        <?php
-                        if(isset($_POST['message'])){
-                            if($_POST['message'] == 'logout'){
-                                echo '<div class="alert alert-info tobefade" role="alert" style="text-align: center"><i class="fa fa-lock"></i>&nbsp;&nbsp;您已登出</div>';
-                            }
-                        }
-                        ?>
                         <form role="form">
                             <fieldset>
                                 <div class="form-group">

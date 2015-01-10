@@ -57,3 +57,14 @@
 .mj-search-placeholder {
   font-family: "Arial", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
 }
+
+.index-info {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#index-info-panel{
+    overflow: scroll;
+}
+
+
