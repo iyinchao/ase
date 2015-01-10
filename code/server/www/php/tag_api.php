@@ -26,6 +26,29 @@ switch($_POST['op']) {
         $data = json_decode($_POST['data']);
         TagManager::get_one_scene_tags($data);
         break;
+    case 'update':     //修改标签
+        if(!isset($_POST['data']))  exit('{"status:"NO_REQ_DATA"}');
+        $data = json_decode($_POST['data']); //解析json（其实应该加上try/catch）
+        TagManager::update($data); //调用方法
+        break;
+    case 'get_one_tag':     //根据id获得标签
+        if(!isset($_POST['data']))  exit('{"status:"NO_REQ_DATA"}');
+        $data = json_decode($_POST['data']); //解析json（其实应该加上try/catch）
+        TagManager::get_one_tag($data); //调用方法
+        break;
+    case 'delete':     //删除标签
+        if(!isset($_POST['data']))  exit('{"status:"NO_REQ_DATA"}');
+        $data = json_decode($_POST['data']); //解析json（其实应该加上try/catch）
+        TagManager::delete($data); //调用方法
+        break;
+    case 'add':     //增加标签
+        if(!isset($_POST['data']))  exit('{"status:"NO_REQ_DATA"}');
+        $data = json_decode($_POST['data']); //解析json（其实应该加上try/catch）
+        TagManager::add($data); //调用方法
+        break;
+    case 'get_tags':   //获得标签
+        TagManager::get_tags();
+        break;
     default:
         exit('{"status":"UNKNOWN_OP"}');
 }

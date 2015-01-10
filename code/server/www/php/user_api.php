@@ -19,9 +19,8 @@ switch($_POST['op']){
         UserManager::client_login($data);
         break;
     case 'client_logout':
-        /*if(!isset($_POST['data'])) exit('{"status":"NO_REQ_DATA"}');
-        $data = json_decode($_POST['data']);
-        SceneManager::client_browse($data);*/
+        UserManager::client_logout();
+        break;
     default:
         exit('{"status":"UNKNOWN_OP"}');
 }
