@@ -4,22 +4,6 @@
 
 (function(){
 
-    $('#logout').click(function(){
-        var form = new FormData();
-        form.append('op', 'client_logout');
-        var xhr = new XMLHttpRequest();
-        xhr.open('post', '../php/user_api.php', true);
-        xhr.addEventListener('readystatechange', function(e){
-            if (this.readyState == 4) {
-                if ((this.status >= 200 && this.status < 300) || this.status == 304) {
-                    var resp = JSON.parse(this.responseText);
-                    if(resp.result=='ok') alert("退出成功");    //好像在360浏览器中不能显示
-                }
-            }
-        });
-        xhr.send(form);
-    })
-
     var SCENE_PER_PAGE = -1; //get all pages
     function load_scene(page, tags, search){
         var requ = {};
