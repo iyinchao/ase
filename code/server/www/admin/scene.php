@@ -24,7 +24,7 @@ if(isset($_COOKIE['MEIJIA_UID'])){
 }else{
     session_start();
     if(!isset($_SESSION['user_id'])){
-        header("Location: http://localhost:8080/admin/login.php");
+        header("Location: ".Conf::SERVER_ADMIN_DOMAIN."login.php");
         die();
     }
 }
@@ -125,7 +125,7 @@ if(isset($_COOKIE['MEIJIA_UID'])){
                             <a class="mj-sidebar-item active" href="scene.php"><i class="fa fa-th fa-fw"></i><span>场景管理</span></a>
                         </li>
                         <li>
-                            <a class="mj-sidebar-item active" href="c-tag.php"><i class="fa fa-th fa-fw"></i><span>标签管理</span></a>
+                            <a class="mj-sidebar-item" href="c-tag.php"><i class="fa fa-tags"></i><span>标签管理</span></a>
                         </li>
                     </ul>
                 </div>
