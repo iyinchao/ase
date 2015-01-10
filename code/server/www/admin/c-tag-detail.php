@@ -1,3 +1,34 @@
+<?php
+include_once '../php/db_conn.php';
+include_once '../php/debug.php';
+
+if(isset($_COOKIE['MEIJIA_UID'])){
+    session_start();
+    if(!isset($_SESSION['user_id'])){
+        //create connection
+        try{
+            $db = DBConn::connect();
+        }catch (Exception $e){
+            exit('{"status":"ERROR_DB_CONN","error_message:"'.$e->getMessage().'"}');
+        }
+
+        $uid = $_COOKIE['MEIJIA_UID'];
+        $query = "select * from user where u_id = '$uid'";
+        $result = $db->query($query);  //执行SQL
+        if ($result->num_rows == 1) {
+            $row = $result->fetch_assoc();
+            $_SESSION['user_id'] = $row['u_id'];
+        }
+        $db->close();
+    }
+}else{
+    session_start();
+    if(!isset($_SESSION['user_id'])){
+        header("Location: http://localhost:8080/admin/login.php");
+        die();
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -73,7 +104,7 @@
                     <li><a href="#"><i class="fa fa-gear fa-fw"></i><span>设置</span></a>
                     </li>
                     <li class="divider"></li>
-                    <li><a href="login.php"><i class="fa fa-sign-out fa-fw"></i><span>退出登录</span></a>
+                    <li><a id="logout" href="login.php"><i class="fa fa-sign-out fa-fw"></i><span>退出登录</span></a>
                     </li>
                 </ul>
                 <!-- /.dropdown-user -->
@@ -101,6 +132,9 @@
                     </li>
                     <li>
                         <a class="mj-sidebar-item active" href="scene.php"><i class="fa fa-th fa-fw"></i><span>场景管理</span></a>
+                    </li>
+                    <li>
+                        <a class="mj-sidebar-item active" href="c-tag.php"><i class="fa fa-th fa-fw"></i><span>标签管理</span></a>
                     </li>
 
                 </ul>

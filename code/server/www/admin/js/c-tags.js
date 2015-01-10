@@ -9,7 +9,7 @@
         var form = new FormData();
         form.append('op', 'get_tags');
         var xhr = new XMLHttpRequest();
-        xhr.open('post', '../php/chu_php/c_tag_manager.php', true);
+        xhr.open('post', '../php/tag_api.php', true);
         xhr.addEventListener('readystatechange', function(e){
             if (this.readyState == 4) {
                 if ((this.status >= 200 && this.status < 300) || this.status == 304) {
@@ -23,6 +23,21 @@
         xhr.send(form);
     }
 
+    $('#logout').click(function(){
+        var form = new FormData();
+        form.append('op', 'client_logout');
+        var xhr = new XMLHttpRequest();
+        xhr.open('post', '../php/user_api.php', true);
+        xhr.addEventListener('readystatechange', function(e){
+            if (this.readyState == 4) {
+                if ((this.status >= 200 && this.status < 300) || this.status == 304) {
+                    var resp = JSON.parse(this.responseText);
+                    if(resp.result=='ok') alert("退出成功");    //好像在360浏览器中不能显示
+                }
+            }
+        });
+        xhr.send(form);
+    })
     function refresh_tag_table(json){
         var data = [];
         for(var i = 0;i < json.num; i++){

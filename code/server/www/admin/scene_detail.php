@@ -24,7 +24,7 @@ if(isset($_COOKIE['MEIJIA_UID'])){
 }else{
     session_start();
     if(!isset($_SESSION['user_id'])){
-        header("Location: login.php");
+        header("Location: http://localhost:8080/admin/login.php");
         die();
     }
 }
@@ -110,7 +110,7 @@ if(!isset($_POST['mode'])){
                     <li><a href="#"><i class="fa fa-gear fa-fw"></i><span>设置</span></a>
                     </li>
                     <li class="divider"></li>
-                    <li><a href="login.php"><i class="fa fa-sign-out fa-fw"></i><span>退出登录</span></a>
+                    <li><a id="logout"  href="login.php"><i class="fa fa-sign-out fa-fw"></i><span>退出登录</span></a>
                     </li>
                 </ul>
                 <!-- /.dropdown-user -->
@@ -139,7 +139,9 @@ if(!isset($_POST['mode'])){
                     <li>
                         <a class="mj-sidebar-item active" href="scene.php"><i class="fa fa-th fa-fw"></i><span>场景管理</span></a>
                     </li>
-
+                    <li>
+                        <a class="mj-sidebar-item active" href="c-tag.php"><i class="fa fa-th fa-fw"></i><span>标签管理</span></a>
+                    </li>
                 </ul>
             </div>
             <!-- /.sidebar-collapse -->
