@@ -64,6 +64,16 @@ class UserManager{
         $db->close();
     }
 
+    static public function client_logout()
+    {
+        session_start();
+        //销毁所有的 session 信息和 cookie 信息
+        if(isset($_SESSION['user_id'])) unset($_SESSION['user_id']);
+        setcookie("MEIJIA_UID", "", time()-3600, '/');
+        setcookie("PHPSESSID", "", time()-3600, '/');
+        session_destroy();
+        echo '{"result":"ok"}';
+    }
     static public function gen_salt(){
         return rand(0,9).rand(0,9).rand(0,9).rand(0,9).rand(0,9).rand(0,9).rand(0,9).rand(0,9);
     }

@@ -1,8 +1,38 @@
+<?php
+include_once '../php/db_conn.php';
+include_once '../php/debug.php';
+
+if(isset($_COOKIE['MEIJIA_UID'])){
+    session_start();
+    if(!isset($_SESSION['user_id'])){
+        //create connection
+        try{
+            $db = DBConn::connect();
+        }catch (Exception $e){
+            exit('{"status":"ERROR_DB_CONN","error_message:"'.$e->getMessage().'"}');
+        }
+
+        $uid = $_COOKIE['MEIJIA_UID'];
+        $query = "select * from user where u_id = '$uid'";
+        $result = $db->query($query);  //执行SQL
+        if ($result->num_rows == 1) {
+            $row = $result->fetch_assoc();
+            $_SESSION['user_id'] = $row['u_id'];
+        }
+        $db->close();
+    }
+}else{
+    session_start();
+    if(!isset($_SESSION['user_id'])){
+        header("Location: ".Conf::SERVER_ADMIN_DOMAIN."login.php");
+        die();
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -64,7 +94,7 @@
                         <li><a href="#"><i class="fa fa-gear fa-fw"></i><span>设置</span></a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href="login.php"><i class="fa fa-sign-out fa-fw"></i><span>退出登录</span></a>
+                        <li><a id="logout" href="login.php"><i class="fa fa-sign-out fa-fw"></i><span>退出登录</span></a>
                         </li>
                     </ul>
                     <!-- /.dropdown-user -->
@@ -91,12 +121,11 @@
                             <a class="mj-sidebar-item" href="index.php"><i class="fa fa-dashboard fa-fw"></i><span>控制台</span></a>
                         </li>
                         <li>
-                            <a class="mj-sidebar-item active" href="scene.php"><i class="fa fa-th fa-fw"></i><span>场景管理</span></a>
+                            <a class="mj-sidebar-item" href="scene.php"><i class="fa fa-th fa-fw"></i><span>场景管理</span></a>
                         </li>
                         <li>
-                            <a class="mj-sidebar-item active" href="c-tag.php"><i class="fa fa-th fa-fw"></i><span>标签管理</span></a>
+                            <a class="mj-sidebar-item active" href="c-tag.php"><i class="fa fa-tags"></i><span>标签管理</span></a>
                         </li>
-
                     </ul>
                 </div>
                 <!-- /.sidebar-collapse -->
@@ -108,7 +137,7 @@
             <div id="page-mask"></div>
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 id="page-title" class="mj-page-title page-header">浏览标签数据字典</h1>
+                    <h1 id="page-title" class="mj-page-title page-header">浏览标签</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>

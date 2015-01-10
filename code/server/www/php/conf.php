@@ -10,6 +10,7 @@
  * Class Conf
  */
 class Conf{
+    const SERVER_ADMIN_DOMAIN = 'http://localhost/admin/';
     const FILESTORE = '../../filestore/';
     const DIR_USER_FILE = '../../filestore/user/';
     const DIR_DESIGN_FILE = '../../filestore/design/';

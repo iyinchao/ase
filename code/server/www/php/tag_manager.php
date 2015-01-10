@@ -10,6 +10,7 @@ include_once 'db_conn.php';
 include_once 'debug.php';
 
 class TagManager{
+
     static public function update($data){
         //database connect
         try{
@@ -19,20 +20,17 @@ class TagManager{
         }
         if(!isset($data->{'id'})){
             exit('{"status":"INVALID_DATA"}');
-        } else {
-            $id = mysqli_real_escape_string($db, $data->{'id'});
         }
+        else { $id = mysqli_real_escape_string($db, $data->{'id'});}
         if(!isset($data->{'name'})){
             exit('{"status":"INVALID_DATA"}');
-        } else {
-            $name = mysqli_real_escape_string($db, $data->{'name'});
         }
+        else { $name = mysqli_real_escape_string($db, $data->{'name'});}
         if(!isset($data->{'desc'})){
-            $desc = '';
-        }else{
-            $desc = mysqli_real_escape_string($db, $data->{'desc'});
+            exit('{"status":"INVALID_DATA"}');
         }
-        $query="update tag set name='$name', `desc`='$desc' where id= '$id'";
+        else { $desc = mysqli_real_escape_string($db, $data->{'desc'});}
+        $query="update tag set name='$name',`desc`='$desc' where id= $id";
         $result = $db->query($query);  //执行SQL
         if($result){
             $response = (object)array();
@@ -43,6 +41,117 @@ class TagManager{
             $response->result = 'no';
             echo json_encode($response);
         }
+        $db->close();  //一定记得在用完数据库后关闭！！
+    }
+
+    static public function get_one_tag($data){
+        //database connect
+        try{
+            $db = DBConn::connect();
+        }catch (Exception $e){
+            exit('{"status":"ERROR_DB_CONN","error_message:"'.$e->getMessage().'"}');
+        }
+        if(!isset($data->{'id'})){
+            exit('{"status":"INVALID_DATA"}');
+        }
+        else { $id = mysqli_real_escape_string($db, $data->{'id'});}
+
+        $query = "select * from tag where id='$id'";
+        $result = $db->query($query);  //执行SQL
+        $response = (object)array();
+        if ($result->num_rows == 1) {
+            $response = (object)array();
+            $response->result = 'ok';
+            $row = $result->fetch_assoc();
+            $response->name=$row['name'];
+            $response->desc=$row['desc'];
+        }else{$response->result = 'no';}
+        echo json_encode($response);
+        $db->close();  //一定记得在用完数据库后关闭！！
+    }
+
+    static public function add($data){
+        //database connect
+        try{
+            $db = DBConn::connect();
+        }catch (Exception $e){
+            exit('{"status":"ERROR_DB_CONN","error_message:"'.$e->getMessage().'"}');
+        }
+        if(!isset($data->{'name'})){
+            exit('{"status":"INVALID_DATA"}');
+        }
+        else { $name = mysqli_real_escape_string($db, $data->{'name'});}
+        if(!isset($data->{'desc'})){
+            exit('{"status":"INVALID_DATA"}');
+        }else { $desc = mysqli_real_escape_string($db, $data->{'desc'});}
+
+        $query = "insert into tag (name,`desc`) values('$name','$desc')";
+
+        $result = $db->query($query);  //执行SQL
+        if($result){
+            $response = (object)array();
+            $response->result = 'ok';
+            echo json_encode($response);
+        }else{
+            $response = (object)array();
+            $response->result = 'no';
+            echo json_encode($response);
+        }
+        $db->close();  //一定记得在用完数据库后关闭！！
+    }
+
+    static public function delete($data){
+        //database connect
+        try{
+            $db = DBConn::connect();
+        }catch (Exception $e){
+            exit('{"status":"ERROR_DB_CONN","error_message:"'.$e->getMessage().'"}');
+        }
+        if(!isset($data->{'id'})){
+            exit('{"status":"INVALID_DATA"}');
+        }
+        else { $id = mysqli_real_escape_string($db, $data->{'id'});}
+        $query = "delete from tag where id= $id";
+        $result=$db->query($query);
+        if($result)
+        {
+            $response = (object)array();
+            $response->result = 'ok';  //这个转换到json就是 {"result":"ok"}
+            echo json_encode($response);  //编码json，发回客户端
+        } else {
+            $response = (object)array();
+            $response->result = 'no';
+            echo json_encode($response);
+        }
+        $query = "delete from tag_scene where tag= $id";   //将tag-scene表里面有关tag的数据删除
+        $result=$db->query($query);
+        $db->close();  //一定记得在用完数据库后关闭！！
+    }
+
+    static public function get_tags(){
+        try{
+            $db = DBConn::connect();
+        }catch (Exception $e){
+            exit('{"status":"ERROR_DB_CONN","error_message:"'.$e->getMessage().'"}');
+        }
+        $query = "select * from tag";
+        $result = $db->query($query);
+        $n=$result->num_rows;
+        $tags=array();
+        $i=0;
+        while ($row = $result->fetch_array()) {
+            $term = (object)array();
+            $term->id = $row['id'];
+            $term->name = $row['name'];
+            $term->desc = $row['desc'];
+            $tags[$i] = $term;
+            $i = $i + 1;
+        }
+
+        $response = (object)array();
+        $response->num = $n;
+        $response->tags=$tags;
+        echo json_encode($response);
         $db->close();
     }
 
