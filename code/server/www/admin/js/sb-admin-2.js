@@ -1,5 +1,30 @@
 $(function() {
 
+    $('#logout').click(function(){
+        var form = new FormData();
+        form.append('op', 'client_logout');
+        var xhr = new XMLHttpRequest();
+        xhr.open('post', '../php/user_api.php', true);
+        xhr.addEventListener('readystatechange', function(e){
+            if (this.readyState == 4) {
+                if ((this.status >= 200 && this.status < 300) || this.status == 304) {
+                    var resp = JSON.parse(this.responseText);
+                    if(resp.result=='ok') {
+                        var url = './login.php';
+                        var form = $('<form action="' + url + '" method="post">' +
+                        '<input type="text" name="message" value="logout" />' +
+                            //'<input type="text" name="mode" value="modify" />' +
+                        '</form>');
+                        $('body').append(form);
+                        form.submit();
+                    }
+                }
+            }
+        });
+        xhr.send(form);
+        //console.log('ok');
+    });
+
     $('#side-menu').metisMenu();
 
 });
@@ -26,3 +51,4 @@ $(function() {
         }
     })
 });
+

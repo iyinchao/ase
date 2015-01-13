@@ -23,21 +23,6 @@
             }
         });
 
-        $('#logout').click(function(){
-            var form = new FormData();
-            form.append('op', 'client_logout');
-            var xhr = new XMLHttpRequest();
-            xhr.open('post', '../php/user_api.php', true);
-            xhr.addEventListener('readystatechange', function(e){
-                if (this.readyState == 4) {
-                    if ((this.status >= 200 && this.status < 300) || this.status == 304) {
-                        var resp = JSON.parse(this.responseText);
-                        if(resp.result=='ok') alert("退出成功");    //好像在360浏览器中不能显示
-                    }
-                }
-            });
-            xhr.send(form);
-        })
         //console.log($('#form-scene-id'));
         if(mode == 'modify')      //如果是修改
         {

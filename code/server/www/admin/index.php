@@ -1,6 +1,7 @@
 <?php
 include_once '../php/db_conn.php';
 include_once '../php/debug.php';
+include_once '../php/conf.php';
 
 if(isset($_COOKIE['MEIJIA_UID'])){
     session_start();
@@ -95,7 +96,7 @@ if(isset($_COOKIE['MEIJIA_UID'])){
                         <li><a href="#"><i class="fa fa-gear fa-fw"></i><span>设置</span></a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href="login.php"><i class="fa fa-sign-out fa-fw"></i><span>退出登录</span></a>
+                        <li><a id="logout" href="#"><i class="fa fa-sign-out fa-fw"></i><span>退出登录</span></a>
                         </li>
                     </ul>
                     <!-- /.dropdown-user -->
@@ -150,14 +151,14 @@ if(isset($_COOKIE['MEIJIA_UID'])){
                         </div>
                         <div class="panel-body">
                             <div style="margin-bottom: 10px;text-align: center;">
-                            <button type="button" class="btn btn-primary">
+                            <button type="button" class="btn btn-primary" id="bt-test-all">
                                 <i class="fa fa-cog fa-spin"></i>
                                 开始测试
                             </button>
                             </div>
-                            <label for="scene-api-lg">场景API</label>
+                            <!--<label for="scene-api-lg">场景API</label>-->
                             <div class="list-group" id="scene-api-lg">
-                                <div  class="list-group-item">
+                                <!--<div  class="list-group-item">
                                     <i class="fa fa-circle-o-notch fa-spin"></i>
                                     <i class="fa fa-question"></i>
                                     <i class="fa fa-question-circle"></i>
@@ -184,7 +185,7 @@ if(isset($_COOKIE['MEIJIA_UID'])){
                                     client_download
                                     <span class="pull-right text-muted small"><em>测试中...</em>
                                     </span>
-                                </div>
+                                </div>-->
                             </div>
                         </div>
                     </div>
@@ -194,8 +195,58 @@ if(isset($_COOKIE['MEIJIA_UID'])){
                         <div class="panel-heading">
                             <h3 class="panel-title">系统状态</h3>
                         </div>
-                        <div class="panel-body">
+                        <div class="panel-body" id="index-info-panel">
+                            <?php
+                            //将获取当前时间的代码放在一个函数里
+                            function runtime(){
+                                $times = explode(" ",microtime());
+                                $nowtime = $times[1]+$times[0];
+                                return $nowtime;
+                            }
 
+                            //假设这里是页面开头
+                            $start_time = runtime();
+
+                            //这里开始是的页面代码
+                            //your code goes here
+
+                            //假设这里是页面顶部
+                            $end_time = runtime();
+                            $cost_time = $end_time - $start_time;
+
+                            //处理输出执行时间
+                            $cost_time = round($cost_time,4);
+
+                            //输出页面的执行时间
+                            echo "页面执行时间为：".$cost_time."秒"."<br>";
+                            ?>
+                            <?php
+                            echo "<span class=\"index-info\">脚本文件的相对路径和文件名:\"".$_SERVER["PHP_SELF"]."</span><br>";
+                            echo "<span class=\"index-info\">服务器使用的CGI脚本规范:\"".$_SERVER["GATEWAY_INTERFACE"]."</span><br>";
+                            echo "<span class=\"index-info\">当前运行脚本所在服务器的IP地址:\"".$_SERVER["SERVER_ADDR"]."</span><br>";
+                            echo "<span class=\"index-info\">当前运行脚本服务器名称:\"".$_SERVER["SERVER_NAME"]."</span><br>";
+                            echo "<span class=\"index-info\">当前运行脚本服务器标识:\"".$_SERVER["SERVER_SOFTWARE"]."</span><br>";
+                            echo "<span class=\"index-info\">请求页面的通信协议的名称和版本:\"".$_SERVER["SERVER_PROTOCOL"]."</span><br>";
+                            echo "<span class=\"index-info\">访问页面的请求方法:\"".$_SERVER["REQUEST_METHOD"]."</span><br>";
+                            echo "<span class=\"index-info\">脚本开始运行时间:\"".$_SERVER["REQUEST_TIME"]."</span><br>";
+                            echo "<span class=\"index-info\">URL问号后的字符串:\"".$_SERVER["QUERY_STRING"]."</span><br>";
+                            echo "<span class=\"index-info\">当前运行脚本的文档根目录:\"".$_SERVER["DOCUMENT_ROOT"]."</span><br>";
+                            echo "<span class=\"index-info\">当前Accept请求的头信息:\"".$_SERVER["HTTP_ACCEPT"]."</span><br>";
+                            echo "<span class=\"index-info\">当前当前请求的Accept-Encoding头信息:\"".$_SERVER["HTTP_ACCEPT_ENCODING"]."</span><br>";
+                            echo "<span class=\"index-info\">当前请求的Accept-Language头信息:\"".$_SERVER["HTTP_ACCEPT_LANGUAGE"]."</span><br>";
+                            echo "<span class=\"index-info\">当前请求的Connection头信息:\"".$_SERVER["HTTP_CONNECTION"]."</span><br>";
+                            echo "<span class=\"index-info\">当前请求的Host头信息:\"".$_SERVER["HTTP_HOST"]."</span><br>";
+                            echo "<span class=\"index-info\">当前页面的前一个页面的URL地址:\"".$_SERVER["HTTP_REFERER"]."</span><br>";
+                            echo "<span class=\"index-info\">当前请求的User-Agent的头信息:\"".$_SERVER["HTTP_USER_AGENT"]."</span><br>";
+                            echo "<span class=\"index-info\">浏览当前页面用户的IP地址:\"".$_SERVER["REMOTE_ADDR"]."</span><br>";
+                            echo "<span class=\"index-info\">用户连接到服务器时所使用的端口:\"".$_SERVER["REMOTE_PORT"]."</span><br>";
+                            echo "<span class=\"index-info\">当前执行脚本的绝对路径名:\"".$_SERVER["SCRIPT_FILENAME"]."</span><br>";
+                            echo "<span class=\"index-info\">Apache配置文件中的SERVER_ADMIN参数设置情况:\"".$_SERVER["SERVER_ADMIN"]."</span><br>";
+                            echo "<span class=\"index-info\">网络服务器使用的端口,默认为\"80\":\"".$_SERVER["SERVER_PORT"]."</span><br>";
+                            echo "<span class=\"index-info\">服务器版本和虚拟主机名的字符串:\"".$_SERVER["SERVER_SIGNATURE"]."</span><br>";
+                            echo "<span class=\"index-info\">当前脚本的路径:\"".$_SERVER["SCRIPT_NAME"]."</span><br>";
+                            echo "<span class=\"index-info\">访问当前页面的URI:\"".$_SERVER["REQUEST_URI"]."</span><br>";
+                            ?>
                         </div>
                     </div>
                 </div>
@@ -220,6 +271,10 @@ if(isset($_COOKIE['MEIJIA_UID'])){
 
     <!-- Custom Theme JavaScript -->
     <script src="js/sb-admin-2.js"></script>
+
+    <!-- Meijia index js-->
+    <script src="js/config.js"></script>
+    <script src="js/index.js"></script>
 
 </body>
 

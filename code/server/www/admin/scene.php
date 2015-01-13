@@ -1,6 +1,7 @@
 <?php
 include_once '../php/db_conn.php';
 include_once '../php/debug.php';
+include_once '../php/conf.php';
 
 if(isset($_COOKIE['MEIJIA_UID'])){
     session_start();
