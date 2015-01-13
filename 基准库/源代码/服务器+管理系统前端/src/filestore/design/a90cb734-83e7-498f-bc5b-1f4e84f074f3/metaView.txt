@@ -1,2 +1,2 @@
 "# views"
-"main"
+"main,主视角"

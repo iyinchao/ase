@@ -1,4 +1,4 @@
-﻿1
+1
 "柜子"
 "object1_bace.exr"
 "object1_shader.exr"

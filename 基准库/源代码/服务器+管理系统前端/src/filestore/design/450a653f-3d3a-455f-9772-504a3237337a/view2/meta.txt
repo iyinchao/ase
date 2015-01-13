@@ -1,15 +1,15 @@
 3
-"Êé³÷"
+"ä¹¦æ©±"
 "object1_bace.exr"
 "object1_shader.exr"
 (color 255 255 255)
 0
-"×À×Ó"
+"æ¡Œå­"
 "object2_bace.exr"
 "object2_shader.exr"
 (color 255 255 255)
 0
-"µØ°å"
+"åœ°æ¿"
 "object3_bace.exr"
 "object3_shader.exr"
 (color 255 255 255)

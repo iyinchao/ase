@@ -4,6 +4,9 @@
 #microsoft word temp file
 ~$*.doc*
 
+#OS X dirty files
+._*
+
 ############personal################
 ##Yinchao
 #phpstorm project settings
