@@ -106,11 +106,11 @@ if(!isset($_POST['mode'])){
                     <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
                 </a>
                 <ul class="mj-sidebar-item dropdown-menu dropdown-user">
-                    <li><a href="#"><i class="fa fa-user fa-fw"></i><span>账户信息</span></a>
+                    <!--<li><a href="#"><i class="fa fa-user fa-fw"></i><span>账户信息</span></a>
                     </li>
                     <li><a href="#"><i class="fa fa-gear fa-fw"></i><span>设置</span></a>
                     </li>
-                    <li class="divider"></li>
+                    <li class="divider"></li>-->
                     <li><a id="logout"  href="login.php"><i class="fa fa-sign-out fa-fw"></i><span>退出登录</span></a>
                     </li>
                 </ul>
@@ -123,7 +123,7 @@ if(!isset($_POST['mode'])){
         <div class="navbar-default sidebar" role="navigation">
             <div class="sidebar-nav navbar-collapse">
                 <ul class="nav" id="side-menu">
-                    <li class="sidebar-search">
+                   <!-- <li class="sidebar-search">
                         <div class="input-group custom-search-form">
                             <input type="text" class="mj-search-placeholder form-control" placeholder="搜索一下...">
                                 <span class="input-group-btn">
@@ -132,8 +132,8 @@ if(!isset($_POST['mode'])){
                                 </button>
                             </span>
                         </div>
-                        <!-- /input-group -->
-                    </li>
+                        <!-- /input-group
+                    </li>-->
                     <li>
                         <a class="mj-sidebar-item" href="index.php"><i class="fa fa-dashboard fa-fw"></i><span>控制台</span></a>
                     </li>

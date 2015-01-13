@@ -91,11 +91,11 @@ if(isset($_COOKIE['MEIJIA_UID'])){
                         <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="mj-sidebar-item dropdown-menu dropdown-user">
-                        <li><a href="#"><i class="fa fa-user fa-fw"></i><span>账户信息</span></a>
+                        <!--<li><a href="#"><i class="fa fa-user fa-fw"></i><span>账户信息</span></a>
                         </li>
                         <li><a href="#"><i class="fa fa-gear fa-fw"></i><span>设置</span></a>
                         </li>
-                        <li class="divider"></li>
+                        <li class="divider"></li>-->
                         <li><a id="logout" href="#"><i class="fa fa-sign-out fa-fw"></i><span>退出登录</span></a>
                         </li>
                     </ul>
@@ -108,7 +108,7 @@ if(isset($_COOKIE['MEIJIA_UID'])){
             <div class="navbar-default sidebar" role="navigation">
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
-                        <li class="sidebar-search">
+                        <!--<li class="sidebar-search">
                             <div class="input-group custom-search-form">
                                 <input type="text" class="mj-search-placeholder form-control" placeholder="搜索一下...">
                                 <span class="input-group-btn">
@@ -117,8 +117,8 @@ if(isset($_COOKIE['MEIJIA_UID'])){
                                 </button>
                             </span>
                             </div>
-                            <!-- /input-group -->
-                        </li>
+
+                        </li>-->
                         <li>
                             <a class="mj-sidebar-item active" href="index.php"><i class="fa fa-dashboard fa-fw"></i><span>控制台</span></a>
                         </li>
@@ -236,7 +236,6 @@ if(isset($_COOKIE['MEIJIA_UID'])){
                             echo "<span class=\"index-info\">当前请求的Accept-Language头信息:\"".$_SERVER["HTTP_ACCEPT_LANGUAGE"]."</span><br>";
                             echo "<span class=\"index-info\">当前请求的Connection头信息:\"".$_SERVER["HTTP_CONNECTION"]."</span><br>";
                             echo "<span class=\"index-info\">当前请求的Host头信息:\"".$_SERVER["HTTP_HOST"]."</span><br>";
-                            echo "<span class=\"index-info\">当前页面的前一个页面的URL地址:\"".$_SERVER["HTTP_REFERER"]."</span><br>";
                             echo "<span class=\"index-info\">当前请求的User-Agent的头信息:\"".$_SERVER["HTTP_USER_AGENT"]."</span><br>";
                             echo "<span class=\"index-info\">浏览当前页面用户的IP地址:\"".$_SERVER["REMOTE_ADDR"]."</span><br>";
                             echo "<span class=\"index-info\">用户连接到服务器时所使用的端口:\"".$_SERVER["REMOTE_PORT"]."</span><br>";

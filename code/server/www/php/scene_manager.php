@@ -111,8 +111,15 @@ class SceneManager{
 
         }
         if(isset($data->sort_by)){
-
+            $sort = mysqli_real_escape_string($db, $data->{'sort_by'});
+            $query = $query . " order by " . $sort;
         }
+
+        if (isset($data->order)) {
+            $order = mysqli_real_escape_string($db, $data->{'order'});
+            $query = $query . " " . $order;
+        }
+
         if($scene_per_page >= 1) {
             $now_page = $page_now * $scene_per_page; //Notice: page starts from 0;
             $query_count = "SELECT COUNT(s_id) AS num FROM ($query)temp";
@@ -126,7 +133,7 @@ class SceneManager{
         //echo $query;
         $result = $db->query($query);
         $scene = array();
-        if(($n = $result->num_rows) > 0){
+        if($result && ($n = $result->num_rows) > 0){
             for($i = 0; $i < $n; $i++){
                 $scene_obj = (object)array();
                 $row = $result->fetch_assoc();
@@ -140,6 +147,8 @@ class SceneManager{
                 }*/
                 $scene[$i] = $scene_obj;
             }
+        }else{
+            exit('{"status":"NO_SCENE"}');
         }
 
         $response = (object)array();

@@ -69,12 +69,13 @@
         var cellStatus = $('#'+'test-cell-' + testList[cur].api_type + testList[cur].api_target +'>.api-item-status');
         cellStatus.empty();
         cellStatus.innerHTML = '测试中...';
-        console.log(cellStatus);
+
         var form = new FormData();
         form.append('op', testDef['op']);
         form.append('data', testDef['data']);
         testXHR = new XMLHttpRequest();
-        testXHR.open('post', '../php/tag_api.php', true);
+
+        testXHR.open('post', '../php/'+testList[cur].api_type+'_api.php', true);
         testXHR.addEventListener('readystatechange', function() {
             if (this.readyState == 4) {
                 console.log('ok');
