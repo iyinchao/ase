@@ -16,39 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `brand`
---
-
-DROP TABLE IF EXISTS `brand`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `brand` (
-  `b_id` char(36) NOT NULL,
-  `name` varchar(80) NOT NULL,
-  `desc` varchar(300) DEFAULT NULL,
-  `email` varchar(80) NOT NULL,
-  `tel` varchar(20) DEFAULT NULL,
-  `website` varchar(80) DEFAULT NULL,
-  `modify_date` datetime DEFAULT NULL,
-  PRIMARY KEY (`b_id`),
-  UNIQUE KEY `b_id_UNIQUE` (`b_id`),
-  UNIQUE KEY `email_UNIQUE` (`email`),
-  UNIQUE KEY `tel_UNIQUE` (`tel`),
-  UNIQUE KEY `website_UNIQUE` (`website`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `brand`
---
-
-LOCK TABLES `brand` WRITE;
-/*!40000 ALTER TABLE `brand` DISABLE KEYS */;
-INSERT INTO `brand` VALUES ('503d5728-fc6c-52f1-a151-537778c296a5','MeijiaTest','This is a test brand','test@meijia.com','12345678910','www.meijia.com','2014-12-03 10:42:08'),('7918c182-6581-42cb-8805-0508e15aa0b5','SJTU','This is a test brand','meijia@sjtu.edu.cn',NULL,NULL,'2014-12-04 21:50:27');
-/*!40000 ALTER TABLE `brand` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `scene`
 --
 
@@ -66,8 +33,7 @@ CREATE TABLE `scene` (
   `views_count` int(3) NOT NULL,
   PRIMARY KEY (`s_id`),
   UNIQUE KEY `s_id_UNIQUE` (`s_id`),
-  KEY `s_b_idx` (`b_id`),
-  CONSTRAINT `s_b` FOREIGN KEY (`b_id`) REFERENCES `brand` (`b_id`) ON DELETE CASCADE ON UPDATE NO ACTION
+  KEY `s_b_idx` (`b_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -77,7 +43,7 @@ CREATE TABLE `scene` (
 
 LOCK TABLES `scene` WRITE;
 /*!40000 ALTER TABLE `scene` DISABLE KEYS */;
-INSERT INTO `scene` VALUES ('36dc3fbc-3c2a-4e68-9bee-f4dea7deb425','503d5728-fc6c-52f1-a151-537778c296a5','厨房场景2','2014-12-28 14:29:38','DALAB','测试场景',0,1),('3d97adf8-fa20-4fd4-850d-bd00b57ac22a','503d5728-fc6c-52f1-a151-537778c296a5','厨房场景','2014-12-28 14:11:36','DALAB','这是个厨房',0,1),('450a653f-3d3a-455f-9772-504a3237337a','503d5728-fc6c-52f1-a151-537778c296a5','cvdfasdf','2014-12-30 08:38:16','adfasdfaf','adfasdfadfafd',0,3),('7a38b72e-63c3-459f-89c4-0633ab2540da','503d5728-fc6c-52f1-a151-537778c296a5','sdfasd','2014-12-28 21:22:26','asdfadsf','',0,1),('94a3b955-3d0d-496c-873b-8d47ea263b5d','503d5728-fc6c-52f1-a151-537778c296a5','又是一个测试','2014-12-28 21:20:17','DALAB','',0,2),('a90cb734-83e7-498f-bc5b-1f4e84f074f3','503d5728-fc6c-52f1-a151-537778c296a5','多视角测试','2014-12-28 12:55:52','舒弋','多个视角文件的测试支持',14,2),('ba1af250-05ed-426a-b210-2471af24083f','503d5728-fc6c-52f1-a151-537778c296a5','tasrt','2014-12-28 12:31:23','adsfasdf','',0,2),('e7d9c34b-f629-4798-ad3a-1c30206c85cb','503d5728-fc6c-52f1-a151-537778c296a5','客厅场景','2014-12-28 10:48:26','超哥','',0,1);
+INSERT INTO `scene` VALUES ('36dc3fbc-3c2a-4e68-9bee-f4dea7deb425','503d5728-fc6c-52f1-a151-537778c296a5','暗黑卧室','2015-01-13 15:31:23','尹超','一个测试场景',0,2),('3d97adf8-fa20-4fd4-850d-bd00b57ac22a','503d5728-fc6c-52f1-a151-537778c296a5','卧室2','2015-01-13 15:40:04','xubo','测试场景2',866,2),('450a653f-3d3a-455f-9772-504a3237337a','503d5728-fc6c-52f1-a151-537778c296a5','书房','2015-01-13 15:19:05','舒弋','这是一个书房场景',0,2),('7a38b72e-63c3-459f-89c4-0633ab2540da','503d5728-fc6c-52f1-a151-537778c296a5','卧室','2015-01-13 15:25:19','储洁宇','这是一个棒棒哒卧室',0,1),('94a3b955-3d0d-496c-873b-8d47ea263b5d','503d5728-fc6c-52f1-a151-537778c296a5','美丽的书房','2015-01-13 15:29:43','杨成','这是一个美丽的书房',0,1),('a90cb734-83e7-498f-bc5b-1f4e84f074f3','503d5728-fc6c-52f1-a151-537778c296a5','厨房','2015-01-13 15:23:29','DALAB','厨房场景，啊！',16,1),('ba1af250-05ed-426a-b210-2471af24083f','503d5728-fc6c-52f1-a151-537778c296a5','厨房','2015-01-13 15:35:39','99','明亮的厨房场景',0,2),('e7d9c34b-f629-4798-ad3a-1c30206c85cb','503d5728-fc6c-52f1-a151-537778c296a5','向阳书房','2015-01-13 15:38:08','超哥','明亮的书房场景',0,1);
 /*!40000 ALTER TABLE `scene` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -104,7 +70,7 @@ CREATE TABLE `tag` (
 
 LOCK TABLES `tag` WRITE;
 /*!40000 ALTER TABLE `tag` DISABLE KEYS */;
-INSERT INTO `tag` VALUES (1,'床上用品',''),(2,'柜子',NULL),(3,'灯具',NULL),(4,'地面','可更换地面纹理的场景'),(5,'桌椅',NULL),(6,'窗帘','');
+INSERT INTO `tag` VALUES (1,'床上用品',''),(2,'柜子','啊，真实个好柜子呀好鬼子'),(3,'灯具',NULL),(4,'地面','可更换地面纹理的场景'),(5,'桌椅',''),(6,'窗帘','');
 /*!40000 ALTER TABLE `tag` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -131,34 +97,8 @@ CREATE TABLE `tag_scene` (
 
 LOCK TABLES `tag_scene` WRITE;
 /*!40000 ALTER TABLE `tag_scene` DISABLE KEYS */;
-INSERT INTO `tag_scene` VALUES ('e7d9c34b-f629-4798-ad3a-1c30206c85cb',1),('e7d9c34b-f629-4798-ad3a-1c30206c85cb',3),('e7d9c34b-f629-4798-ad3a-1c30206c85cb',4),('e7d9c34b-f629-4798-ad3a-1c30206c85cb',5),('e7d9c34b-f629-4798-ad3a-1c30206c85cb',6),('ba1af250-05ed-426a-b210-2471af24083f',2),('ba1af250-05ed-426a-b210-2471af24083f',3),('a90cb734-83e7-498f-bc5b-1f4e84f074f3',1),('a90cb734-83e7-498f-bc5b-1f4e84f074f3',2),('a90cb734-83e7-498f-bc5b-1f4e84f074f3',3),('3d97adf8-fa20-4fd4-850d-bd00b57ac22a',2),('3d97adf8-fa20-4fd4-850d-bd00b57ac22a',3),('3d97adf8-fa20-4fd4-850d-bd00b57ac22a',4),('36dc3fbc-3c2a-4e68-9bee-f4dea7deb425',2),('36dc3fbc-3c2a-4e68-9bee-f4dea7deb425',3),('36dc3fbc-3c2a-4e68-9bee-f4dea7deb425',4),('94a3b955-3d0d-496c-873b-8d47ea263b5d',1),('94a3b955-3d0d-496c-873b-8d47ea263b5d',2),('94a3b955-3d0d-496c-873b-8d47ea263b5d',3),('94a3b955-3d0d-496c-873b-8d47ea263b5d',6),('7a38b72e-63c3-459f-89c4-0633ab2540da',1),('7a38b72e-63c3-459f-89c4-0633ab2540da',2),('450a653f-3d3a-455f-9772-504a3237337a',2),('450a653f-3d3a-455f-9772-504a3237337a',3),('450a653f-3d3a-455f-9772-504a3237337a',4);
+INSERT INTO `tag_scene` VALUES ('450a653f-3d3a-455f-9772-504a3237337a',2),('450a653f-3d3a-455f-9772-504a3237337a',3),('450a653f-3d3a-455f-9772-504a3237337a',4),('450a653f-3d3a-455f-9772-504a3237337a',5),('a90cb734-83e7-498f-bc5b-1f4e84f074f3',2),('a90cb734-83e7-498f-bc5b-1f4e84f074f3',5),('7a38b72e-63c3-459f-89c4-0633ab2540da',1),('7a38b72e-63c3-459f-89c4-0633ab2540da',2),('7a38b72e-63c3-459f-89c4-0633ab2540da',4),('7a38b72e-63c3-459f-89c4-0633ab2540da',6),('94a3b955-3d0d-496c-873b-8d47ea263b5d',2),('94a3b955-3d0d-496c-873b-8d47ea263b5d',4),('94a3b955-3d0d-496c-873b-8d47ea263b5d',5),('36dc3fbc-3c2a-4e68-9bee-f4dea7deb425',2),('36dc3fbc-3c2a-4e68-9bee-f4dea7deb425',3),('ba1af250-05ed-426a-b210-2471af24083f',2),('ba1af250-05ed-426a-b210-2471af24083f',5),('e7d9c34b-f629-4798-ad3a-1c30206c85cb',2),('e7d9c34b-f629-4798-ad3a-1c30206c85cb',3),('e7d9c34b-f629-4798-ad3a-1c30206c85cb',5),('3d97adf8-fa20-4fd4-850d-bd00b57ac22a',2),('3d97adf8-fa20-4fd4-850d-bd00b57ac22a',3);
 /*!40000 ALTER TABLE `tag_scene` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `tag_uscene`
---
-
-DROP TABLE IF EXISTS `tag_uscene`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tag_uscene` (
-  `us_id` char(36) NOT NULL,
-  `tag` int(11) NOT NULL,
-  KEY `id_us_idx` (`us_id`),
-  KEY `tag_tag_idx` (`tag`),
-  CONSTRAINT `id_us` FOREIGN KEY (`us_id`) REFERENCES `user_scene` (`us_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `tag_tag_u` FOREIGN KEY (`tag`) REFERENCES `tag` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `tag_uscene`
---
-
-LOCK TABLES `tag_uscene` WRITE;
-/*!40000 ALTER TABLE `tag_uscene` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tag_uscene` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -192,37 +132,6 @@ INSERT INTO `user` VALUES ('00000000-0000-0000-0000-000000000000','test','test@m
 UNLOCK TABLES;
 
 --
--- Table structure for table `user_scene`
---
-
-DROP TABLE IF EXISTS `user_scene`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `user_scene` (
-  `us_id` char(36) NOT NULL,
-  `u_id` char(36) NOT NULL,
-  `s_id` char(36) NOT NULL,
-  `name` varchar(80) NOT NULL,
-  `modify_date` datetime NOT NULL,
-  PRIMARY KEY (`us_id`),
-  UNIQUE KEY `us_id_UNIQUE` (`us_id`),
-  KEY `us_u_idx` (`u_id`),
-  KEY `us_s_idx` (`s_id`),
-  CONSTRAINT `us_s` FOREIGN KEY (`s_id`) REFERENCES `scene` (`s_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  CONSTRAINT `us_u` FOREIGN KEY (`u_id`) REFERENCES `user` (`u_id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user_scene`
---
-
-LOCK TABLES `user_scene` WRITE;
-/*!40000 ALTER TABLE `user_scene` DISABLE KEYS */;
-/*!40000 ALTER TABLE `user_scene` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Dumping routines for database 'bhouse'
 --
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -235,4 +144,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-01-09 22:27:56
+-- Dump completed on 2015-01-13 15:44:02
