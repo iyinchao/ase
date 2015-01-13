@@ -1,0 +1,21 @@
+3
+"书橱"
+"object1_bace.exr"
+"object1_shader.exr"
+(color 255 255 255)
+0
+"桌子"
+"object2_bace.exr"
+"object2_shader.exr"
+(color 255 255 255)
+0
+"地板"
+"object3_bace.exr"
+"object3_shader.exr"
+(color 255 255 255)
+0
+1
+"氛围光"
+"light1.exr"
+(color 255 255 255)
+100

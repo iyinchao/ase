@@ -1,0 +1,22 @@
+4
+"窗帘"
+"object1_bace.exr"
+"object1_shader.exr"
+(color 255 255 255)
+0
+"床单"
+"object2_bace.exr"
+"object2_shader.exr"
+(color 255 255 255)
+0
+"电视柜"
+"object3_bace.exr"
+"object3_shader.exr"
+(color 255 255 255)
+0
+"地毯"
+"object4_bace.exr"
+"object4_shader.exr"
+(color 127.5 127.5 127.5)
+0
+0

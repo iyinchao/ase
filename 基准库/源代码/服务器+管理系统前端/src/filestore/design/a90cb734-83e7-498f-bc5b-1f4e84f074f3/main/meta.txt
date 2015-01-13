@@ -1,0 +1,12 @@
+2
+"³÷¹ñ"
+"object1_bace.exr"
+"object1_shader.exr"
+(color 255 255 255)
+0
+"×ÀÃæ"
+"object2_bace.exr"
+"object2_shader.exr"
+(color 127.5 127.5 127.5)
+0
+0

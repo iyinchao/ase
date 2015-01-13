@@ -1,0 +1,17 @@
+3
+"Êé³÷"
+"object1_bace.exr"
+"object1_shader.exr"
+(color 255 255 255)
+0
+"×ÀÃæ"
+"object2_bace.exr"
+"object2_shader.exr"
+(color 255 255 255)
+0
+"µØ°å"
+"object3_bace.exr"
+"object3_shader.exr"
+(color 255 255 255)
+0
+0

@@ -1,0 +1,15 @@
+﻿1
+"柜子"
+"object1_bace.exr"
+"object1_shader.exr"
+(color 255 255 255)
+0
+2
+"灯光"
+"light1.exr"
+(color 255 255 255)
+100
+"日光"
+"light2.exr"
+(color 255 255 255)
+100

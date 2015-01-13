@@ -1,0 +1,16 @@
+2
+"ÒÎ×Ó"
+"object1_bace.exr"
+"object1_shader.exr"
+(color 255 255 255)
+0
+"¹ñ×Ó"
+"object2_bace.exr"
+"object2_shader.exr"
+(color 255 255 255)
+0
+1
+"Ñô¹â"
+"light1.exr"
+(color 255 255 255)
+100
